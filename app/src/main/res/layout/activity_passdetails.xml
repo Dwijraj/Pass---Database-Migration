@@ -432,16 +432,32 @@
                     android:layout_weight="80"
                     android:weightSum="100"
                     android:layout_width="0dp"
+                    android:orientation="vertical"
                     android:layout_height="wrap_content">
 
+
+
+                    <Spinner
+
+                        android:gravity="start"
+                        android:layout_gravity="center"
+                        android:id="@+id/spinnerPurpose"
+                        android:background="#ffff"
+                        android:tag="Select the Id "
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:minHeight="50dp"
+                        android:layout_weight="70"/>
+
                     <EditText
-                        android:layout_weight="100"
-                        android:layout_width="0dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="30"
+                        android:visibility="invisible"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/reason"
                         android:hint="Enter your purpose of visit"
                         android:background="#ffff" />
-
 
 
                 </LinearLayout>

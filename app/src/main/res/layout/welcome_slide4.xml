@@ -12,9 +12,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/img_width_height"
-            android:layout_height="@dimen/img_width_height"
-            android:src="@drawable/selecteditem_dot" />
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@mipmap/ic_lock_outline_white_24dp"
+            android:background="@drawable/selecteditem_dot" />
 
         <TextView
             android:layout_width="wrap_content"

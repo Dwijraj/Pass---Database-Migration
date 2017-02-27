@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseref= FirebaseDatabase.getInstance().getReference().child("Users");//Points to the Users child  of the root parent
 
 
-        // telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);  //Telephony manager object is initiated
-
 
 
 

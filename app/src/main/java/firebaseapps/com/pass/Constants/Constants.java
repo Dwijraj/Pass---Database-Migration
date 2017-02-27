@@ -29,6 +29,7 @@ public class Constants {
     public static String REGISTRATION_USER_EMAIL_KEY="user_email";
     public static String REGISTRATION_URL="http://preetishweb.com/pass3/index.php/api/userapi/users/format/json";
     public static String IMAGE_SEND_LINK= "http://preetishweb.com/pass3/index.php/api/userapi/check/format/json";
+    public static String OFFLINE="http://192.168.2.2/pass3/index.php/api/userapi/check/format/json";
     public static String SHARED_PREFS_NAME="USER";
     public static String SHARED_PREF_KEY="USER_MOBILE";
 

@@ -21,7 +21,7 @@
         <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.Passdetails">
 
-          <!--  <intent-filter>
+        <!--  <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
                  <category android:name="android.intent.category.LAUNCHER" />

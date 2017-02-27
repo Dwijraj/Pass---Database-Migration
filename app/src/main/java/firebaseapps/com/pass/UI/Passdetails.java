@@ -3,13 +3,12 @@ package firebaseapps.com.pass.UI;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
+
 import android.app.ProgressDialog;
 
 import android.content.Context;
 import android.content.Intent;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 
@@ -21,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 
 import android.util.Log;
@@ -32,8 +32,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +43,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -84,7 +81,10 @@ import java.util.Map;
 
 
 import firebaseapps.com.pass.Adapter.CustomAdapter;
+import firebaseapps.com.pass.Application;
+import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
+import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.Utils.PayPalConfig;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GetMimeType;
@@ -102,44 +102,13 @@ import mohitbadwal.rxconnect.RxConnect;
 public class Passdetails extends AppCompatActivity {
 
 
-    public static final int NOTIFICATION_ID = 10;
-    private GoogleApiClient mGoogleAPiClient;
-    private ImageView UploadedImage;
-    private final int CAMERA_OPEN=9992;
-    private Button Upload;
     private String ImagePath;
-    private File destination;
-    private Uri selectedImage;
     private String MIME;
-    private String MIME_PROFILE;
-    private RadioButton radioButtonIssue;
-    private RadioButton radioButtonVisibility;
-    private Double Longitude;
-    private  ByteArrayOutputStream bytearrayoutputstream;
-    private  byte[] BYTE;
-    private Double Latitude;
-    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE=7;
     private Uri imageuri =null;
     private Uri imageuriProfile=null;
-    private FirebaseAuth mFirebaseAuth;
-    private RadioGroup radioGroupIssues;
-    private RadioGroup radioGroupVisibility;
-    private DatabaseReference Data;
     private Bitmap bitmap;
-    private String Uploader;
-    File f;
-    private final int GALLERY_OPEN=9991;
-   private final int GALLERY_OPEN_PROFILE=9989;
-    private final Integer LOCATION = 0x1;
-    private final Integer CAMERA = 0x5;
-    private String PREF_NAME="Uploader";
-    private SharedPreferences sharedpreferences ;// = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     private byte[] b;
     private byte[] PROFILE_PIC_BYTE_ARRAY;
-
-
-
-    private FirebaseAuth mAuth;
     private ImageView scan_id;
     private ProgressDialog mDialog;
     private Uri scaniduri;
@@ -152,7 +121,6 @@ public class Passdetails extends AppCompatActivity {
     private LinearLayout ERROR_NAME;
     private LinearLayout ERROR_MOBILE;
     private LinearLayout ERROR_DATE;
-    private int WRITE_EXST=1000;
     private EditText Address;
     private EditText Mobile;
     private TextView Dateofbirth;
@@ -177,7 +145,6 @@ public class Passdetails extends AppCompatActivity {
     private DatabaseReference PRICE_OF_PLACE;
     private StorageReference ApplicationStorageRef;
     private RxConnect rxConnect;
-    //For PayPal Parts
     private String paymentAmount;
     private String state;
     private String ID_Source;
@@ -186,18 +153,21 @@ public class Passdetails extends AppCompatActivity {
     private Spinner spinner;
     private String id;
     private String PLACE=null;
+    private String PURPOSE_OF_VISIT;
+    private Spinner REASON_OF_VISIT;
     private Spinner PLACES_SPINNER;
     public static final int PAYPAL_REQUEST_CODE = 123;
-  //  private AwesomeValidation mAwesomeValidation;
     public static int THE_TEST=0;
     private String MOBILE_NUMBER;
     String URL="http://mobicomm.dove-sms.com/mobicomm/submitsms.jsp";//?user=SACHIN&key=d4c5c9993fXX&mobile=918093679890&message=(test sms)&senderid=INFOSM&accusage=1";
     private DatePicker datePicker;
     private static  final String[]paths = {"","Passport", "Driving License", "Adhar Card","PAN"};
     private static final  String[] PLACES={"","1","2","3"};
+    private static final  String[] REASONS={"","Roam","Educational","Other"};
     private Calendar calendar;
     private int mDay, mMonth ,mYear;
     private DatabaseReference REFUND;
+
     //Paypal Configuration Object
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -229,6 +199,7 @@ public class Passdetails extends AppCompatActivity {
         PRICE_OF_PLACE.keepSynced(true);
         PLACE_OF_VISIT=(TextView) findViewById(R.id.PLACE_OF_VISITS);
         PLACES_SPINNER=(Spinner) findViewById(R.id.spinnerPlaces);
+        REASON_OF_VISIT=(Spinner) findViewById(R.id.spinnerPurpose);
         REFUND=FirebaseDatabase.getInstance().getReference().child("ToRefund");
         ERROR_DATE=(LinearLayout)findViewById(R.id.DATE_ERROR);
         ERROR_MOBILE=(LinearLayout)findViewById(R.id.MOBILE_ERROR);
@@ -239,7 +210,7 @@ public class Passdetails extends AppCompatActivity {
         DOBDate=(ImageButton)findViewById(R.id.DOBDate);
         DOJDate=(ImageButton)findViewById(R.id.DOJDate);
         calendar = Calendar.getInstance();
-        mAuth=FirebaseAuth.getInstance();
+        //mAuth=FirebaseAuth.getInstance();
         scan_id=(ImageView)findViewById(R.id.scan_pic) ;
         mDialog=new ProgressDialog(this);
         mDialog.setCanceledOnTouchOutside(false);
@@ -260,7 +231,7 @@ public class Passdetails extends AppCompatActivity {
         UNAVAILABLE_DATES=FirebaseDatabase.getInstance().getReference().child("UnavailableDates");
         UNAVAILABLE_DATES.keepSynced(true);
         ApplicationRef= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
-        User_app_ref=FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+      //  User_app_ref=FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         ApplicationStorageRef= FirebaseStorage.getInstance().getReference();        //Points to the root directory of the Storage
         spinner = (Spinner)findViewById(R.id.spinner);
         CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),paths);
@@ -270,7 +241,34 @@ public class Passdetails extends AppCompatActivity {
         CustomAdapter customAdapter1=new CustomAdapter(getApplicationContext(),PLACES);
         PLACES_SPINNER.setAdapter(customAdapter1);
 
+        CustomAdapter customAdapter2=new CustomAdapter(getApplicationContext(),REASONS);
+        REASON_OF_VISIT.setAdapter(customAdapter2);
 
+        REASON_OF_VISIT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                PURPOSE_OF_VISIT=REASONS[position];
+
+                Log.v("Purpose",PURPOSE_OF_VISIT);
+
+                if(PURPOSE_OF_VISIT.equals("Other"))
+                {
+                    Purpose.setVisibility(View.VISIBLE);
+
+                    Purpose.setHint("Enter your reason");
+                }
+                else {
+                    Purpose.setVisibility(View.INVISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -308,6 +306,8 @@ public class Passdetails extends AppCompatActivity {
 
             }
         });
+
+
 
 
 
@@ -525,28 +525,6 @@ public class Passdetails extends AppCompatActivity {
             public void onClick(View view) {
 
 
-             /*   String name = UUID.randomUUID().toString();
-                destination = new File(Environment
-                        .getExternalStorageDirectory(), name + ".jpg");
-                Intent CameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                     /*  CameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                               Uri.fromFile(destination));
-                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), "CameraDemo");
-
-                if (!mediaStorageDir.exists()) {
-                    mediaStorageDir.mkdirs();
-                }
-
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-                f=new File(mediaStorageDir.getPath() + File.separator +
-                        "IMG_"+ timeStamp + ".jpg");
-
-                CameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(f));
-                startActivityForResult(CameraIntent,CAMERA_OPEN);*/
-
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, PROFILE_PHOTO);
 
@@ -574,15 +552,25 @@ public class Passdetails extends AppCompatActivity {
                 final String Addresses = Address.getText().toString().trim();
                 Mobiles = Mobile.getText().toString().trim();
                 final String ID_NO = ID_No.getText().toString().trim();
-                final String Purposes = Purpose.getText().toString().trim();
+                String Purposes;
+                if(PURPOSE_OF_VISIT.equals("Other"))
+                {
+                    Purposes = Purpose.getText().toString().trim();
+                }
+                else
+                {
+                    Purposes = PURPOSE_OF_VISIT;
+                }
+
                 final String DateOfBirth = Dateofbirth.getText().toString().trim();
                 final String DateOfJourney = Dateofjourney.getText().toString().trim();
 
+                Log.v("Purpose",Purposes+"dcd");
 
 
-                   // if(mAwesomeValidation.validate())
+
                   //  {
-                      /*  if(  !( ID_Source.contains("Tap") || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) || TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) || TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes) || TextUtils.isEmpty(byteArray.toString()) || TextUtils.isEmpty(scaniduri.toString()) )
+                     /*   if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) || TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) || TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes) || TextUtils.isEmpty(byteArray.toString()) || TextUtils.isEmpty(scaniduri.toString()) )
                                 &&ERROR_NAME.getVisibility()==View.INVISIBLE&&ERROR_MOBILE.getVisibility()==View.INVISIBLE&&
                                 ERROR_DATE.getVisibility()==View.INVISIBLE)
                         {
@@ -699,16 +687,6 @@ public class Passdetails extends AppCompatActivity {
        return bitmap;
    }
 
-    private static String guessAppropriateEncoding(CharSequence contents) {
-        // Very crude at the moment
-        for (int i = 0; i < contents.length(); i++) {
-            if (contents.charAt(i) > 0xFF) {
-                return "UTF-8";
-            }
-        }
-        return null;
-    }
-
 
     private void getPayment(String cost) {
         //Getting the amount from editText
@@ -741,58 +719,19 @@ public class Passdetails extends AppCompatActivity {
         final String Addresses= Address.getText().toString().trim();
         Mobiles= Mobile.getText().toString().trim();
         final String ID_NO= ID_No.getText().toString().trim();
-        final String Purposes= Purpose.getText().toString().trim();
+        final String Purposes;
+        if(PURPOSE_OF_VISIT.equals("Other"))
+        {
+            Purposes = Purpose.getText().toString().trim();
+        }
+        else
+        {
+            Purposes = PURPOSE_OF_VISIT;
+        }
         final String DateOfBirth=Dateofbirth.getText().toString().trim();
         final String DateOfJourney=Dateofjourney.getText().toString().trim();
+        final String Registered_Mobile=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
-
-
-     /*   rxConnect.setParam(Constants.REGISTRATION_USER_MOBILE_KEY,"HELLO");
-        rxConnect.setParam(Constants.REGISTRATION_USER_EMAIL_KEY,"HELLOIZ");
-        rxConnect.execute(Constants.IMAGE_SEND_LINK,RxConnect.POST, new RxConnect.RxResultHelper() {
-
-
-            @Override
-            public void onResult(String result) {
-
-                Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                Log.v("Result",result);
-
-
-
-                try {
-                    JSONObject jsonObject=new JSONObject(result);
-                    Toast.makeText(getApplicationContext(),jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
-
-
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-            }
-
-            @Override
-            public void onNoResult() {
-                //do something
-
-                Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                //do somenthing on error
-
-                Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-
-
-            }
-
-
-        }); */
 
 
 
@@ -809,8 +748,18 @@ public class Passdetails extends AppCompatActivity {
                 Log.v("JSONRESPONSE",RESPONSE+response.statusCode);
                 try {
 
-                    String jsonString = new String(response.data, "UTF-8");
-                    JSONObject jsonObject=new JSONObject(jsonString);
+
+
+
+                    String jsonString = new String(response.data);
+
+                    JSONObject jsonObject= new JSONObject(jsonString);
+
+                    Log.v("JsonObject1",jsonObject.getString("response_status"));
+                    Log.v("JsonObject2",jsonObject.getString("msg"));
+
+
+
 
                     Log.v("JSONRESPONSE",jsonString+jsonObject);
                 }catch (Exception ec)
@@ -830,25 +779,36 @@ public class Passdetails extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Intent intents=new  Intent(getApplicationContext(),MainActivity.class);
-                PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),0,intents,PendingIntent.FLAG_UPDATE_CURRENT);
+
 
 
                 Log.v("JSONRESPONSE",error.getMessage()+"EEROR");
 
-
-                String json =error.toString();
-                try
+                if(imageuri==null)
                 {
-                    JSONObject jsonObject=new JSONObject(json);
-
-
+                    Toast.makeText(Passdetails.this,"Upload Scan ID",Toast.LENGTH_SHORT).show();
+                }
+                else if(imageuriProfile==null)
+                {
+                    Toast.makeText(Passdetails.this,"Upload Profile Picture",Toast.LENGTH_SHORT).show();
 
                 }
-                catch (Exception e)
+                else
                 {
+                    String Network_status= NetworkUtil.getConnectivityStatusString(Passdetails.this);
+
+                    if(Network_status.equals("Not connected to Internet"))
+                    {
+                        Toast.makeText(Passdetails.this,"Failed to connect..",Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        Toast.makeText(Passdetails.this,"Error Uploading",Toast.LENGTH_SHORT).show();
 
                 }
+
+
+
+
 
             }
         }) {
@@ -858,13 +818,17 @@ public class Passdetails extends AppCompatActivity {
 
 
                 Map<String, String> params = new HashMap<>();
-                params.put("filename","FILE");
-                params.put("uploader","HELLO");
-                params.put("issue", "HE");
-                //params.put("submit","checked");
-                params.put("uploadervisible","VISI");
-                //   params.put("fileToUpload",ImageBase64);
-                params.put("mode","android");
+                params.put(ApplicationParams.Name,Names);
+                params.put(ApplicationParams.Address,Addresses);
+                params.put(ApplicationParams.Mobile,Mobiles);
+                params.put(ApplicationParams.PlaceOfVisit,PLACE);
+                params.put(ApplicationParams.IDNumber,ID_NO);
+                params.put(ApplicationParams.IDSource,ID_Source);
+                params.put(ApplicationParams.RegisteredMobile,Registered_Mobile);
+                params.put(ApplicationParams.DateOfBirthd,DateOfBirth);
+                params.put(ApplicationParams.DateOfJourney,DateOfJourney);
+                params.put(ApplicationParams.PurposeOfVisit,Purposes);
+
                 return params;
             }
 
@@ -875,8 +839,8 @@ public class Passdetails extends AppCompatActivity {
                 // for now just get bitmap data from ImageView
 
 
-                params.put("picture", new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
-                params.put("picture1",new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
+                params.put(ApplicationParams.PICTURE, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
+                params.put(ApplicationParams.PICTURE1,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
                 Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
                 return params;
             }

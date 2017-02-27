@@ -2,9 +2,12 @@ package firebaseapps.com.pass.UI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.Log;
 
+import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.R;
 
 public class Startup extends Activity {
@@ -24,9 +27,25 @@ public class Startup extends Activity {
                 @Override
                 public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                    Intent mainIntent = new Intent(Startup.this,MainActivity.class);
-                    Startup.this.startActivity(mainIntent);
-                    Startup.this.finish();
+
+                  SharedPreferences SHARED_PREF=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE);
+
+                    String USeR=SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER");
+                    boolean Value=!(USeR.equals("NO_USER"));
+                    if(Value)
+                    {
+                        Log.v("Username",SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"));
+                        Intent MAIN=new Intent(Startup.this,ApplyPass.class);
+                        finish();
+                        startActivity(MAIN);
+                    }
+                    else
+                    {
+                        Intent mainIntent = new Intent(Startup.this,GetStarted.class);
+                        Startup.this.startActivity(mainIntent);
+                        Startup.this.finish();
+                    }
+
                 }
             }, SPLASH_DISPLAY_LENGTH);
         }
