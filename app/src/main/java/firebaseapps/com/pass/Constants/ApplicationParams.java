@@ -6,16 +6,23 @@ package firebaseapps.com.pass.Constants;
 
 public class ApplicationParams {
 
-    public static String Name="";
-    public static String Address="";
-    public static String Mobile="";
-    public static String RegisteredMobile="";
-    public static String PlaceOfVisit="";
-    public static String IDNumber="";
-    public static String IDSource="";
-    public static String DateOfBirthd="";
-    public static String PurposeOfVisit="";
-    public static String DateOfJourney="";
+
+
+
+
+
+
+
+    public static String Name="applicant_name";
+    public static String Address="applicant_address";
+    public static String RegisteredMobile="mobile_registered";
+    public static String Mobile="application_mobile";
+    public static String PlaceOfVisit="place_visting";
+    public static String IDNumber="applicant_id_no";
+    public static String IDSource="applicant_id_source";
+    public static String DateOfBirthd="dob";
+    public static String PurposeOfVisit="purpose_visting";
+    public static String DateOfJourney="date_journey";
     public static String PICTURE="picture";
     public static String PICTURE1="picture1";
 

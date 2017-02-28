@@ -54,7 +54,6 @@
         <activity android:name=".View_Pass" />
         <activity android:name=".UI.Vehicles" />
         <activity android:name=".UI.Refund" />
-        <activity android:name=".UI.Barcode_Display" />
         <activity android:name=".UI.Startup">
           <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

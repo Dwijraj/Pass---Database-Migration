@@ -1,5 +1,6 @@
 package firebaseapps.com.pass;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -16,10 +17,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.WriterException;
 
-import firebaseapps.com.pass.UI.Barcode_Display;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+
 import firebaseapps.com.pass.UI.Passdetails;
 import firebaseapps.com.pass.UI.Vehicles;
+import firebaseapps.com.pass.Utils.JsonParser;
+import firebaseapps.com.pass.Utils.QR_Codegenerator;
 
 
 public class ViewPass extends AppCompatActivity {
@@ -39,7 +47,6 @@ public class ViewPass extends AppCompatActivity {
     private TextView DriverName;
     private TextView CarNumber;
     private ImageView Profile2;
-    private  String pass;
     private TextView Application_status2;
     private DatabaseReference ApplicationRef2;
     public  Application app;
@@ -77,14 +84,13 @@ public class ViewPass extends AppCompatActivity {
         Application_status2=(TextView)findViewById(R.id.SCAN_STATUS);
         ApplicationRef2= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
 
+
         Intent i=getIntent();
-        Bundle extras=i.getExtras();
-         pass=extras.getString("Pass");
+        String Pass_number=i.getExtras().getString("PassNumber");
 
 
 
-
-        Vehicle.setOnClickListener(new View.OnClickListener() {
+  /*      Vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                // Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
@@ -93,13 +99,86 @@ public class ViewPass extends AppCompatActivity {
                 TO_VEHICLES.putExtra("BookedBy",pass);
                 startActivity(TO_VEHICLES);
             }
-        });
+        }); */
 
-        ApplicationRef2.child(pass).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        try {
+            JSONObject jsonObject=new JSONObject(View_Pass.PASS_DETAILS);
+
+            String Name= JsonParser.JSONValue(jsonObject,"Name");
+            String Address= JsonParser.JSONValue(jsonObject,"Address");
+            String PlaceOfVisit= JsonParser.JSONValue(jsonObject,"Destination");
+            String Mobile= JsonParser.JSONValue(jsonObject,"mobile");
+            String IDNumber= JsonParser.JSONValue(jsonObject,"IDNumber");
+            String IDSource= JsonParser.JSONValue(jsonObject,"IDSource");
+            String DateOfBirth= JsonParser.JSONValue(jsonObject,"DateOfBirth");
+            String Purpose= JsonParser.JSONValue(jsonObject,"Purpose");
+            String DateOfJourney= JsonParser.JSONValue(jsonObject,"DateOfJourney");
+            String Profile= JsonParser.JSONValue(jsonObject,"Profile");
+            String ScanId= JsonParser.JSONValue(jsonObject,"ScanId");
+            String ApplicationStatus=JsonParser.JSONValue(jsonObject,"applicationstatus");
+
+            try {
+
+                Bitmap  bitmap_QR_CODE = null;
+
+                bitmap_QR_CODE = QR_Codegenerator.encodeAsBitmap(Pass_number,500);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap_QR_CODE.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //byte[] BARCODE_BYTE_ARRAY = stream.toByteArray();
+
+                Glide.with(getApplicationContext())
+                        .load(Profile)
+                        .into(Profile2);
+
+
+                Glide.with(getApplicationContext())
+                        .load(ScanId)
+                        .into(scan_id2);
+
+                Glide.with(getApplicationContext())
+                        .load(bitmap_QR_CODE)
+                        .into(imageView);
+
+
+                Name2.setText(Name);
+                Address2.setText(Address);
+                Mobile2.setText(Mobile);
+                ID_No2.setText(IDNumber);
+                Dateofbirth2.setText(DateOfBirth);
+                Dateofjourney2.setText(DateOfJourney);
+                Purpose2.setText(Purpose);
+                Application_status2.setText(ApplicationStatus.toUpperCase());
+                ID_source.setText(IDSource);
+               // CarNumber.setText(Carnumber);
+               // DriverName.setText(app.Drivername);
+               // Gate.setText(app.Gate);
+                place_of_visit.setText(PlaceOfVisit);
+
+
+            }
+            catch (WriterException e)
+            {
+                e.printStackTrace();
+            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+      /*  ApplicationRef2.child(pass).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                app=dataSnapshot.getValue(Application.class);  //App crasehs due to this line
+                app=dataSnapshot.getValue(Application.class);
 
                 Name2.setText(app.Name);
                 Address2.setText(app.Address);
@@ -145,24 +224,7 @@ public class ViewPass extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
-
-        generatebarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent NEW_INTENT=new Intent(ViewPass.this,Barcode_Display.class);
-                NEW_INTENT.putExtra("Barcode_URL",app.Barcode_Image);
-                NEW_INTENT.putExtra("Pass_No",pass);
-                startActivity(NEW_INTENT);
-
-            }
-        });
-
-
-
-
-
-
+        }); */
 
     }
 }

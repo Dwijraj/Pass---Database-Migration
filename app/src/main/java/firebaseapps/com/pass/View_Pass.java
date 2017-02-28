@@ -16,28 +16,37 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import firebaseapps.com.pass.Constants.Constants;
+import mohitbadwal.rxconnect.RxConnect;
+
 public class View_Pass extends AppCompatActivity {
 
-    private DatabaseReference databaseReference;
+
+    private RxConnect rxConnect;
     private EditText pass_no;
     private Button view;
-    private FirebaseAuth mAuth;
-
+    public static String PASS_DETAILS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view__pass);
 
-        mAuth=FirebaseAuth.getInstance();
-
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("Applications");
         pass_no=(EditText)findViewById(R.id.view_pass_passno_);
         view=(Button)findViewById(R.id.view_pass);
+        rxConnect=new RxConnect(View_Pass.this);
+        rxConnect.setCachingEnabled(false);
 
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+
 
                 final String PASS_NO=pass_no.getText().toString().trim();
                 if(PASS_NO.isEmpty())
@@ -46,7 +55,48 @@ public class View_Pass extends AppCompatActivity {
                 }
                 else
                 {
-                    databaseReference.addValueEventListener(new ValueEventListener() {
+
+                    rxConnect.setParam("Passnumber",PASS_NO);
+                    rxConnect.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                        @Override
+                        public void onResult(String result) {
+
+                            try {
+                                JSONObject jsonObject=new JSONObject(result);
+
+                                String REGISTERED_MOBILE_NUBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+                                if(jsonObject.getString("result").equals("")/*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
+                                {
+                                    PASS_DETAILS=result;
+                                    Intent VIEW_PASS=new Intent(View_Pass.this,ViewPass.class);
+                                    VIEW_PASS.putExtra("PassNumber",PASS_NO);
+                                    finish();
+                                    startActivity(VIEW_PASS);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(),"No Such application exists",Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onNoResult() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+
+                        }
+                    });
+
+                   /* databaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.hasChild(PASS_NO))
@@ -97,7 +147,7 @@ public class View_Pass extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
-                    });
+                    }); */
                 }
 
             }

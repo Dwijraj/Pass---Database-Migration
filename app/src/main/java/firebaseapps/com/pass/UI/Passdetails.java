@@ -61,6 +61,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,10 +85,12 @@ import firebaseapps.com.pass.Adapter.CustomAdapter;
 import firebaseapps.com.pass.Application;
 import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
+import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.Utils.PayPalConfig;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GetMimeType;
+import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 import mohitbadwal.rxconnect.RxConnect;
 
@@ -125,6 +128,8 @@ public class Passdetails extends AppCompatActivity {
     private EditText Mobile;
     private TextView Dateofbirth;
     private TextView Dateofjourney;
+    private TextView PRICE_FIELD;
+    private String   PRICE_OF_PASS;
     private TextView Transaction_Id;
     private EditText ID_No;
     private EditText Purpose;
@@ -136,8 +141,6 @@ public class Passdetails extends AppCompatActivity {
     private String Mobiles;
     private ImageButton DOJDate;
     private byte[] BARCODE_BYTE_ARRAY;
-    private static final int WHITE = 0xFFFFFFFF;
-    private static final int BLACK = 0xFF000000;
     private TextView Application_status;
     private DatabaseReference ApplicationRef;
     private DatabaseReference User_app_ref;
@@ -162,11 +165,13 @@ public class Passdetails extends AppCompatActivity {
     String URL="http://mobicomm.dove-sms.com/mobicomm/submitsms.jsp";//?user=SACHIN&key=d4c5c9993fXX&mobile=918093679890&message=(test sms)&senderid=INFOSM&accusage=1";
     private DatePicker datePicker;
     private static  final String[]paths = {"","Passport", "Driving License", "Adhar Card","PAN"};
-    private static final  String[] PLACES={"","1","2","3"};
+    private static   String[] PLACES={"","1","2","3"};
+    private String[] PRICES;
     private static final  String[] REASONS={"","Roam","Educational","Other"};
     private Calendar calendar;
     private int mDay, mMonth ,mYear;
     private DatabaseReference REFUND;
+    private HashMap<String,String> PriceNPlace;
 
     //Paypal Configuration Object
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -191,10 +196,39 @@ public class Passdetails extends AppCompatActivity {
         rxConnect=new RxConnect(Passdetails.this);
         rxConnect.setCachingEnabled(false);
 
+        String REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+
+        rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+        rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+
+               /* {"response_status":"1","msg":"sucess",
+                        "place_info":[{"place_name":"puri","price_detail":"250"},{"place_name":"konark","price_detail":"300"}]} */
+
+               GetPricesAndPlaces(result);
+            }
+
+            @Override
+            public void onNoResult() {
+
+                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
 
 
         dialog=new Dialog(Passdetails.this);
 
+        PRICE_FIELD=(TextView) findViewById(R.id.PRICE_OF_PASS);
         PRICE_OF_PLACE=FirebaseDatabase.getInstance().getReference();
         PRICE_OF_PLACE.keepSynced(true);
         PLACE_OF_VISIT=(TextView) findViewById(R.id.PLACE_OF_VISITS);
@@ -294,6 +328,8 @@ public class Passdetails extends AppCompatActivity {
 
                     PLACE=PLACES[positiond];
                     PLACE_OF_VISIT.setText(PLACES[positiond]);
+                    PRICE_FIELD.setText(PriceNPlace.get(PLACES[positiond]));
+                    PRICE_OF_PASS=PriceNPlace.get(PLACES[positiond]);
 
 
                 }
@@ -431,6 +467,8 @@ public class Passdetails extends AppCompatActivity {
                         String myFormat = "dd-MM-yyyy"; //Change as you need
                     final    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
 
+                        Dateofjourney.setText(sdf.format(myCalendar.getTime()));
+
 
                         UNAVAILABLE_DATES.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -450,7 +488,7 @@ public class Passdetails extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    Dateofjourney.setText(sdf.format(myCalendar.getTime()));
+
 
                                     if(ERROR_DATE.getVisibility()== View.VISIBLE)
                                     {
@@ -659,38 +697,36 @@ public class Passdetails extends AppCompatActivity {
             }
         });
     }
+    public void GetPricesAndPlaces(String result)
+    {
+        try {
+
+               /* {"response_status":"1","msg":"sucess",
+                        "place_info":[{"place_name":"puri","price_detail":"250"},{"place_name":"konark","price_detail":"300"}]} */
+
+            JSONObject jsonObject=new JSONObject(result);
+            JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"place_info");
+            PriceNPlace=JsonParser.PricNPlace(jsonArray);
+
+            PLACES= (String[]) PriceNPlace.keySet().toArray();
+            PRICES= (String[]) PriceNPlace.values().toArray();
+
+        }
+        catch (JSONException e)
+        {
+
+        }
+    }
     public void onDestroy() {
         stopService(new Intent(this, PayPalService.class));
         THE_TEST=0;
         super.onDestroy();
     }
-   Bitmap encodeAsBitmap(String str,int WIDTH) throws WriterException {
-       BitMatrix result;
-       try {
-           result = new MultiFormatWriter().encode(str,
-                   BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
-       } catch (IllegalArgumentException iae) {
-           // Unsupported format
-           return null;
-       }
-       int w = result.getWidth();
-       int h = result.getHeight();
-       int[] pixels = new int[w * h];
-       for (int y = 0; y < h; y++) {
-           int offset = y * w;
-           for (int x = 0; x < w; x++) {
-               pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
-           }
-       }
-       Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-       bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
-       return bitmap;
-   }
 
 
-    private void getPayment(String cost) {
+    private void getPayment() {
         //Getting the amount from editText
-        paymentAmount = cost;
+        paymentAmount = PRICE_OF_PASS;
 
         //Creating a paypalpayment
         PayPalPayment payment = new PayPalPayment(new BigDecimal(String.valueOf(paymentAmount)), "USD", "Pass Fee",
@@ -737,12 +773,17 @@ public class Passdetails extends AppCompatActivity {
 
 
 
+        final ProgressDialog progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Submitting...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
 
 
 
+                progressDialog.dismiss();
                 String RESPONSE=new String(response.data);
 
                 Log.v("JSONRESPONSE",RESPONSE+response.statusCode);
@@ -753,11 +794,17 @@ public class Passdetails extends AppCompatActivity {
 
                     String jsonString = new String(response.data);
 
+
                     JSONObject jsonObject= new JSONObject(jsonString);
 
                     Log.v("JsonObject1",jsonObject.getString("response_status"));
                     Log.v("JsonObject2",jsonObject.getString("msg"));
 
+                    Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
+
+                    Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
+
+                    scan_id.setImageBitmap(bitmap2);
 
 
 
@@ -782,6 +829,7 @@ public class Passdetails extends AppCompatActivity {
 
 
 
+                progressDialog.dismiss();
                 Log.v("JSONRESPONSE",error.getMessage()+"EEROR");
 
                 if(imageuri==null)
@@ -824,7 +872,7 @@ public class Passdetails extends AppCompatActivity {
                 params.put(ApplicationParams.PlaceOfVisit,PLACE);
                 params.put(ApplicationParams.IDNumber,ID_NO);
                 params.put(ApplicationParams.IDSource,ID_Source);
-                params.put(ApplicationParams.RegisteredMobile,Registered_Mobile);
+                params.put(ApplicationParams.RegisteredMobile,"123456789");
                 params.put(ApplicationParams.DateOfBirthd,DateOfBirth);
                 params.put(ApplicationParams.DateOfJourney,DateOfJourney);
                 params.put(ApplicationParams.PurposeOfVisit,Purposes);
@@ -839,8 +887,8 @@ public class Passdetails extends AppCompatActivity {
                 // for now just get bitmap data from ImageView
 
 
-                params.put(ApplicationParams.PICTURE, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
-                params.put(ApplicationParams.PICTURE1,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
+                params.put(ApplicationParams.PICTURE1, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
+                params.put(ApplicationParams.PICTURE,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
                 Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
                 return params;
             }
@@ -1040,10 +1088,7 @@ public class Passdetails extends AppCompatActivity {
                         state=response.getString("state");
                         id=response.getString("id");
                // bitmap_BAR_CODE = encodeAsBitmap(id, BarcodeFormat.CODE_128, 600, 300);  -->Originally
-                        bitmap_QR_CODE = encodeAsBitmap(id,500);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap_QR_CODE.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        BARCODE_BYTE_ARRAY = stream.toByteArray();
+
 
 
                         if(state.equals("approved"))
@@ -1053,10 +1098,8 @@ public class Passdetails extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
 
-                    } catch (WriterException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(),"Unable to generate barcode image",Toast.LENGTH_SHORT).show();
                     }
+
                 }
             }
         }

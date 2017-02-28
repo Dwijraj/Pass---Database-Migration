@@ -187,14 +187,33 @@
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
+
+                    <LinearLayout
                         android:layout_weight="40"
-                        android:textColor="#ffff"
-                        android:gravity="center"
-                        android:text="PLACE OF VISIT"
-                        android:id="@+id/PLACE_OF_VISITS"
-                        android:layout_height="0dp" />
+                        android:weightSum="100"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="50"
+                            android:textColor="#ffff"
+                            android:gravity="center"
+                            android:text="PLACE OF VISIT"
+                            android:id="@+id/PLACE_OF_VISITS"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="50"
+                            android:textColor="#ffff"
+                            android:gravity="center"
+                            android:text="PRICE OF PASS"
+                            android:id="@+id/PRICE_OF_PASS"
+                            android:layout_height="match_parent" />
+
+
+                    </LinearLayout>
+
 
 
                     <Spinner
@@ -557,6 +576,7 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:background="#413333"
+                    android:scaleType="centerCrop"
                     android:id="@+id/scan_pic"/>
 
                 <LinearLayout
