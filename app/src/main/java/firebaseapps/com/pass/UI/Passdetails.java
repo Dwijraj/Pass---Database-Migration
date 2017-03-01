@@ -16,6 +16,7 @@ import android.net.Uri;
 
 import android.provider.MediaStore;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -74,11 +75,16 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 
 import firebaseapps.com.pass.Adapter.CustomAdapter;
@@ -94,9 +100,6 @@ import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 import mohitbadwal.rxconnect.RxConnect;
 
-//import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
-
-//http://mobicomm.dove-sms.com/mobicomm//submitsms.jsp?user=SACHIN&key=d4c5c9993fXX&mobile=91(9437510178)&message=(test sms)&senderid=INFOSM&accusage=1
 
 /** MINOR BUG FIXES IMAGE VIEW IN SCAN_ID CANT PUT BIG IMAGES **/
 
@@ -152,7 +155,7 @@ public class Passdetails extends AppCompatActivity {
     private String state;
     private String ID_Source;
     private int flag;
-    private TextView PLACE_OF_VISIT;
+    private String PLACE_OF_VISIT;
     private Spinner spinner;
     private String id;
     private String PLACE=null;
@@ -162,16 +165,16 @@ public class Passdetails extends AppCompatActivity {
     public static final int PAYPAL_REQUEST_CODE = 123;
     public static int THE_TEST=0;
     private String MOBILE_NUMBER;
-    String URL="http://mobicomm.dove-sms.com/mobicomm/submitsms.jsp";//?user=SACHIN&key=d4c5c9993fXX&mobile=918093679890&message=(test sms)&senderid=INFOSM&accusage=1";
     private DatePicker datePicker;
-    private static  final String[]paths = {"","Passport", "Driving License", "Adhar Card","PAN"};
-    private static   String[] PLACES={"","1","2","3"};
+    private static  final ArrayList<String>paths =new ArrayList<>();// {"","Passport", "Driving License", "Adhar Card","PAN"};
+    private static   ArrayList<String> PLACES;//={"","1","2","3"};
     private String[] PRICES;
-    private static final  String[] REASONS={"","Roam","Educational","Other"};
+    private static final  ArrayList<String> REASONS=new ArrayList<>();//={"","Roam","Educational","Other"};
     private Calendar calendar;
     private int mDay, mMonth ,mYear;
     private DatabaseReference REFUND;
     private HashMap<String,String> PriceNPlace;
+    private RxConnect rxConnect1;
 
     //Paypal Configuration Object
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -193,26 +196,42 @@ public class Passdetails extends AppCompatActivity {
         THE_TEST=1;
         //mAwesomeValidation = new AwesomeValidation(BASIC);
 
+        paths.add("");
+        paths.add("Passport");
+        paths.add("Adhar Card");
+        paths.add("Driving License");
+
+
+
+        REASONS.add("");
+        REASONS.add("Roam");
+        REASONS.add("Tourism");
+
         rxConnect=new RxConnect(Passdetails.this);
         rxConnect.setCachingEnabled(false);
 
+        rxConnect1=new RxConnect(Passdetails.this);
+        rxConnect1.setCachingEnabled(false);
+
         String REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+
 
         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
         rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
 
-               /* {"response_status":"1","msg":"sucess",
-                        "place_info":[{"place_name":"puri","price_detail":"250"},{"place_name":"konark","price_detail":"300"}]} */
 
-               GetPricesAndPlaces(result);
+                Log.v("Response","RESULT"+result);
+
+                GetPricesAndPlaces(result);
             }
 
             @Override
             public void onNoResult() {
 
                 Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                Log.v("Response","RESULT NOPE");
             }
 
             @Override
@@ -220,6 +239,32 @@ public class Passdetails extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
 
+                Log.v("Response","RESULT"+throwable.getMessage());
+            }
+        });
+
+        rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
+        rxConnect.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+
+
+
+            }
+
+            @Override
+            public void onNoResult() {
+
+                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                Log.v("Response","RESULT NOPE");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                Log.v("Response","RESULT"+throwable.getMessage());
             }
         });
 
@@ -231,7 +276,6 @@ public class Passdetails extends AppCompatActivity {
         PRICE_FIELD=(TextView) findViewById(R.id.PRICE_OF_PASS);
         PRICE_OF_PLACE=FirebaseDatabase.getInstance().getReference();
         PRICE_OF_PLACE.keepSynced(true);
-        PLACE_OF_VISIT=(TextView) findViewById(R.id.PLACE_OF_VISITS);
         PLACES_SPINNER=(Spinner) findViewById(R.id.spinnerPlaces);
         REASON_OF_VISIT=(Spinner) findViewById(R.id.spinnerPurpose);
         REFUND=FirebaseDatabase.getInstance().getReference().child("ToRefund");
@@ -262,27 +306,18 @@ public class Passdetails extends AppCompatActivity {
         Profile=(ImageView) findViewById(R.id.profilephoto);
         Application_status=(TextView)findViewById(R.id.application_status);
         Payment=(Button)findViewById(R.id.payment);
+        Payment.setVisibility(View.INVISIBLE);
+        Payment.setEnabled(false);
         UNAVAILABLE_DATES=FirebaseDatabase.getInstance().getReference().child("UnavailableDates");
         UNAVAILABLE_DATES.keepSynced(true);
         ApplicationRef= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
-      //  User_app_ref=FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         ApplicationStorageRef= FirebaseStorage.getInstance().getReference();        //Points to the root directory of the Storage
         spinner = (Spinner)findViewById(R.id.spinner);
-        CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),paths);
-        spinner.setAdapter(customAdapter);
-        spinner.setPrompt("Select The source");
-
-        CustomAdapter customAdapter1=new CustomAdapter(getApplicationContext(),PLACES);
-        PLACES_SPINNER.setAdapter(customAdapter1);
-
-        CustomAdapter customAdapter2=new CustomAdapter(getApplicationContext(),REASONS);
-        REASON_OF_VISIT.setAdapter(customAdapter2);
-
-        REASON_OF_VISIT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       REASON_OF_VISIT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                PURPOSE_OF_VISIT=REASONS[position];
+                PURPOSE_OF_VISIT=REASONS.get(position);
 
                 Log.v("Purpose",PURPOSE_OF_VISIT);
 
@@ -308,7 +343,7 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                ID_Source=paths[position];
+                ID_Source=paths.get(position);
 
             }
 
@@ -325,11 +360,10 @@ public class Passdetails extends AppCompatActivity {
                 if(positiond!=0)
                 {
 
+                    PLACE=PLACES.get(positiond);
 
-                    PLACE=PLACES[positiond];
-                    PLACE_OF_VISIT.setText(PLACES[positiond]);
-                    PRICE_FIELD.setText(PriceNPlace.get(PLACES[positiond]));
-                    PRICE_OF_PASS=PriceNPlace.get(PLACES[positiond]);
+                    PRICE_FIELD.setText(PriceNPlace.get(PLACES.get(positiond)));
+                    PRICE_OF_PASS=PriceNPlace.get(PLACES.get(positiond));
 
 
                 }
@@ -607,47 +641,15 @@ public class Passdetails extends AppCompatActivity {
 
 
 
-                  //  {
-                     /*   if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) || TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) || TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes) || TextUtils.isEmpty(byteArray.toString()) || TextUtils.isEmpty(scaniduri.toString()) )
+                   {
+                      if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
+                              TextUtils.isEmpty(PLACE) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) ||
+                              TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) ||
+                              TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes) ||
+                              TextUtils.isEmpty(byteArray.toString()) || TextUtils.isEmpty(scaniduri.toString()) )
                                 &&ERROR_NAME.getVisibility()==View.INVISIBLE&&ERROR_MOBILE.getVisibility()==View.INVISIBLE&&
                                 ERROR_DATE.getVisibility()==View.INVISIBLE)
                         {
-                            UNAVAILABLE_DATES.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
-
-
-                                    if(dataSnapshot.hasChild(DateOfJourney))
-                                    {
-                                        Toast.makeText(getApplicationContext(),"Selected date is unavailable",Toast.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                    {
-                                        PRICE_OF_PLACE.child("Prices").child(PLACE).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                                                getPayment(dataSnapshot.getValue(String.class));
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-}
-
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
 
                             // getPayment();
                         }
@@ -686,9 +688,10 @@ public class Passdetails extends AppCompatActivity {
 
                             }
                         }
-                  //  } */
+                    }
 
-                SubmitApplication();
+                getPayment();
+               // SubmitApplication();
 
 
 
@@ -704,12 +707,45 @@ public class Passdetails extends AppCompatActivity {
                /* {"response_status":"1","msg":"sucess",
                         "place_info":[{"place_name":"puri","price_detail":"250"},{"place_name":"konark","price_detail":"300"}]} */
 
+           /* {"response_status":"1","msg":"sucess",
+           "place_info":[{"place_id":"1","place_name":"puri","price_detail":"250"},{"place_id":"2","place_name":"konark","price_detail":"300"}]}
+            */
+
+
+            Log.v("Error","Here0");
             JSONObject jsonObject=new JSONObject(result);
-            JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"place_info");
+            Log.v("Error","Here1");
+            final JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"place_info");
+            Log.v("Error","Here2");
             PriceNPlace=JsonParser.PricNPlace(jsonArray);
 
-            PLACES= (String[]) PriceNPlace.keySet().toArray();
-            PRICES= (String[]) PriceNPlace.values().toArray();
+            Log.v("length",jsonArray.length()+"");
+            PLACES=new ArrayList<>();
+            PLACES.add("");
+
+            for(int i=0;i<jsonArray.length();i++)
+            {
+                JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                PLACES.add(i+1,JsonParser.JSONValue(jsonObject1,"place_name"));
+            }
+
+
+            Log.v("Error","Here3");
+
+
+             CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),paths);
+             spinner.setAdapter(customAdapter);
+
+
+             CustomAdapter customAdapter1=new CustomAdapter(getApplicationContext(),PLACES);
+             PLACES_SPINNER.setAdapter(customAdapter1);
+
+             CustomAdapter customAdapter2=new CustomAdapter(getApplicationContext(),REASONS);
+             REASON_OF_VISIT.setAdapter(customAdapter2);
+
+            Payment.setVisibility(View.INVISIBLE);
+            Payment.setEnabled(true);
+           // PL=new ArrayList<String>(Place_list);
 
         }
         catch (JSONException e)
@@ -731,6 +767,7 @@ public class Passdetails extends AppCompatActivity {
         //Creating a paypalpayment
         PayPalPayment payment = new PayPalPayment(new BigDecimal(String.valueOf(paymentAmount)), "USD", "Pass Fee",
                 PayPalPayment.PAYMENT_INTENT_SALE);
+
 
         //Creating Paypal Payment activity intent
         Intent intent = new Intent(this, PaymentActivity.class);
@@ -767,139 +804,138 @@ public class Passdetails extends AppCompatActivity {
         final String DateOfBirth=Dateofbirth.getText().toString().trim();
         final String DateOfJourney=Dateofjourney.getText().toString().trim();
         final String Registered_Mobile=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
-
-
-
-
-
-
         final ProgressDialog progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Submitting...");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
+
+        if(Purposes!=null)
+        {
+            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
+                @Override
+                public void onResponse(NetworkResponse response) {
 
 
 
-                progressDialog.dismiss();
-                String RESPONSE=new String(response.data);
+                    progressDialog.dismiss();
+                    String RESPONSE=new String(response.data);
 
-                Log.v("JSONRESPONSE",RESPONSE+response.statusCode);
-                try {
-
-
-
-
-                    String jsonString = new String(response.data);
-
-
-                    JSONObject jsonObject= new JSONObject(jsonString);
-
-                    Log.v("JsonObject1",jsonObject.getString("response_status"));
-                    Log.v("JsonObject2",jsonObject.getString("msg"));
-
-                    Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
-
-                    Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
-
-                    scan_id.setImageBitmap(bitmap2);
-
-
-
-                    Log.v("JSONRESPONSE",jsonString+jsonObject);
-                }catch (Exception ec)
-                {
-                    Log.v("JSONRESPONSE",ec.getLocalizedMessage());
-                }
-
-
-              Log.v("Response", String.valueOf(response.statusCode)+ response.headers.get("status"));
+                    Log.v("JSONRESPONSE",RESPONSE+response.statusCode);
+                    try {
 
 
 
 
+                        String jsonString = new String(response.data);
 
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                        JSONObject jsonObject= new JSONObject(jsonString);
+
+                        Log.v("JsonObject1",jsonObject.getString("response_status"));
+                        Log.v("JsonObject2",jsonObject.getString("msg"));
+
+                        Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
+
+                        Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
+
+                        scan_id.setImageBitmap(bitmap2);
 
 
 
-                progressDialog.dismiss();
-                Log.v("JSONRESPONSE",error.getMessage()+"EEROR");
-
-                if(imageuri==null)
-                {
-                    Toast.makeText(Passdetails.this,"Upload Scan ID",Toast.LENGTH_SHORT).show();
-                }
-                else if(imageuriProfile==null)
-                {
-                    Toast.makeText(Passdetails.this,"Upload Profile Picture",Toast.LENGTH_SHORT).show();
-
-                }
-                else
-                {
-                    String Network_status= NetworkUtil.getConnectivityStatusString(Passdetails.this);
-
-                    if(Network_status.equals("Not connected to Internet"))
+                        Log.v("JSONRESPONSE",jsonString+jsonObject);
+                    }catch (Exception ec)
                     {
-                        Toast.makeText(Passdetails.this,"Failed to connect..",Toast.LENGTH_SHORT).show();
+                        Log.v("JSONRESPONSE",ec.getLocalizedMessage());
+                    }
+
+
+                    Log.v("Response", String.valueOf(response.statusCode)+ response.headers.get("status"));
+
+
+
+
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+
+
+                    progressDialog.dismiss();
+                    Log.v("JSONRESPONSE",error.getMessage()+"EEROR");
+
+                    if(imageuri==null)
+                    {
+                        Toast.makeText(Passdetails.this,"Upload Scan ID",Toast.LENGTH_SHORT).show();
+                    }
+                    else if(imageuriProfile==null)
+                    {
+                        Toast.makeText(Passdetails.this,"Upload Profile Picture",Toast.LENGTH_SHORT).show();
+
                     }
                     else
-                        Toast.makeText(Passdetails.this,"Error Uploading",Toast.LENGTH_SHORT).show();
+                    {
+                        String Network_status= NetworkUtil.getConnectivityStatusString(Passdetails.this);
+
+                        if(Network_status.equals("Not connected to Internet"))
+                        {
+                            Toast.makeText(Passdetails.this,"Failed to connect..",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                            Toast.makeText(Passdetails.this,"Error Uploading",Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+
+
 
                 }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
 
 
 
+                    Map<String, String> params = new HashMap<>();
+                    params.put(ApplicationParams.Name,Names);
+                    params.put(ApplicationParams.Address,Addresses);
+                    params.put(ApplicationParams.Mobile,Mobiles);
+                    params.put(ApplicationParams.PlaceOfVisit,PLACE);
+                    params.put(ApplicationParams.IDNumber,ID_NO);
+                    params.put(ApplicationParams.IDSource,ID_Source);
+                    params.put(ApplicationParams.RegisteredMobile,Registered_Mobile);
+                    params.put(ApplicationParams.DateOfBirthd,DateOfBirth);
+                    params.put(ApplicationParams.DateOfJourney,DateOfJourney);
+                    params.put(ApplicationParams.PurposeOfVisit,Purposes);
+
+                    return params;
+                }
+
+                @Override
+                protected Map<String, DataPart> getByteData() {
+                    Map<String, DataPart> params = new HashMap<>();
+                    // file name could found file base or direct access from real path
+                    // for now just get bitmap data from ImageView
 
 
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
+                    params.put(ApplicationParams.PICTURE1, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
+                    params.put(ApplicationParams.PICTURE,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
+                    Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
+                    return params;
+                }
+
+            };
+            //Creating a Request Queue
+            RequestQueue requestQueue2 = Volley.newRequestQueue(this);
+
+            //Adding request to the queue
+            requestQueue2.add(multipartRequest);
 
 
-
-                Map<String, String> params = new HashMap<>();
-                params.put(ApplicationParams.Name,Names);
-                params.put(ApplicationParams.Address,Addresses);
-                params.put(ApplicationParams.Mobile,Mobiles);
-                params.put(ApplicationParams.PlaceOfVisit,PLACE);
-                params.put(ApplicationParams.IDNumber,ID_NO);
-                params.put(ApplicationParams.IDSource,ID_Source);
-                params.put(ApplicationParams.RegisteredMobile,"123456789");
-                params.put(ApplicationParams.DateOfBirthd,DateOfBirth);
-                params.put(ApplicationParams.DateOfJourney,DateOfJourney);
-                params.put(ApplicationParams.PurposeOfVisit,Purposes);
-
-                return params;
-            }
-
-            @Override
-            protected Map<String, DataPart> getByteData() {
-                Map<String, DataPart> params = new HashMap<>();
-                // file name could found file base or direct access from real path
-                // for now just get bitmap data from ImageView
-
-
-                params.put(ApplicationParams.PICTURE1, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
-                params.put(ApplicationParams.PICTURE,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
-                Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
-                return params;
-            }
-
-        };
-        //Creating a Request Queue
-        RequestQueue requestQueue2 = Volley.newRequestQueue(this);
-
-        //Adding request to the queue
-        requestQueue2.add(multipartRequest);
-
+        }
 
 
 
@@ -1001,7 +1037,6 @@ public class Passdetails extends AppCompatActivity {
                         .load(PROFILE_PIC_BYTE_ARRAY)
                         .into(Profile);
 
-               // Profile.setImageURI(profilephoto);
 
 
         }
@@ -1010,7 +1045,6 @@ public class Passdetails extends AppCompatActivity {
             //when applicant scanned user id is selected
 
             imageuri=data.getData();
-//            Log.v("Dinkus25",imageuri.getPath());
             MIME= GetMimeType.GetMimeType(Passdetails.this,imageuri);
 
             if(MIME.contains("/jpg") || MIME.contains("/JPG"))
@@ -1078,12 +1112,14 @@ public class Passdetails extends AppCompatActivity {
 
 
 
+
                 //if confirmation is not null
                 if (confirm != null) {
                     try {
 
 
                         JSONObject object=confirm.toJSONObject();
+                        Log.v("response",object.toString());
                         JSONObject response=object.getJSONObject("response");
                         state=response.getString("state");
                         id=response.getString("id");

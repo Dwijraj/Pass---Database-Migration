@@ -48,22 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText OTPS;
     private EditText Phone;
     private EditText EMAILID;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthlistener;
     private Button buttons;
     private final int GALLERY_OPEN=90;
-    static final Integer WRITE_EXST = 0x2;
     private final Integer CAMERA = 0x4;
     private ProgressDialog prog;
-    private DatabaseReference mDatabaseref;
-    private DatabaseReference OTPDatabase;
-    private RxConnect rxConnect1;
     private int OTPint;
-    private RequestQueue requestQueue;
     private String OTPstring;
-    private Random random;
     private RxConnect rxConnect;
-    private int SEND_STATUS=0;
     public static SharedPreferences.Editor USER;
     public static SharedPreferences SHARED_PREF;
     @Override
@@ -75,16 +66,13 @@ public class MainActivity extends AppCompatActivity {
         USER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).edit();
         EMAILID=(EditText) findViewById(R.id.EMAIL);
         OTPIDS=(LinearLayout) findViewById(R.id.OTPID);
-        rxConnect1=new RxConnect(MainActivity.this);
-        rxConnect1.setCachingEnabled(false);
         rxConnect=new RxConnect(MainActivity.this);
         rxConnect.setCachingEnabled(false);
-        OTPDatabase=FirebaseDatabase.getInstance().getReference().child("OTP");
         OTPS=(EditText)findViewById(R.id.OTP);
         Phone=(EditText)findViewById(R.id.editText3);
         prog=new ProgressDialog(this);
         buttons=(Button)findViewById(R.id.button);
-        mDatabaseref= FirebaseDatabase.getInstance().getReference().child("Users");//Points to the Users child  of the root parent
+
 
 
 
@@ -154,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                             } catch (Exception e) {
 
                                  Log.e("ERROR", e.getMessage(), e);
-                                SEND_STATUS=1;
 
                             }
 
@@ -178,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 rxConnect.setParam(Constants.REGISTRATION_USER_MOBILE_KEY,Phone.getText().toString().trim());
                                 rxConnect.setParam(Constants.REGISTRATION_USER_EMAIL_KEY,EMAILID.getText().toString().trim());
-                                rxConnect.execute(Constants.REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
+                                rxConnect.execute(Constants.OFFLINE_REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
 
 
                                     @Override
@@ -193,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                                             JSONObject jsonObject=new JSONObject(result);
                                             String MESSAGE=jsonObject.getString("msg");
 
-                                            if(MESSAGE.equals(ConstantResponse.REGISTRATION_SUCCESS_RESPONSE))
+                                            if(MESSAGE.equals(ConstantResponse.REGISTRATION_SUCCESS_RESPONSE)||MESSAGE.contains("Allowed"))
                                             {
                                                 USER.putString(Constants.SHARED_PREF_KEY,Phone.getText().toString().trim()).commit();
                                                 Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);

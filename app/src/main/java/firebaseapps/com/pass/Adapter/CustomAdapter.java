@@ -13,16 +13,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import static firebaseapps.com.pass.R.*;
 import static firebaseapps.com.pass.R.color.HintColor;
 
 public class CustomAdapter extends BaseAdapter {
     Context context;
    // int flags[];
-    String[] countryNames;
+    ArrayList<String> countryNames;
     LayoutInflater inflter;
 
-    public CustomAdapter(Context applicationContext, String[] countryNames) {
+    public CustomAdapter(Context applicationContext, ArrayList<String> countryNames) {
         this.context = applicationContext;
         this.countryNames = countryNames;
         inflter = (LayoutInflater.from(applicationContext));
@@ -30,7 +32,7 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return countryNames.length;
+        return countryNames.size();
     }
 
     @Override
@@ -56,7 +58,7 @@ public class CustomAdapter extends BaseAdapter {
         else
         {
             Image.setVisibility(View.INVISIBLE);
-            names.setText(countryNames[i]);
+            names.setText(countryNames.get(i));
         }
         return view;
     }

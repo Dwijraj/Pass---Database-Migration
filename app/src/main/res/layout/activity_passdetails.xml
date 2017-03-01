@@ -184,35 +184,12 @@
                     android:layout_weight="80"
                     android:layout_width="0dp"
                     android:weightSum="100"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
 
 
-                    <LinearLayout
-                        android:layout_weight="40"
-                        android:weightSum="100"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="50"
-                            android:textColor="#ffff"
-                            android:gravity="center"
-                            android:text="PLACE OF VISIT"
-                            android:id="@+id/PLACE_OF_VISITS"
-                            android:layout_height="match_parent" />
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="50"
-                            android:textColor="#ffff"
-                            android:gravity="center"
-                            android:text="PRICE OF PASS"
-                            android:id="@+id/PRICE_OF_PASS"
-                            android:layout_height="match_parent" />
-
-
-                    </LinearLayout>
 
 
 
@@ -226,6 +203,52 @@
                         android:layout_height="0dp"
                         android:minHeight="50dp"
                         android:layout_weight="60"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:weightSum="100"
+                android:baselineAligned="false"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_weight="20"
+                    android:weightSum="100"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_weight="100"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Price "
+                        android:textSize="15sp"
+                        android:textColor="#ffff"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="70"
+                    android:layout_width="0dp"
+                    android:weightSum="100"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+
+                        android:layout_weight="100"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:id="@+id/PRICE_OF_PASS"
+                        android:textColor="#ffff"
+                        android:text="Price"
+                        />
 
 
                 </LinearLayout>
@@ -534,6 +557,7 @@
                 <LinearLayout
                     android:layout_weight="20"
                     android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content">
 
                     <ImageButton
