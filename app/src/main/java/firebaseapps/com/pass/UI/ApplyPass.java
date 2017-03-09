@@ -43,11 +43,8 @@ public class ApplyPass extends AppCompatActivity {
 
         applypass=(Button)findViewById(R.id.getstarted);                                        //To apply for new pass
         checkpassstatus=(Button)findViewById(R.id.checkpassstatus);                             //To check pass status
-        //To login as admin
         changepassdetails=(Button)findViewById(R.id.Changepassdetails);                         //To change the details of the pass
         ViewPass=(Button)findViewById(R.id.Viewpass);                                           //To view the pass
-
-
         String status = NetworkUtil.getConnectivityStatusString(getApplicationContext());       //Gets the network status
 
         /**If network is enable but the service is not running
@@ -69,12 +66,6 @@ public class ApplyPass extends AppCompatActivity {
                 //Takes user to the new activity on applyling pass
                 Intent Passdetail=new Intent(ApplyPass.this,Passdetails.class);     //Allows user to fill up a new pass application
                 startActivity(Passdetail);
-
-
-
-
-
-
 
             }
         });

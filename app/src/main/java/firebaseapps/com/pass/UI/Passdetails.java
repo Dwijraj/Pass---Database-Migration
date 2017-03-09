@@ -79,18 +79,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 
 import firebaseapps.com.pass.Adapter.CustomAdapter;
 import firebaseapps.com.pass.Application;
 import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
+import firebaseapps.com.pass.Constants.Payment_Params;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.Utils.PayPalConfig;
@@ -122,8 +125,6 @@ public class Passdetails extends AppCompatActivity {
     private final int PROFILE_PHOTO=1321;       //To recognise in onActivityresult
     private final int SCAN_ID=12241;            //To recognise in onActivityResult
     private EditText Name;
-    private byte[] byteArray;
-    private Bitmap bitmap_QR_CODE;
     private LinearLayout ERROR_NAME;
     private LinearLayout ERROR_MOBILE;
     private LinearLayout ERROR_DATE;
@@ -143,38 +144,30 @@ public class Passdetails extends AppCompatActivity {
     private ImageButton DOBDate;
     private String Mobiles;
     private ImageButton DOJDate;
-    private byte[] BARCODE_BYTE_ARRAY;
     private TextView Application_status;
-    private DatabaseReference ApplicationRef;
-    private DatabaseReference User_app_ref;
-    private DatabaseReference UNAVAILABLE_DATES;
-    private DatabaseReference PRICE_OF_PLACE;
-    private StorageReference ApplicationStorageRef;
-    private RxConnect rxConnect;
+    private RxConnect rxConnect; //To retrieve Prices and Places
     private String paymentAmount;
     private String state;
     private String ID_Source;
-    private int flag;
-    private String PLACE_OF_VISIT;
     private Spinner spinner;
     private String id;
     private String PLACE=null;
+    private String TOKEN_PASS;
     private String PURPOSE_OF_VISIT;
     private Spinner REASON_OF_VISIT;
     private Spinner PLACES_SPINNER;
     public static final int PAYPAL_REQUEST_CODE = 123;
     public static int THE_TEST=0;
-    private String MOBILE_NUMBER;
-    private DatePicker datePicker;
     private static  final ArrayList<String>paths =new ArrayList<>();// {"","Passport", "Driving License", "Adhar Card","PAN"};
     private static   ArrayList<String> PLACES;//={"","1","2","3"};
-    private String[] PRICES;
     private static final  ArrayList<String> REASONS=new ArrayList<>();//={"","Roam","Educational","Other"};
     private Calendar calendar;
     private int mDay, mMonth ,mYear;
     private DatabaseReference REFUND;
     private HashMap<String,String> PriceNPlace;
-    private RxConnect rxConnect1;
+    private RxConnect rxConnect1,rxConnect2; //rxConnect1 is for retreiving unavailable date rxConnect2 for Payment Confirmation
+    private ArrayList<String> UNAVAILABLE_DATES=new ArrayList<>();
+    String REGISTERED_NUMBER;
 
     //Paypal Configuration Object
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -210,72 +203,17 @@ public class Passdetails extends AppCompatActivity {
         rxConnect=new RxConnect(Passdetails.this);
         rxConnect.setCachingEnabled(false);
 
+        rxConnect2=new RxConnect(Passdetails.this);
+        rxConnect2.setCachingEnabled(false);
+
         rxConnect1=new RxConnect(Passdetails.this);
         rxConnect1.setCachingEnabled(false);
 
-        String REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
-
-
-        rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
-        rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
-            @Override
-            public void onResult(String result) {
-
-
-                Log.v("Response","RESULT"+result);
-
-                GetPricesAndPlaces(result);
-            }
-
-            @Override
-            public void onNoResult() {
-
-                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
-                Log.v("Response","RESULT NOPE");
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-
-                Log.v("Response","RESULT"+throwable.getMessage());
-            }
-        });
-
-        rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
-        rxConnect.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
-            @Override
-            public void onResult(String result) {
-
-
-
-            }
-
-            @Override
-            public void onNoResult() {
-
-                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
-                Log.v("Response","RESULT NOPE");
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-
-                Log.v("Response","RESULT"+throwable.getMessage());
-            }
-        });
-
-
-
+         REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
         dialog=new Dialog(Passdetails.this);
 
         PRICE_FIELD=(TextView) findViewById(R.id.PRICE_OF_PASS);
-        PRICE_OF_PLACE=FirebaseDatabase.getInstance().getReference();
-        PRICE_OF_PLACE.keepSynced(true);
         PLACES_SPINNER=(Spinner) findViewById(R.id.spinnerPlaces);
         REASON_OF_VISIT=(Spinner) findViewById(R.id.spinnerPurpose);
         REFUND=FirebaseDatabase.getInstance().getReference().child("ToRefund");
@@ -288,7 +226,6 @@ public class Passdetails extends AppCompatActivity {
         DOBDate=(ImageButton)findViewById(R.id.DOBDate);
         DOJDate=(ImageButton)findViewById(R.id.DOJDate);
         calendar = Calendar.getInstance();
-        //mAuth=FirebaseAuth.getInstance();
         scan_id=(ImageView)findViewById(R.id.scan_pic) ;
         mDialog=new ProgressDialog(this);
         mDialog.setCanceledOnTouchOutside(false);
@@ -306,14 +243,82 @@ public class Passdetails extends AppCompatActivity {
         Profile=(ImageView) findViewById(R.id.profilephoto);
         Application_status=(TextView)findViewById(R.id.application_status);
         Payment=(Button)findViewById(R.id.payment);
-        Payment.setVisibility(View.INVISIBLE);
         Payment.setEnabled(false);
-        UNAVAILABLE_DATES=FirebaseDatabase.getInstance().getReference().child("UnavailableDates");
-        UNAVAILABLE_DATES.keepSynced(true);
-        ApplicationRef= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
-        ApplicationStorageRef= FirebaseStorage.getInstance().getReference();        //Points to the root directory of the Storage
         spinner = (Spinner)findViewById(R.id.spinner);
-       REASON_OF_VISIT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+        rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+        rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+
+
+                Log.v("Response","RESULT"+result);
+
+                GetPricesAndPlaces(result);
+
+                Payment.setEnabled(true);
+            }
+
+            @Override
+            public void onNoResult() {
+
+                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                Log.v("Response","RESULT NOPE");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                Log.v("Response","RESULT"+throwable.getMessage());
+            }
+        });
+
+       /* rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
+        rxConnect1.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+
+
+                try {
+
+                    JSONObject jsonObjec=new JSONObject(result);
+                    UNAVAILABLE_DATES.add("");
+
+                }catch (JSONException e)
+                {
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onNoResult() {
+
+                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                Log.v("Response","RESULT NOPE");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                Log.v("Response","RESULT"+throwable.getMessage());
+            }
+        }); */
+
+
+
+
+
+
+
+        REASON_OF_VISIT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -421,7 +426,7 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                if(s.length()==0)
+                if(s.length()==0&& TextUtils.isDigitsOnly(s))
                 {
                     if(ERROR_MOBILE.getVisibility()== View.VISIBLE)
                     {
@@ -455,7 +460,7 @@ public class Passdetails extends AppCompatActivity {
                     }
 
                 }
-                else if(s.length()==0)
+                else if(TextUtils.isEmpty(s))
                 {
                     if(ERROR_MOBILE.getVisibility()== View.VISIBLE)
                     {
@@ -499,44 +504,21 @@ public class Passdetails extends AppCompatActivity {
                        // myCalenderCopy=myCalendar;
 
                         String myFormat = "dd-MM-yyyy"; //Change as you need
-                    final    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+                        final    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+
 
                         Dateofjourney.setText(sdf.format(myCalendar.getTime()));
 
-
-                        UNAVAILABLE_DATES.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
+                   /*     if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
+                        {
+                            Dateofjourney.setText(sdf.format(myCalendar.getTime()));
 
 
-
-
-                                if(dataSnapshot.hasChild(sdf.format(myCalendar.getTime())))
-                                {
-                                    Toast.makeText(getApplicationContext(),"Selected date is unavailable",Toast.LENGTH_SHORT).show();
-                                    if(ERROR_DATE.getVisibility()== View.INVISIBLE)
-                                    {
-                                        ERROR_DATE.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                                else
-                                {
-
-
-                                    if(ERROR_DATE.getVisibility()== View.VISIBLE)
-                                    {
-                                        ERROR_DATE.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_LONG).show();
+                        } */
 
 
 
@@ -641,7 +623,7 @@ public class Passdetails extends AppCompatActivity {
 
 
 
-                   {
+                  /* {
                       if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
                               TextUtils.isEmpty(PLACE) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) ||
                               TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) ||
@@ -688,10 +670,10 @@ public class Passdetails extends AppCompatActivity {
 
                             }
                         }
-                    }
+                    } */
 
-                getPayment();
-               // SubmitApplication();
+               // getPayment();
+                SubmitApplication();
 
 
 
@@ -743,8 +725,7 @@ public class Passdetails extends AppCompatActivity {
              CustomAdapter customAdapter2=new CustomAdapter(getApplicationContext(),REASONS);
              REASON_OF_VISIT.setAdapter(customAdapter2);
 
-            Payment.setVisibility(View.INVISIBLE);
-            Payment.setEnabled(true);
+
            // PL=new ArrayList<String>(Place_list);
 
         }
@@ -834,7 +815,10 @@ public class Passdetails extends AppCompatActivity {
                         Log.v("JsonObject1",jsonObject.getString("response_status"));
                         Log.v("JsonObject2",jsonObject.getString("msg"));
 
+                        TOKEN_PASS=JsonParser.JSONValue(jsonObject,"token_no");
+
                         Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
+                        getPayment();
 
                         Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
 
@@ -1116,6 +1100,17 @@ public class Passdetails extends AppCompatActivity {
                 //if confirmation is not null
                 if (confirm != null) {
                     try {
+                        /*{"response":{
+                                    "state":"approved",
+                                    "id":"PAY-1UT80857ML451200TLC3O6ZA",
+                                    "create_time":"2017-03-01 T 15:57:31Z","intent":"sale"},
+                        "client":{"platform":"Android",
+                                   "paypal_sdk_version":"2.15.0",
+                                   "product_name":"PayPal-Android-SDK",
+                                   "environment":"sandbox"},
+                        "response_type":"payment"}
+                         */
+
 
 
                         JSONObject object=confirm.toJSONObject();
@@ -1123,6 +1118,52 @@ public class Passdetails extends AppCompatActivity {
                         JSONObject response=object.getJSONObject("response");
                         state=response.getString("state");
                         id=response.getString("id");
+                        String time=response.getString("create_time");
+
+                        rxConnect2.setParam(Payment_Params.USER_MOBILE_KEY,REGISTERED_NUMBER);
+                        rxConnect2.setParam(Payment_Params.STATUS_PAY,state);
+                        rxConnect2.setParam(Payment_Params.TRANSACTION_PAY_ID,id);
+                        rxConnect2.setParam(Payment_Params.PAY_TIME,time);
+                        rxConnect2.setParam(Payment_Params.TOKEN_ID,TOKEN_PASS);
+                        rxConnect2.execute(Constants.CONFIRMATION_LINK, RxConnect.POST, new RxConnect.RxResultHelper() {
+                            @Override
+                            public void onResult(String result) {
+
+
+                                Log.v("Response","RESULT"+result);
+
+                                try
+                                {
+                                    JSONObject RESPONSE_ON_PAY=new JSONObject(result);
+                                    Log.v("Response_on_pay",JsonParser.JSONValue(RESPONSE_ON_PAY,"response_status")+" "+JsonParser.JSONValue(RESPONSE_ON_PAY,"msg"));
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+
+//                                GetPricesAndPlaces(result);
+                            }
+
+                            @Override
+                            public void onNoResult() {
+
+                                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                                Log.v("Response","RESULT NOPE");
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                                Log.v("Response","RESULT"+throwable.getMessage());
+                            }
+                        });
+
+
+
+
                // bitmap_BAR_CODE = encodeAsBitmap(id, BarcodeFormat.CODE_128, 600, 300);  -->Originally
 
 
@@ -1130,7 +1171,8 @@ public class Passdetails extends AppCompatActivity {
                         if(state.equals("approved"))
                         {
 
-                                SubmitApplication();
+
+                           //     SubmitApplication();
                         }
                     } catch (JSONException e) {
 

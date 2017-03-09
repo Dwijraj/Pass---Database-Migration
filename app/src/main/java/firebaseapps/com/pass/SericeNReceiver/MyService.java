@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 /**This service checks for change in application status of the logged in user if there is change in any of
  * his applied pass
- * this service sends a croadcast with a definite action which intern is responsible to firing
+ * this service sends a broadcast with a definite action which intern is responsible to firing
  * notifications
  */
 

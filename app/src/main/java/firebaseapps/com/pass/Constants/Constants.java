@@ -31,13 +31,13 @@ public class Constants {
     public static String OFFLINE_REGISTRATION_URL="http://192.168.2.2/pass3/index.php/api/userapi/users/format/json";
     public static String IMAGE_SEND_LINK= "http://192.168.2.2/pass3/index.php/api/userapi/userpassdetail/format/json";
     public static String PRICING_URL="http://192.168.2.2/pass3/index.php/api/userapi/place/format/json";
+    public static String CONFIRMATION_LINK="http://192.168.2.2/pass3/index.php/api/userapi/updateprice_status/format/json";
     public static String OFFLINE="http://192.168.2.2/pass3/index.php/api/userapi/check/format/json";
-    public static String UNAVAILABLE_DOJ="http://192.168.2.2/pass3/index.php/api/userapi/check/format/json";
-    public static String PASS_RETREIVE_URL="";
+    public static String UNAVAILABLE_DOJ="http://192.168.2.2/pass3/index.php/api/userapi/datesl_rejects_list/format/json";
+    public static String PASS_RETREIVE_URL="http://192.168.2.2/pass3/index.php/api/userapi/user_pass_info/format/json";
+    public static String UPDATE_DETAILS_URL="";
+    public static String STATUS_DETAIL_URL="";
     public static String SHARED_PREFS_NAME="USER";
     public static String SHARED_PREF_KEY="USER_MOBILE";
-
-
-
 
 }

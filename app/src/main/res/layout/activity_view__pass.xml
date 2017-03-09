@@ -28,10 +28,49 @@
             android:gravity="center"
            android:maxLines="1"
             android:id="@+id/view_pass_passno."
-            android:hint="Enter transaction id."
+            android:hint="Enter Pass number"
             android:textColorHint="#ffff"
             android:minEms="10"
             android:maxEms="30"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:textColor="#ffff"
+            android:maxLines="1"
+            android:id="@+id/view_pass_Id_no"
+            android:hint="Enter Mobile Number in the application"
+            android:textColorHint="#ffff"
+            android:minEms="10"
+            android:maxEms="30"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/DOJ_TEXT_VIEW"
+                android:text="Date of Journey"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:layout_height="match_parent" />
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/DOJ_VIEW_PASS"
+                android:background="@mipmap/ic_date_range_white_24dp"
+                android:layout_height="50dp" />
+
+
+
+
+
+
+
+        </LinearLayout>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

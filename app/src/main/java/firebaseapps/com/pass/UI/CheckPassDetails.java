@@ -15,7 +15,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.R;
+import firebaseapps.com.pass.Utils.JsonParser;
+import mohitbadwal.rxconnect.RxConnect;
 
 public class CheckPassDetails extends AppCompatActivity {
 
@@ -24,11 +30,14 @@ public class CheckPassDetails extends AppCompatActivity {
     private Button check;
     private ProgressDialog m2Dialog;
     private DatabaseReference mDatabaseref;
+    private RxConnect rxConnect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_pass_details);
 
+        rxConnect=new RxConnect(this);
+        rxConnect.setCachingEnabled(false);
         mDatabaseref= FirebaseDatabase.getInstance().getReference().child("Applications");  //Reference to applications
         tras_id=(EditText)findViewById(R.id.viewtransactionid);
         app_status=(TextView)findViewById(R.id.viewstatus);
@@ -44,46 +53,40 @@ public class CheckPassDetails extends AppCompatActivity {
 
                final String tr_id=tras_id.getText().toString();
 
-                mDatabaseref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild(tr_id))
-                        {
-                            DatabaseReference statusref=mDatabaseref.child(tr_id).child("ApplicationStatus");
 
-                            statusref.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
+                String REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
-                                    m2Dialog.dismiss();
-                                    String appli_status=dataSnapshot.getValue(String.class);
-                                    app_status.setText("Application status");
+                if(!tr_id.isEmpty()) {
+                    rxConnect.setParam("applicant_number", REGISTERED_NUMBER);
+                    rxConnect.setParam("token_id", tr_id);
+                    rxConnect.execute(Constants.STATUS_DETAIL_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                        @Override
+                        public void onResult(String result) {
 
-                                    app_status.append(" :"+appli_status.toUpperCase());
-                                }
+                            try {
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                JSONObject jsonObject = new JSONObject(result);
+                                String Status = JsonParser.JSONValue(jsonObject, "status");
+                                app_status.setText(Status);
 
-                                }
-                            });
+                            } catch (JSONException e) {
+
+                            }
+
                         }
-                        else
-                        {
-                            //When application is not present
-                            m2Dialog.dismiss();
-                            app_status.setText("Application status");
 
-                            app_status.append(" :"+"APPLICATION NOT FOUND");
-                            Toast.makeText(getApplicationContext(),"no such application found",Toast.LENGTH_LONG).show();
+                        @Override
+                        public void onNoResult() {
+
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onError(Throwable throwable) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
         });
 

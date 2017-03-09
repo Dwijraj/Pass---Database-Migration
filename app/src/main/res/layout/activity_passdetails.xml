@@ -259,20 +259,20 @@
                 android:baselineAligned="false"
                 android:layout_marginTop="40dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_weight="20"
                     android:weightSum="100"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                   <TextView
                       android:gravity="center"
                       android:layout_width="0dp"
                       android:layout_weight="100"
-                      android:layout_height="wrap_content"
+                      android:layout_height="match_parent"
                       android:text="Mobile"
                       android:textSize="15sp"
                       android:textColor="#ffff"/>
@@ -285,12 +285,13 @@
                   android:layout_weight="70"
                   android:layout_width="0dp"
                   android:weightSum="100"
-                  android:layout_height="wrap_content">
+                  android:gravity="center"
+                  android:layout_height="match_parent">
 
                   <EditText
                       android:layout_weight="100"
                       android:layout_width="0dp"
-                      android:layout_height="wrap_content"
+                      android:layout_height="match_parent"
                       android:hint="Enter your mobile number "
                       android:inputType="phone"
                       android:id="@+id/mobile"
@@ -305,10 +306,9 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:layout_marginTop="4dp"
                         android:layout_width="35dp"
                         android:background="@mipmap/ic_error_white_24dp"
-                        android:layout_height="30dp" />
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
           </LinearLayout>

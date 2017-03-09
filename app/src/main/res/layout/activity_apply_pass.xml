@@ -121,7 +121,6 @@
 
                          <Button
                              android:layout_weight="100"
-
                              android:layout_marginTop="20dp"
                              android:text="Change Pass DETAILS"
                              android:layout_width="0dp"

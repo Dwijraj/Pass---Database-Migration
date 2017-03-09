@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,35 +90,91 @@ public class ViewPass extends AppCompatActivity {
         Intent i=getIntent();
         String Pass_number=i.getExtras().getString("PassNumber");
 
-
-
-  /*      Vehicle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
-
-                Intent TO_VEHICLES=new Intent(ViewPass.this,Vehicles.class);
-                TO_VEHICLES.putExtra("BookedBy",pass);
-                startActivity(TO_VEHICLES);
-            }
-        }); */
-
+               /* {"response_status":"1",
+                "msg":"sucess",
+                "application_info":{"token_no":"token_16",
+                                    "applicant_name":"gags",
+                                    "applicant_address":"zgvzvz",
+                                    "place_visting":"puri",
+                                    "application_mobile":"9887699890",
+                                    "applicant_id_source":"Passport",
+                                    "applicant_id_no":"zvzvsvvsvs",
+                                    "dob":"2017-03-07",
+                                    "purpose_visting":"Roam",
+                                    "Photo":"http:\/\/192.168.2.2\/pass3\/uploads\/file\/21:11:25173711.jpeg",
+                                    "Scan_id_photo":"http:\/\/192.168.2.2\/pass3\/uploads\/pic\/21:11:2569025.jpeg",
+                                    "paid_status":"approved",
+                                    "status":"4",
+                                    "date_journey":"2017-03-12"}
+                                    } */
 
         try {
-            JSONObject jsonObject=new JSONObject(View_Pass.PASS_DETAILS);
 
-            String Name= JsonParser.JSONValue(jsonObject,"Name");
-            String Address= JsonParser.JSONValue(jsonObject,"Address");
-            String PlaceOfVisit= JsonParser.JSONValue(jsonObject,"Destination");
-            String Mobile= JsonParser.JSONValue(jsonObject,"mobile");
-            String IDNumber= JsonParser.JSONValue(jsonObject,"IDNumber");
-            String IDSource= JsonParser.JSONValue(jsonObject,"IDSource");
-            String DateOfBirth= JsonParser.JSONValue(jsonObject,"DateOfBirth");
-            String Purpose= JsonParser.JSONValue(jsonObject,"Purpose");
-            String DateOfJourney= JsonParser.JSONValue(jsonObject,"DateOfJourney");
-            String Profile= JsonParser.JSONValue(jsonObject,"Profile");
-            String ScanId= JsonParser.JSONValue(jsonObject,"ScanId");
-            String ApplicationStatus=JsonParser.JSONValue(jsonObject,"applicationstatus");
+
+            JSONObject Values=new JSONObject(View_Pass.PASS_DETAILS);
+
+            Log.v("Here","1");
+
+            JSONObject jsonObject=Values.getJSONObject("application_info");
+
+
+            Log.v("Here","2");
+          //  jsonArray.getJSONObject()
+
+            String Name= JsonParser.JSONValue(jsonObject,"applicant_name");
+
+            Log.v("Here","3");
+            String Address= JsonParser.JSONValue(jsonObject,"applicant_address");
+
+            Log.v("Here","4");
+            String PlaceOfVisit= JsonParser.JSONValue(jsonObject,"place_visting");
+
+            Log.v("Here","5");
+            String Mobile= JsonParser.JSONValue(jsonObject,"application_mobile");
+
+            Log.v("Here","6");
+            String IDNumber= JsonParser.JSONValue(jsonObject,"applicant_id_no");
+
+            Log.v("Here","7");
+            String IDSource= JsonParser.JSONValue(jsonObject,"applicant_id_source");
+
+            Log.v("Here","8");
+            String DateOfBirth= JsonParser.JSONValue(jsonObject,"dob");
+
+            Log.v("Here","9");
+            String Purpose= JsonParser.JSONValue(jsonObject,"purpose_visting");
+
+            Log.v("Here","10");
+            String DateOfJourney= JsonParser.JSONValue(jsonObject,"date_journey");
+
+            Log.v("Here","11");
+            String Res= JsonParser.JSONValue(jsonObject,"Photo");
+
+            String Profile = Res.replaceAll("\"","");
+
+            Log.v("Here","12"+Profile);
+            String ResId= JsonParser.JSONValue(jsonObject,"Scan_id_photo");
+
+            String ScanId=ResId.replaceAll("\"","");
+
+            Log.v("Here","13"+ScanId);
+            String ApplicationStatus=JsonParser.JSONValue(jsonObject,"paid_status");
+
+            Log.v("Here","14");
+
+            Name2.setText(Name);
+            Address2.setText(Address);
+            Mobile2.setText(Mobile);
+            ID_No2.setText(IDNumber);
+            Dateofbirth2.setText(DateOfBirth);
+            Dateofjourney2.setText(DateOfJourney);
+            Purpose2.setText(Purpose);
+            Application_status2.setText(ApplicationStatus.toUpperCase());
+            ID_source.setText(IDSource);
+            // CarNumber.setText(Carnumber);
+            // DriverName.setText(app.Drivername);
+            // Gate.setText(app.Gate);
+            place_of_visit.setText(PlaceOfVisit);
 
             try {
 
@@ -137,30 +195,19 @@ public class ViewPass extends AppCompatActivity {
                         .load(ScanId)
                         .into(scan_id2);
 
-                Glide.with(getApplicationContext())
+                imageView.setImageBitmap(bitmap_QR_CODE);
+
+              /*  Glide.with(getApplicationContext())
                         .load(bitmap_QR_CODE)
-                        .into(imageView);
+                        .into(imageView); */
 
 
-                Name2.setText(Name);
-                Address2.setText(Address);
-                Mobile2.setText(Mobile);
-                ID_No2.setText(IDNumber);
-                Dateofbirth2.setText(DateOfBirth);
-                Dateofjourney2.setText(DateOfJourney);
-                Purpose2.setText(Purpose);
-                Application_status2.setText(ApplicationStatus.toUpperCase());
-                ID_source.setText(IDSource);
-               // CarNumber.setText(Carnumber);
-               // DriverName.setText(app.Drivername);
-               // Gate.setText(app.Gate);
-                place_of_visit.setText(PlaceOfVisit);
 
 
             }
-            catch (WriterException e)
+            catch (Exception e)
             {
-                e.printStackTrace();
+               Log.v("Here",e.getLocalizedMessage());// e.printStackTrace();
             }
 
 

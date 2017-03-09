@@ -45,17 +45,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private LinearLayout OTPIDS;
-    private EditText OTPS;
-    private EditText Phone;
-    private EditText EMAILID;
-    private Button buttons;
-    private final int GALLERY_OPEN=90;
-    private final Integer CAMERA = 0x4;
-    private ProgressDialog prog;
-    private int OTPint;
-    private String OTPstring;
-    private RxConnect rxConnect;
-    public static SharedPreferences.Editor USER;
+    private EditText OTPS; //To enter OTP
+    private EditText Phone; //To enter Phone number
+    private EditText EMAILID; //To enter EMAIL ID
+    private Button buttons;   //Submit
+    private final int GALLERY_OPEN=90; //Code for Gallery Permission
+    private final Integer CAMERA = 0x4; //Code for Camera Permission
+    private ProgressDialog prog;  //Progress Dialog
+    private int OTPint;            //OTP generated in int format
+    private String OTPstring;      //OTP generated in STring format
+    private RxConnect rxConnect;   //Instance of RxConnect to do network calls
+    public static SharedPreferences.Editor USER;  //Shared Prefs to store User Credentials internally
     public static SharedPreferences SHARED_PREF;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
         buttons=(Button)findViewById(R.id.button);
 
 
-
-
-
+        /**
+         To take run time gallery and camera Permissions
+        **/
 
         if(Build.VERSION.SDK_INT>=23)
         {
@@ -86,16 +86,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        String USeR=SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER");
-        boolean Value=!(USeR.equals("NO_USER"));
-        boolean ValueF=USeR.equals("NO_USER");
-
-        Log.v("Check",Value+" Opposite "+ValueF);
-
-        if(Value)
+        String USeR=SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"); //If user has logged in previously retrieve  his details else we get NO_USER
+        boolean Value=!(USeR.equals("NO_USER"));                                 //Compares the User name with NO_USER
+        if(Value)     //If User logged in previously allow him to move forward with Apply Pass
         {
             Log.v("Username",SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"));
-            Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);
+            Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);     //Redirects the logged in user to Home page
             finish();
             startActivity(MAIN);
         }
@@ -112,8 +108,11 @@ public class MainActivity extends AppCompatActivity {
 
                     prog.setMessage("Signing you..");
 
+                       /**
+                        Code to generate an OTP for user and send it Via SMS and Email
+                        **/
+
                     final String IMEI = Phone.getText().toString().trim();
-                    //  final String IMEI = "455567888344432";
                     final String EMAIL = IMEI + "@" + IMEI + ".com";
                     final String PASSWORD = IMEI;
                     Random rn = new Random();
@@ -125,13 +124,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                     OTPint=  99 + i;
                     OTPstring=String.valueOf(OTPint);
-//                    Log.v("OTP",OTPstring);
 
-                    Toast.makeText(getApplicationContext(),"YOUR OTP IS "+OTPstring,Toast.LENGTH_SHORT ).show();
+                    Toast.makeText(getApplicationContext(),"YOUR OTP IS "+OTPstring,Toast.LENGTH_SHORT ).show(); //Displaying the OTP do remove while productiion
 
+                       /**
+                        Send the OTP to the user Via Email
+                        **/
                        new Thread(new Runnable() {
                         @Override
-                        public void run() {
+                        public void run() {   //Network Calls should be done in background thread they don't work on UI Thread
 
                             GMailSender sender = new GMailSender(Constants.EMAIL_SENDER
                                     , Constants.EMAIL_PASSWORD_SENDER);
@@ -147,8 +148,21 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     }).start();
+                       /**
+                        Send OTP  Via SMS on Entered Mobile Number
+                        **/
 
-                   buttons.setText("GET STARTED");
+
+                       OTPS.setVisibility(View.VISIBLE);
+                       OTPS.setEnabled(true);
+                       Phone.setEnabled(false);
+                       OTPIDS.setVisibility(View.VISIBLE);
+
+
+
+
+
+                    buttons.setText("GET STARTED");
                     OTPS.setVisibility(View.VISIBLE);
                     Phone.setEnabled(false);
                     OTPIDS.setVisibility(View.VISIBLE);
@@ -158,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             final  String   OTP_INPUT=OTPS.getText().toString().trim();
-                            if(OTP_INPUT.equals(OTPstring))
+                            if(OTP_INPUT.equals(OTPstring))   //Check if entered OTP and OTP generated are Equal
                             {
 
                                 prog.show();
@@ -182,6 +196,13 @@ public class MainActivity extends AppCompatActivity {
 
                                             if(MESSAGE.equals(ConstantResponse.REGISTRATION_SUCCESS_RESPONSE)||MESSAGE.contains("Allowed"))
                                             {
+                                                /**
+                                                  If user's details are new then register him and let's him proceed forward else
+                                                  if even mobile number or email is used previously a check is made if both email
+                                                  and password belong's to a particular user then user is signed in and allowed
+                                                  to proceed forward
+                                                 **/
+
                                                 USER.putString(Constants.SHARED_PREF_KEY,Phone.getText().toString().trim()).commit();
                                                 Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);
                                                 finish();
@@ -244,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Enter Phone number...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Enter Details ",Toast.LENGTH_SHORT).show();
                 }
             }
         });
