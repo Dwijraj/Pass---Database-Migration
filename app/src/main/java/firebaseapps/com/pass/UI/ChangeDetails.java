@@ -16,32 +16,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Utils.JsonParser;
@@ -54,10 +41,10 @@ import mohitbadwal.rxconnect.RxConnect;
 /**
  * OTP System to be implemented
  * params to send
- * 1.Fields before getting OTP
- * 2.Old Date of Journey
- * 3.Registered Mobile
- * The i get Applicant mobile number
+ * Fields before getting OTP
+ * 1.Old Date of Journey
+ * 2.Registered Mobile
+ * The I get Applicant mobile number
  * 1.Applicant Mobile
  * 2.Token_ID
  * OTP generate and check
@@ -122,28 +109,26 @@ public class ChangeDetails extends AppCompatActivity {
         Idno=(EditText)findViewById(R.id.change_idno);
         DOJ=(TextView)findViewById(R.id.change_DOJ);
         update=(Button)findViewById(R.id.change_button);
+        img_button.setEnabled(true);
 
         rxConnect=new RxConnect(ChangeDetails.this);
         rxConnect.setCachingEnabled(false);
 
         REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
-        rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+      /*  rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
         Log.v("Mobile",REGISTERED_NUMBER);
         rxConnect.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
 
-                img_button.setEnabled(true);
+
                 Log.v("unavailable",result);
                 try {
 
 
                     JSONObject jsonObject=new JSONObject(result);
 
-                          /*  {       "response_status":"1",
-                                    "msg":"sucess",
-                                    "dates_info":[{"date_block":"2017-03-17"},{"date_block":"2017-03-30"},{"date_block":"2017-04-20"}]} */
 
                           String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
                           if(Response_status.equals("1"))
@@ -191,7 +176,7 @@ public class ChangeDetails extends AppCompatActivity {
 
                 Log.v("Response","RESULT"+throwable.getMessage());
             }
-        });
+        }); */
 
 
         intent = new Intent(this, PayPalService.class);
@@ -227,7 +212,10 @@ public class ChangeDetails extends AppCompatActivity {
 
                         String SELECTED_DATE=sdf.format(myCalendar.getTime());
 
-                        if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
+                        DOJ.setText(sdf.format(myCalendar.getTime()));
+                        DateOfJourney=sdf.format(myCalendar.getTime());
+
+                      /*  if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
                         {
                             DOJ.setText(sdf.format(myCalendar.getTime()));
                             DateOfJourney=sdf.format(myCalendar.getTime());
@@ -235,15 +223,15 @@ public class ChangeDetails extends AppCompatActivity {
                         }
                         else
                         {
+
                             Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
-                        }
+                        } */
 
                         mDay = selectedday;
                         mMonth = selectedmonth;
                         mYear = selectedyear;
                     }
                 }, mYear, mMonth, mDay);
-                mDatePicker.getDatePicker().setMaxDate(m_three_months.getTimeInMillis());
                 // mDatePicker.setTitle("Select date");
                 mDatePicker.show();
 
@@ -272,19 +260,119 @@ public class ChangeDetails extends AppCompatActivity {
 
         Log.v("Clicked","clidl");
         passno=Passno.getText().toString().trim();
-        String PassId=Idno.getText().toString().trim();
-        if(!(passno.isEmpty()||PassId.isEmpty()||DateOfJourney.isEmpty()))
+
+        if(!(passno.isEmpty()||DateOfJourney.isEmpty()))
         {
 
 
-            rxConnect1.setParam("new_doj",DateOfJourney);
+            rxConnect1.setParam("old_doj",DateOfJourney);
             rxConnect1.setParam("token_id",passno);
-            rxConnect1.setParam("pass_id",PassId);
             rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
 
-            rxConnect1.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect1.execute(/*Constants.UPDATE_DETAILS_URL*/Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
+
+                    try {
+
+                        JSONObject jsonObject=new JSONObject(result);
+                        final String APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
+                       /* Idno.setVisibility(View.VISIBLE);
+                        Idno.setHint("Enter the OTP you received on the mobile number used in application"); */
+
+                        Random rn = new Random();
+                        int n = 999 - 99;
+                        int i = rn.nextInt() % n;
+                        if(i<0)
+                        {
+                            i*=-1;
+                        }
+                        int  OTPint=  99 + i;
+                        final   String   OTPstring=String.valueOf(OTPint);
+
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP is "+OTPstring);
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
+                                rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                                rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
+                                    @Override
+                                    public void onResult(String result) {
+                                        //do something on result
+                                        Idno.setVisibility(View.VISIBLE);
+                                        Idno.setHint("Enter the OTP you received on the mobile number used in application");
+                                        Toast.makeText(getApplicationContext(),"OTP sent ",Toast.LENGTH_SHORT).show();
+                                        update.setText("Enter OTP");
+
+
+                                    }
+                                    @Override
+                                    public void onNoResult() {
+                                        //do something
+                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+                                    }
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        //do somenthing on error
+                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }).start();
+
+                        update.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(update.getText().toString().equals("Enter OTP"))
+                                {
+                                    String ENTERED_OTP=Idno.getText().toString().trim();
+                                    if (ENTERED_OTP.equals(OTPstring))
+                                    {
+                                        RxConnect rxConnect2=new RxConnect(ChangeDetails.this);
+                                        rxConnect2.setCachingEnabled(false);
+                                        rxConnect2.setParam("token_id",passno);
+                                        rxConnect2.setParam("registered_mob",REGISTERED_NUMBER);
+                                        rxConnect2.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                                            @Override
+                                            public void onResult(String result) {
+
+                                                Intent Change=new Intent(ChangeDetails.this, ViewPass.class);
+                                                Change.putExtra("PassNumber",passno);
+                                                Change.putExtra("editable","1");
+                                                View_Pass.PASS_DETAILS=result;
+                                                finish();
+                                                startActivity(Change);
+
+                                            }
+
+                                            @Override
+                                            public void onNoResult() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable throwable) {
+
+                                            }
+                                        });
+                                    }
+                                }
+
+                            }
+                        });
+
+
+
+                    }catch (JSONException e)
+                    {
+
+                    }
+
 
                 }
 

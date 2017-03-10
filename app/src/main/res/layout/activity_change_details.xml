@@ -14,10 +14,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true">
 
 
             <LinearLayout
@@ -64,7 +64,7 @@
                 android:layout_gravity="center"
                 android:minEms="10"
                 android:id="@+id/change_DOJ"
-                android:hint="Select new Date of journey"
+                android:hint="Select Old Date of journey"
                 />
             <ImageButton
                 android:layout_width="50dp"
@@ -80,6 +80,7 @@
             android:layout_marginTop="45dp"
             android:layout_weight="100"
             android:gravity="center"
+            android:visibility="invisible"
             android:layout_height="wrap_content">
 
             <EditText

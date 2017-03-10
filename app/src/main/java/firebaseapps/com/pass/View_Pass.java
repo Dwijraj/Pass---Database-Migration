@@ -143,6 +143,7 @@ public class View_Pass extends AppCompatActivity {
                                     PASS_DETAILS=result;
                                     Intent VIEW_PASS=new Intent(View_Pass.this,ViewPass.class);
                                     VIEW_PASS.putExtra("PassNumber",PASS_NO);
+                                    VIEW_PASS.putExtra("editable","0");
                                     finish();
                                     startActivity(VIEW_PASS);
                                 }

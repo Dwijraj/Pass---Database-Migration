@@ -37,6 +37,7 @@ public class Constants {
     public static String PASS_RETREIVE_URL="http://192.168.2.2/pass3/index.php/api/userapi/user_pass_info/format/json";
     public static String UPDATE_DETAILS_URL="";
     public static String STATUS_DETAIL_URL="";
+    public static String GET_APPLICANT_MOB_CHANGE_DETAIL="";
     public static String SHARED_PREFS_NAME="USER";
     public static String SHARED_PREF_KEY="USER_MOBILE";
 

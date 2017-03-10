@@ -69,8 +69,8 @@ public class ViewPass extends AppCompatActivity {
         Gate=(TextView) findViewById(R.id.GATE);
         CarNumber=(TextView)findViewById(R.id.Carnumbers);
         DriverName=(TextView)findViewById(R.id.DriverNAME);
-      final  ImageView imageView=(ImageView) findViewById(R.id.BAR_CODE_SHOW);
-       final TextView  Pass=(TextView)findViewById(R.id.PassNumber);
+        final  ImageView imageView=(ImageView) findViewById(R.id.BAR_CODE_SHOW);
+        final TextView  Pass=(TextView)findViewById(R.id.PassNumber);
         generatebarcode=(Button)findViewById(R.id.Display_Bar_Code);
         Vehicle=(Button)findViewById(R.id.vehicle);
         scan_id2=(ImageView)findViewById(R.id.SCAN_PIC) ;
@@ -89,24 +89,16 @@ public class ViewPass extends AppCompatActivity {
 
         Intent i=getIntent();
         String Pass_number=i.getExtras().getString("PassNumber");
+        String Editable=i.getExtras().getString("editable");
 
-               /* {"response_status":"1",
-                "msg":"sucess",
-                "application_info":{"token_no":"token_16",
-                                    "applicant_name":"gags",
-                                    "applicant_address":"zgvzvz",
-                                    "place_visting":"puri",
-                                    "application_mobile":"9887699890",
-                                    "applicant_id_source":"Passport",
-                                    "applicant_id_no":"zvzvsvvsvs",
-                                    "dob":"2017-03-07",
-                                    "purpose_visting":"Roam",
-                                    "Photo":"http:\/\/192.168.2.2\/pass3\/uploads\/file\/21:11:25173711.jpeg",
-                                    "Scan_id_photo":"http:\/\/192.168.2.2\/pass3\/uploads\/pic\/21:11:2569025.jpeg",
-                                    "paid_status":"approved",
-                                    "status":"4",
-                                    "date_journey":"2017-03-12"}
-                                    } */
+        if (Editable.equals("1"))
+        {
+
+            generatebarcode.setText("Submit Changes");
+            //Submit the changes
+
+
+        }
 
         try {
 
@@ -215,63 +207,5 @@ public class ViewPass extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-      /*  ApplicationRef2.child(pass).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                app=dataSnapshot.getValue(Application.class);
-
-                Name2.setText(app.Name);
-                Address2.setText(app.Address);
-                Mobile2.setText(app.Mobile);
-                ID_No2.setText(app.ID_No);
-                Dateofbirth2.setText(app.DateOfBirth);
-                Dateofjourney2.setText(app.DateOfJourney);
-                Purpose2.setText(app.Purpose);
-                Application_status2.setText(app.ApplicationStatus.toUpperCase());
-                ID_source.setText(app.ID_Source);
-                CarNumber.setText(app.Carnumber);
-                DriverName.setText(app.Drivername);
-                Gate.setText(app.Gate);
-                place_of_visit.setText(app.Destination);
-
-                if(app.ApplicationStatus.contains("Verified"))
-                {
-
-                    Vehicle.setEnabled(true);
-
-
-                }
-
-
-                Glide.with(getApplicationContext())
-                        .load(app.ApplicantPhoto)
-                        .into(Profile2);
-
-
-                Glide.with(getApplicationContext())
-                        .load(app.ApplicantScanId)
-                        .into(scan_id2);
-
-                Glide.with(getApplicationContext())
-                        .load(app.Barcode_Image)
-                        .into(imageView);
-
-                Pass.setText(pass);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        }); */
-
     }
 }

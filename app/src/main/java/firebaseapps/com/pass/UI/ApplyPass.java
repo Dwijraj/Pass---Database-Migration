@@ -86,7 +86,7 @@ public class ApplyPass extends AppCompatActivity {
                          new AlertDialog.Builder(ApplyPass.this)
                         .setTitle("Select appropriate option")
                         .setMessage("Select appropriate option")
-                        .setPositiveButton("Change Date of Journey", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Change Application detail", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
 

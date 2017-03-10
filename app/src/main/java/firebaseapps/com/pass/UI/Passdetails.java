@@ -243,8 +243,9 @@ public class Passdetails extends AppCompatActivity {
         Profile=(ImageView) findViewById(R.id.profilephoto);
         Application_status=(TextView)findViewById(R.id.application_status);
         Payment=(Button)findViewById(R.id.payment);
-        Payment.setEnabled(false);
         spinner = (Spinner)findViewById(R.id.spinner);
+
+        Payment.setEnabled(false);
 
 
         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
@@ -257,7 +258,65 @@ public class Passdetails extends AppCompatActivity {
 
                 GetPricesAndPlaces(result);
 
-                Payment.setEnabled(true);
+
+
+
+            }
+
+            @Override
+            public void onNoResult() {
+
+                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                Log.v("Response","RESULT NOPE");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                Log.v("Response","RESULT"+throwable.getMessage());
+            }
+        });
+        rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
+        Log.v("Mobile",REGISTERED_NUMBER);
+        rxConnect1.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+
+
+                Log.v("unavailable",result);
+                try {
+
+
+                    JSONObject jsonObject=new JSONObject(result);
+
+                          /*  {       "response_status":"1",
+                                    "msg":"sucess",
+                                    "dates_info":[{"date_block":"2017-03-17"},{"date_block":"2017-03-30"},{"date_block":"2017-04-20"}]} */
+
+                    String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
+                    if(Response_status.equals("1"))
+                    {
+                        JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"dates_info");
+
+                        for(int i=0;i<jsonArray.length();i++)
+                        {
+                            JSONObject Object= (JSONObject) jsonArray.get(i);
+                            UNAVAILABLE_DATES.add(JsonParser.JSONValue(Object,"date_block"));
+                            Log.v("DatesUnavailable",JsonParser.JSONValue(Object,"date_block"));
+
+                        }
+                          Payment.setEnabled(true);
+
+
+                    }
+                }catch (JSONException e)
+                {
+
+                }
+
+
             }
 
             @Override
@@ -276,41 +335,7 @@ public class Passdetails extends AppCompatActivity {
             }
         });
 
-       /* rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
-        rxConnect1.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
-            @Override
-            public void onResult(String result) {
 
-
-                try {
-
-                    JSONObject jsonObjec=new JSONObject(result);
-                    UNAVAILABLE_DATES.add("");
-
-                }catch (JSONException e)
-                {
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onNoResult() {
-
-                Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
-                Log.v("Response","RESULT NOPE");
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-                Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-
-                Log.v("Response","RESULT"+throwable.getMessage());
-            }
-        }); */
 
 
 
@@ -506,22 +531,16 @@ public class Passdetails extends AppCompatActivity {
                         String myFormat = "dd-MM-yyyy"; //Change as you need
                         final    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
 
-
-                        Dateofjourney.setText(sdf.format(myCalendar.getTime()));
-
-                   /*     if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
+                        if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
                         {
-                            Dateofjourney.setText(sdf.format(myCalendar.getTime()));
 
+                            Dateofjourney.setText(sdf.format(myCalendar.getTime()));
 
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_LONG).show();
-                        } */
-
-
-
+                            Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
+                        }
 
                         mDay = selectedday;
                         mMonth = selectedmonth;
@@ -602,37 +621,41 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final String Names = Name.getText().toString().trim();
-                final String Addresses = Address.getText().toString().trim();
-                Mobiles = Mobile.getText().toString().trim();
-                final String ID_NO = ID_No.getText().toString().trim();
-                String Purposes;
-                if(PURPOSE_OF_VISIT.equals("Other"))
-                {
-                    Purposes = Purpose.getText().toString().trim();
-                }
-                else
-                {
-                    Purposes = PURPOSE_OF_VISIT;
-                }
 
-                final String DateOfBirth = Dateofbirth.getText().toString().trim();
-                final String DateOfJourney = Dateofjourney.getText().toString().trim();
+                try {
 
-                Log.v("Purpose",Purposes+"dcd");
+                    String Names = Name.getText().toString().trim();
+                    String Addresses = Address.getText().toString().trim();
+                    Mobiles = Mobile.getText().toString().trim();
+                    String ID_NO = ID_No.getText().toString().trim();
+                    String Purposes;
+                    if(PURPOSE_OF_VISIT.equals("Other"))
+                    {
+                        Purposes = Purpose.getText().toString().trim();
+                    }
+                    else
+                    {
+                        Purposes = PURPOSE_OF_VISIT;
+                    }
+
+                    final String DateOfBirth = Dateofbirth.getText().toString().trim();
+                    final String DateOfJourney = Dateofjourney.getText().toString().trim();
+
+                    Log.v("Purpose",Purposes+"dcd");
 
 
 
-                  /* {
-                      if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
-                              TextUtils.isEmpty(PLACE) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) ||
-                              TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) ||
-                              TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes) ||
-                              TextUtils.isEmpty(byteArray.toString()) || TextUtils.isEmpty(scaniduri.toString()) )
+                    {
+                        if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
+                                TextUtils.isEmpty(PLACE) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) ||
+                                TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) ||
+                                TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes))
                                 &&ERROR_NAME.getVisibility()==View.INVISIBLE&&ERROR_MOBILE.getVisibility()==View.INVISIBLE&&
                                 ERROR_DATE.getVisibility()==View.INVISIBLE)
                         {
+                            Log.v("Working","Here123");
 
+                            // SubmitApplication();
                             // getPayment();
                         }
                         else
@@ -644,12 +667,12 @@ public class Passdetails extends AppCompatActivity {
 
                                     Toast.makeText(getApplicationContext(),"Please enter valid Name",Toast.LENGTH_SHORT).show();
                                 }
-                              else  if(ERROR_MOBILE.getVisibility()==View.VISIBLE)
+                                else  if(ERROR_MOBILE.getVisibility()==View.VISIBLE)
                                 {
 
                                     Toast.makeText(getApplicationContext(),"Please enter valid mobile number",Toast.LENGTH_SHORT).show();
                                 }
-                              else  if(ERROR_DATE.getVisibility()==View.VISIBLE)
+                                else  if(ERROR_DATE.getVisibility()==View.VISIBLE)
                                 {
 
                                     Toast.makeText(getApplicationContext(),"Please enter valid Date",Toast.LENGTH_SHORT).show();
@@ -666,14 +689,20 @@ public class Passdetails extends AppCompatActivity {
                             }
                             else
                             {
-                                Toast.makeText(getApplicationContext(),"Please fill the empty fields and upload your profile photo and Scan_id",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Please fill the empty fields and upload applicantcant photo and Scan_id",Toast.LENGTH_SHORT).show();
 
                             }
                         }
-                    } */
+                    }
 
-               // getPayment();
-                SubmitApplication();
+                    // getPayment();
+
+
+
+                }catch (Exception e)
+                {
+                    Log.v("ErrorFromNotNetConnect",e.getLocalizedMessage()+"..");
+                }
 
 
 

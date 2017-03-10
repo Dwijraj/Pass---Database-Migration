@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                        /**
                         Send the OTP to the user Via Email
                         **/
+
                        new Thread(new Runnable() {
                         @Override
                         public void run() {   //Network Calls should be done in background thread they don't work on UI Thread
@@ -151,6 +152,38 @@ public class MainActivity extends AppCompatActivity {
                        /**
                         Send OTP  Via SMS on Entered Mobile Number
                         **/
+                      /* new Thread(new Runnable() {
+                           @Override
+                           public void run() {
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+IMEI);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP is "+OTPstring);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                               rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
+                                   @Override
+                                   public void onResult(String result) {
+                                       //do something on result
+                                       Toast.makeText(getApplicationContext(),"OTP sent ",Toast.LENGTH_SHORT).show();
+                                       buttons.setText("GET STARTED");
+                                       OTPS.setVisibility(View.VISIBLE);
+                                       Phone.setEnabled(false);
+                                       OTPIDS.setVisibility(View.VISIBLE);
+                                   }
+                                   @Override
+                                   public void onNoResult() {
+                                       //do something
+                                       Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+                                   }
+                                   @Override
+                                   public void onError(Throwable throwable) {
+                                       //do somenthing on error
+                                       Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+                                   }
+                               });
+                           }
+                       }).start(); */
 
 
                        OTPS.setVisibility(View.VISIBLE);
@@ -179,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 rxConnect.setParam(Constants.REGISTRATION_USER_MOBILE_KEY,Phone.getText().toString().trim());
                                 rxConnect.setParam(Constants.REGISTRATION_USER_EMAIL_KEY,EMAILID.getText().toString().trim());
-                                rxConnect.execute(Constants.OFFLINE_REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
+                                rxConnect.execute(Constants.REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
 
 
                                     @Override
