@@ -35,6 +35,7 @@ public class Constants {
     public static String OFFLINE="http://192.168.2.2/pass3/index.php/api/userapi/check/format/json";
     public static String UNAVAILABLE_DOJ="http://192.168.2.2/pass3/index.php/api/userapi/datesl_rejects_list/format/json";
     public static String PASS_RETREIVE_URL="http://192.168.2.2/pass3/index.php/api/userapi/user_pass_info/format/json";
+    public static String REFUND_REQUEST="";
     public static String UPDATE_DETAILS_URL="";
     public static String STATUS_DETAIL_URL="";
     public static String GET_APPLICANT_MOB_CHANGE_DETAIL="";

@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
+import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.ConstantResponse;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.R;
@@ -125,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
                     OTPint=  99 + i;
                     OTPstring=String.valueOf(OTPint);
 
-                    Toast.makeText(getApplicationContext(),"YOUR OTP IS "+OTPstring,Toast.LENGTH_SHORT ).show(); //Displaying the OTP do remove while productiion
+
+                     //  Toasty.info(getApplicationContext(), "YOUR OTP IS "+OTPstring,Toast.LENGTH_SHORT, true).show();
+
 
                        /**
                         Send the OTP to the user Via Email
@@ -152,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                        /**
                         Send OTP  Via SMS on Entered Mobile Number
                         **/
-                      /* new Thread(new Runnable() {
+                       new Thread(new Runnable() {
                            @Override
                            public void run() {
                                rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
@@ -165,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
                                    @Override
                                    public void onResult(String result) {
                                        //do something on result
-                                       Toast.makeText(getApplicationContext(),"OTP sent ",Toast.LENGTH_SHORT).show();
+                                       Toast.makeText(getApplicationContext(),OTPstring,Toast.LENGTH_SHORT).show();
+                                       Toasty.info(getApplicationContext(),"OTP sent",Toast.LENGTH_LONG,true).show();
                                        buttons.setText("GET STARTED");
                                        OTPS.setVisibility(View.VISIBLE);
                                        Phone.setEnabled(false);
@@ -174,16 +178,18 @@ public class MainActivity extends AppCompatActivity {
                                    @Override
                                    public void onNoResult() {
                                        //do something
-                                       Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-                                   }
+
+                                       Toasty.info(getApplicationContext(),"Sorry OTP couldn't be send ",Toast.LENGTH_LONG,true).show();
+                                       }
                                    @Override
                                    public void onError(Throwable throwable) {
                                        //do somenthing on error
-                                       Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+                                       Toasty.info(getApplicationContext(),"Error sending OTP",Toast.LENGTH_LONG,true).show();
+
                                    }
                                });
                            }
-                       }).start(); */
+                       }).start();
 
 
                        OTPS.setVisibility(View.VISIBLE);
@@ -218,8 +224,6 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onResult(String result) {
 
-                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                        Log.v("Result",result);
 
                                         prog.dismiss();
 
@@ -230,9 +234,9 @@ public class MainActivity extends AppCompatActivity {
                                             if(MESSAGE.equals(ConstantResponse.REGISTRATION_SUCCESS_RESPONSE)||MESSAGE.contains("Allowed"))
                                             {
                                                 /**
-                                                  If user's details are new then register him and let's him proceed forward else
+                                                  If user's details are new then register him and let him proceed forward else
                                                   if even mobile number or email is used previously a check is made if both email
-                                                  and password belong's to a particular user then user is signed in and allowed
+                                                  and password belongs to a particular user then user is signed in and allowed
                                                   to proceed forward
                                                  **/
 
@@ -256,8 +260,7 @@ public class MainActivity extends AppCompatActivity {
                                         //do something
 
                                         prog.dismiss();
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-
+                                        Toasty.error(getApplicationContext(),"Sorry there was an error",Toast.LENGTH_LONG).show();
 
                                     }
 
@@ -266,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
                                         //do somenthing on error
 
                                         prog.dismiss();
-                                        Log.v("Response",throwable.getMessage()+"MSG");
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+
+                                        Toasty.error(getApplicationContext(),"Sorry there was an error",Toast.LENGTH_LONG).show();
 
 
                                     }
@@ -278,27 +281,29 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else if( OTPS.getVisibility()== View.INVISIBLE)
                             {
+                                Toasty.error(getApplicationContext(),"Sorry there was an error",Toast.LENGTH_LONG).show();
 
-                                Toast.makeText(getApplicationContext(),"OTP couldn't be sent ensure internet connection",Toast.LENGTH_SHORT).show();
 
                             }
                             else if(OTP_INPUT.isEmpty())
                             {
-                                Toast.makeText(getApplicationContext(),"Enter the correct OTP",Toast.LENGTH_SHORT).show();
+                                Toasty.error(getApplicationContext(),"Please eneter OTP",Toast.LENGTH_LONG).show();
+
                             }
                             else
                             {
-                                Toast.makeText(getApplicationContext(),"OTP doesnot match",Toast.LENGTH_SHORT).show();
+                                Toasty.error(getApplicationContext(),"Sorry there was an error",Toast.LENGTH_LONG).show();
+
                             }
 
 
                         }
                     });
 
-                }
+                   }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Enter Details ",Toast.LENGTH_SHORT).show();
+                        Toasty.warning(getApplicationContext(),"Please enter your details",Toast.LENGTH_SHORT).show();
                 }
             }
         });

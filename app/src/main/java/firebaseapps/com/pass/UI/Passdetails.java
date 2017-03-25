@@ -187,7 +187,6 @@ public class Passdetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passdetails);
         THE_TEST=1;
-        //mAwesomeValidation = new AwesomeValidation(BASIC);
 
         paths.add("");
         paths.add("Passport");
@@ -199,6 +198,8 @@ public class Passdetails extends AppCompatActivity {
         REASONS.add("");
         REASONS.add("Roam");
         REASONS.add("Tourism");
+        REASONS.add("Educational");
+
 
         rxConnect=new RxConnect(Passdetails.this);
         rxConnect.setCachingEnabled(false);
@@ -209,7 +210,7 @@ public class Passdetails extends AppCompatActivity {
         rxConnect1=new RxConnect(Passdetails.this);
         rxConnect1.setCachingEnabled(false);
 
-         REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+        REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
         dialog=new Dialog(Passdetails.this);
 
@@ -279,7 +280,7 @@ public class Passdetails extends AppCompatActivity {
             }
         });
         rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
-        Log.v("Mobile",REGISTERED_NUMBER);
+
         rxConnect1.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {

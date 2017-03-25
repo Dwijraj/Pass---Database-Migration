@@ -1,446 +1,460 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="786dp"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary"
-        android:weightSum="100">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_weight="20"
-            android:gravity="center"
-            android:weightSum="10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:weightSum="100">
 
-
-            <ImageView
-                android:layout_weight="6"
-                android:layout_width="230dp"
-                android:layout_height="230dp"
-                android:id="@+id/SCAN_PROFILE"
-                android:scaleType="centerCrop" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_width="0dp"
-                android:textColor="#ffff"
-                android:textSize="19sp"
-                android:layout_height="wrap_content"
-                android:text="@string/Name"
-                android:id="@+id/names"/>
-
-            <TextView
-                android:layout_marginTop="20dp"
-                android:layout_weight="50"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Name goes here"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_NAME"
-                android:layout_marginLeft="30dp"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50.13"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="ADDRESS"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Address"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_ADDRESS"
-                android:layout_marginLeft="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="56.81"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="MOBILE"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_MOBILE"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="37.42"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ID NUMBER"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="62.58"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="id_no"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_ID"
-                android:layout_marginLeft="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="DESTINATION"
-                android:textSize="19sp"
-                android:textColor="#ffff"
-                />
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Gate number"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/place"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginTop="40dp"
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_weight="52.08"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="ID SOURCE"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="44.51"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="id_no"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/ID_Source_field"
-                android:layout_marginLeft="20dp"/>
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50.52"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="PURPOSE OF VISIT"
-                android:textSize="19sp"
-                android:textColor="#ffff"
-                android:id="@+id/textView3" />
-
-            <TextView
-                android:layout_marginTop="0dp"
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Pupose"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_REASON"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50.52"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="DATE OF JOURNEY"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_marginTop="0dp"
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="DOJ"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_DOJ"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginTop="40dp"
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="DATE OF BIRTH"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Date of birth"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/SCAN_DOB"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="DRIVER NAME"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Driver Name"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/DriverNAME"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="CAR NUMBER"
-                android:textSize="19sp"
-                android:textColor="#ffff"
-                android:id="@+id/textView2" />
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Car Number"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/Carnumbers"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="50"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="GATE"
-                android:textSize="19sp"
-                android:textColor="#ffff"
-                />
-
-            <TextView
-                android:layout_weight="50"
-                android:layout_marginTop="0dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Gate number"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:id="@+id/GATE"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>
-
-
-
-
-        <RelativeLayout
-            android:layout_weight="100"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_margin="20dp"
-                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
-                android:maxHeight="230dp"
-                android:background="@color/colorPrimary"
-                android:id="@+id/SCAN_PIC"/>
-
-
-        </RelativeLayout>
-
-
-
-        <LinearLayout
-            android:layout_marginTop="40dp"
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
+                android:layout_weight="20"
                 android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="APPLICATION STATUS"
-                android:id="@+id/NOT_REQUIRED"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
+                android:orientation="vertical"
+                android:weightSum="10">
 
-            <TextView
+
+                <ImageView
+                    android:id="@+id/SCAN_PROFILE"
+                    android:layout_width="230dp"
+                    android:layout_height="230dp"
+                    android:layout_weight="6"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="center"
+                android:layout_height="70dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/names"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="@string/Name"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_NAME"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Name goes here"
+                    android:textColor="#ffff" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Application status"
-                android:id="@+id/SCAN_STATUS"
-                android:textSize="19sp"
-                android:textColor="#ffff"/>
-        <!--    <TextView
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50.13"
+                    android:gravity="center"
+                    android:text="ADDRESS"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_ADDRESS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Address"
+                    android:textColor="#ffff" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="MOBILE"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_MOBILE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Mobile"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="ID NUMBER"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_ID"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="id_no"
+                    android:textColor="#ffff" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="DESTINATION"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/place"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Gate number"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="52.08"
+                    android:gravity="center"
+                    android:text="ID SOURCE"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/ID_Source_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="44.51"
+                    android:gravity="center"
+                    android:text="id_no"
+                    android:textColor="#ffff" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50.52"
+                    android:gravity="center"
+                    android:text="PURPOSE OF VISIT"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_REASON"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Pupose"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="DATE OF JOURNEY"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_DOJ"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="30"
+                    android:gravity="end"
+                    android:text="DOJ"
+                    android:textColor="#ffff" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center">
+
+                    <ImageButton
+
+                        android:id="@+id/DOJ_CHANGE_BUTTON"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@mipmap/ic_date_range_white_24dp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="DATE OF BIRTH"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_DOB"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Date of birth"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="DRIVER NAME"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/DriverNAME"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Driver Name"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="CAR NUMBER"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/Carnumbers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Car Number"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="GATE"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/GATE"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="50"
+                    android:gravity="center"
+                    android:text="Gate number"
+                    android:textColor="#ffff" />
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="100"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/SCAN_PIC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
+                    android:background="@color/colorPrimary"
+                    android:maxHeight="230dp" />
+
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_weight="20"
+                android:orientation="vertical"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/NOT_REQUIRED"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="APPLICATION STATUS"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/SCAN_STATUS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Application status"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
+                <!--    <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -449,68 +463,57 @@
                 android:text="Payment pending"
                 android:textColor="#ffff"
                 android:textSize="16dp"/> -->
-        </LinearLayout>
+            </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_width="match_parent"
-                android:layout_margin="20dp"
-                android:id="@+id/BAR_CODE_SHOW"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_width="match_parent"
-                android:text="Hellos sdsdsdsdsdsdsds"
-                android:textSize="19sp"
-                android:textColor="#ffff"
-                android:gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/BAR_CODE_SHOW"
-                android:id="@+id/PassNumber"
-                android:layout_height="wrap_content" />
-
-
-
-        </RelativeLayout>
-
-
-
-        <LinearLayout
-            android:layout_marginTop="40dp"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-
-                <Button
-                    android:text="BOOK VEHICLE"
-                    android:enabled="false"
-                    android:id="@+id/vehicle"
-                    android:textColor="#000000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/Display_Bar_Code"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/BAR_CODE_SHOW"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SHOW BAR CODE"/>
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp" />
+
+                <TextView
+                    android:id="@+id/PassNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/BAR_CODE_SHOW"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="Hellos sdsdsdsdsdsdsds"
+                    android:textColor="#ffff"
+                    android:textSize="19sp" />
 
 
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+
+
+                    <Button
+                        android:id="@+id/Display_Bar_Code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
+    </ScrollView>
 
 
-    </LinearLayout>
-</ScrollView>
-
-
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

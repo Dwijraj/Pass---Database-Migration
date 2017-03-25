@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
 
-  <!--Make sure image is present in Drawable folder-->
+
     <TextView
         android:id="@+id/textView"
         android:textSize="14sp"

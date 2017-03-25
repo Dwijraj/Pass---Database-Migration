@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.UI.Passdetails;
 import mohitbadwal.rxconnect.RxConnect;
@@ -149,12 +150,12 @@ public class View_Pass extends AppCompatActivity {
                                 }
                                 else if(jsonObject.getString("response_status").equals("3"))
                                 {
-                                    Toast.makeText(getApplicationContext(),"No Such application exists",Toast.LENGTH_SHORT).show();
+                                    Toasty.error(getApplicationContext(),"No Such application exists",Toast.LENGTH_SHORT).show();
                                 }
                                 else
                                 {
                                     Log.v("RESPONSE_STATUS",jsonObject.getString("response_status")+"  ...");
-                                    Toast.makeText(getApplicationContext(),"You are not authorized to view this pass",Toast.LENGTH_SHORT).show();
+                                    Toasty.info(getApplicationContext(),"You are not authorized to view this pass",Toast.LENGTH_SHORT).show();
 
                                 }
 

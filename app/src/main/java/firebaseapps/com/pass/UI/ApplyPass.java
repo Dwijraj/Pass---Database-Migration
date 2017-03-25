@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.android.volley.RequestQueue;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.SericeNReceiver.MyService;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.R;
@@ -33,6 +35,7 @@ public class ApplyPass extends AppCompatActivity {
     private Button ViewPass;
     private String user;
     private Button changepassdetails;
+    public static  String OPTION;
 
 
     @Override
@@ -63,6 +66,7 @@ public class ApplyPass extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
                 //Takes user to the new activity on applyling pass
                 Intent Passdetail=new Intent(ApplyPass.this,Passdetails.class);     //Allows user to fill up a new pass application
                 startActivity(Passdetail);
@@ -90,6 +94,7 @@ public class ApplyPass extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
 
+                                OPTION="Change Details";
                                 Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to change the DOJ
                                 startActivity(ChangeDetails);
                             }
@@ -98,8 +103,11 @@ public class ApplyPass extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
 
-                                Intent In=new Intent(new Intent(ApplyPass.this,Refund.class));
-                                startActivity(In);
+
+                                OPTION="Refund request";
+                                Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to change the DOJ
+                                startActivity(ChangeDetails);
+
                                   // do nothing
                             }
                         })

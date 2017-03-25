@@ -1,4 +1,6 @@
 package firebaseapps.com.pass;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -6,10 +8,16 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -25,11 +33,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
 
+import firebaseapps.com.pass.Adapter.CustomAdapter;
+import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.UI.Passdetails;
 import firebaseapps.com.pass.UI.Vehicles;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.QR_Codegenerator;
+import mohitbadwal.rxconnect.RxConnect;
+
+import static firebaseapps.com.pass.UI.ChangeDetails.UNAVAILABLE_DATES;
 
 
 public class ViewPass extends AppCompatActivity {
@@ -38,7 +56,6 @@ public class ViewPass extends AppCompatActivity {
     private TextView Name2;
     private TextView Address2;
     private Button Vehicle;
-    private Button generatebarcode;
     private TextView Mobile2;
     private TextView Dateofbirth2;
     private TextView Dateofjourney2;
@@ -55,6 +72,15 @@ public class ViewPass extends AppCompatActivity {
     private TextView ID_source;
     private TextView Gate;
     private TextView place_of_visit;
+    private ImageButton DOJ_CHANGE;
+    private Boolean Changed=false;
+    public static String CHANGED_DOJ;
+    public static String CHANGED_PLACE_OF_VISIT;
+    HashMap<String,String> PriceNPlace=new HashMap<>();
+    ArrayList<String>  PLACES;
+    int  mYear ;
+    int  mMonth ;//= mcurrentDate.get(Calendar.MONTH);
+    int  mDay ;//= mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
 
 
@@ -65,14 +91,16 @@ public class ViewPass extends AppCompatActivity {
             finish();
         setContentView(R.layout.pass_history);
 
+
+
         place_of_visit=(TextView) findViewById(R.id.place);
         Gate=(TextView) findViewById(R.id.GATE);
         CarNumber=(TextView)findViewById(R.id.Carnumbers);
         DriverName=(TextView)findViewById(R.id.DriverNAME);
         final  ImageView imageView=(ImageView) findViewById(R.id.BAR_CODE_SHOW);
         final TextView  Pass=(TextView)findViewById(R.id.PassNumber);
-        generatebarcode=(Button)findViewById(R.id.Display_Bar_Code);
-        Vehicle=(Button)findViewById(R.id.vehicle);
+        Vehicle=(Button)findViewById(R.id.Display_Bar_Code);
+
         scan_id2=(ImageView)findViewById(R.id.SCAN_PIC) ;
         Name2=(TextView)findViewById(R.id.SCAN_NAME);
         Address2=(TextView)findViewById(R.id.SCAN_ADDRESS);
@@ -84,21 +112,17 @@ public class ViewPass extends AppCompatActivity {
         ID_source=(TextView)findViewById(R.id.ID_Source_field);
         Profile2=(ImageView)findViewById(R.id.SCAN_PROFILE);
         Application_status2=(TextView)findViewById(R.id.SCAN_STATUS);
+        DOJ_CHANGE=(ImageButton)findViewById(R.id.DOJ_CHANGE_BUTTON);
+        DOJ_CHANGE.setVisibility(View.INVISIBLE);
+        DOJ_CHANGE.setEnabled(false);
         ApplicationRef2= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
 
 
         Intent i=getIntent();
-        String Pass_number=i.getExtras().getString("PassNumber");
+        final String Pass_number=i.getExtras().getString("PassNumber");
         String Editable=i.getExtras().getString("editable");
 
-        if (Editable.equals("1"))
-        {
 
-            generatebarcode.setText("Submit Changes");
-            //Submit the changes
-
-
-        }
 
         try {
 
@@ -110,49 +134,46 @@ public class ViewPass extends AppCompatActivity {
             JSONObject jsonObject=Values.getJSONObject("application_info");
 
 
-            Log.v("Here","2");
-          //  jsonArray.getJSONObject()
 
             String Name= JsonParser.JSONValue(jsonObject,"applicant_name");
 
-            Log.v("Here","3");
             String Address= JsonParser.JSONValue(jsonObject,"applicant_address");
 
-            Log.v("Here","4");
+
             String PlaceOfVisit= JsonParser.JSONValue(jsonObject,"place_visting");
 
-            Log.v("Here","5");
+
             String Mobile= JsonParser.JSONValue(jsonObject,"application_mobile");
 
-            Log.v("Here","6");
+
             String IDNumber= JsonParser.JSONValue(jsonObject,"applicant_id_no");
 
-            Log.v("Here","7");
+
             String IDSource= JsonParser.JSONValue(jsonObject,"applicant_id_source");
 
-            Log.v("Here","8");
+
             String DateOfBirth= JsonParser.JSONValue(jsonObject,"dob");
 
-            Log.v("Here","9");
+
             String Purpose= JsonParser.JSONValue(jsonObject,"purpose_visting");
 
-            Log.v("Here","10");
+
             String DateOfJourney= JsonParser.JSONValue(jsonObject,"date_journey");
 
-            Log.v("Here","11");
+
             String Res= JsonParser.JSONValue(jsonObject,"Photo");
 
             String Profile = Res.replaceAll("\"","");
 
-            Log.v("Here","12"+Profile);
+
             String ResId= JsonParser.JSONValue(jsonObject,"Scan_id_photo");
 
             String ScanId=ResId.replaceAll("\"","");
 
-            Log.v("Here","13"+ScanId);
+
             String ApplicationStatus=JsonParser.JSONValue(jsonObject,"paid_status");
 
-            Log.v("Here","14");
+
 
             Name2.setText(Name);
             Address2.setText(Address);
@@ -163,10 +184,11 @@ public class ViewPass extends AppCompatActivity {
             Purpose2.setText(Purpose);
             Application_status2.setText(ApplicationStatus.toUpperCase());
             ID_source.setText(IDSource);
-            // CarNumber.setText(Carnumber);
-            // DriverName.setText(app.Drivername);
-            // Gate.setText(app.Gate);
             place_of_visit.setText(PlaceOfVisit);
+
+            CHANGED_DOJ=DateOfJourney;
+            CHANGED_PLACE_OF_VISIT=PlaceOfVisit;
+
 
             try {
 
@@ -189,17 +211,201 @@ public class ViewPass extends AppCompatActivity {
 
                 imageView.setImageBitmap(bitmap_QR_CODE);
 
-              /*  Glide.with(getApplicationContext())
-                        .load(bitmap_QR_CODE)
-                        .into(imageView); */
-
-
-
 
             }
             catch (Exception e)
             {
                Log.v("Here",e.getLocalizedMessage());// e.printStackTrace();
+            }
+
+            if (Editable.equals("1"))
+            {
+
+
+                String  REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+
+                final RxConnect rxConnect=new RxConnect(this);
+                rxConnect.setCachingEnabled(false);
+                rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+                rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    @Override
+                    public void onResult(String result) {
+
+                        try {
+
+                            Log.v("Error","Here0");
+                            JSONObject jsonObject=new JSONObject(result);
+                            Log.v("Error","Here1");
+                            final JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"place_info");
+                            Log.v("Error","Here2");
+                            PriceNPlace=JsonParser.PricNPlace(jsonArray);
+
+                            Log.v("length",jsonArray.length()+"");
+                            PLACES=new ArrayList<>();
+                            PLACES.add("");
+
+                            for(int i=0;i<jsonArray.length();i++)
+                            {
+                                JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                                PLACES.add(i+1,JsonParser.JSONValue(jsonObject1,"place_name"));
+                            }
+                            Vehicle.setText("Submit Changes");
+                            DOJ_CHANGE.setVisibility(View.VISIBLE);
+                            DOJ_CHANGE.setEnabled(true);
+                            Vehicle.setVisibility(View.INVISIBLE);
+
+
+                            place_of_visit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    final Dialog dialog=new Dialog(ViewPass.this);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.editable);
+
+                                    Spinner spinner=(Spinner) dialog.findViewById(R.id.Editable_spinner_id);
+
+                                    CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),PLACES);
+                                    spinner.setAdapter(customAdapter);
+
+                                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                            String Previous=CHANGED_PLACE_OF_VISIT;
+                                            //CHANGED_PLACE_OF_VISIT=PLACES.get(position);
+                                            if(position!=0)
+                                            {
+                                                CHANGED_PLACE_OF_VISIT=PLACES.get(position);
+                                                if(!Previous.equals(CHANGED_PLACE_OF_VISIT))
+                                                {
+
+                                                    place_of_visit.setText(CHANGED_PLACE_OF_VISIT);
+                                                    Changed=true;
+                                                    dialog.dismiss();
+
+                                                }
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> parent) {
+
+                                        }
+                                    }) ;
+                                    dialog.show();
+                                }
+                            });
+
+
+                        }
+                        catch (JSONException e)
+                        {
+
+                        }
+                   }
+
+                    @Override
+                    public void onNoResult() {
+
+                        Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
+                        Log.v("Response","RESULT NOPE");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                        Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+                        Log.v("Response","RESULT"+throwable.getMessage());
+                    }
+                });
+                DOJ_CHANGE.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        final Calendar mcurrentDate = Calendar.getInstance();
+
+                        final Calendar  m_three_months = Calendar.getInstance();
+
+                        m_three_months.add(Calendar.MONTH,2);
+                        mcurrentDate.add(Calendar.DAY_OF_MONTH,5);
+                        mYear  = mcurrentDate.get(Calendar.YEAR);
+                        mMonth = mcurrentDate.get(Calendar.MONTH);
+                        mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog mDatePicker = new DatePickerDialog(ViewPass.this, new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                                final  Calendar myCalendar = Calendar.getInstance();
+                                //Calendar myCalenderCopy;
+                                myCalendar.set(Calendar.YEAR, selectedyear);
+                                myCalendar.set(Calendar.MONTH, selectedmonth);
+                                myCalendar.set(Calendar.DAY_OF_MONTH, selectedday);
+
+                                // myCalenderCopy=myCalendar;
+
+                                String myFormat = "dd-MM-yyyy"; //Change as you need
+                                final SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+
+                                if (CHANGED_DOJ.equals(sdf.format(myCalendar.getTime())))
+                                {
+                                    Toast.makeText(getApplicationContext(),"Your trip was already scheduled on this day",Toast.LENGTH_LONG).show();
+                                }
+                                else  if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
+                                {
+                                    Dateofjourney2.setText(sdf.format(myCalendar.getTime()));
+                                    CHANGED_DOJ=sdf.format(myCalendar.getTime());
+                                    Changed=true;
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
+                                }
+
+                                mDay = selectedday;
+                                mMonth = selectedmonth;
+                                mYear = selectedyear;
+                            }
+                        }, mYear, mMonth, mDay);
+                        mDatePicker.getDatePicker().setMinDate(mcurrentDate.getTimeInMillis());
+                        mDatePicker.getDatePicker().setMaxDate(m_three_months.getTimeInMillis());
+                        // mDatePicker.setTitle("Select date");
+                        mDatePicker.show();
+                    }
+                });
+
+                Vehicle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        RxConnect rxConnect1=new RxConnect(ViewPass.this);
+                        rxConnect1.setParam("token_id",Pass_number);
+                        rxConnect1.setParam("doj_changed",CHANGED_DOJ);
+                        rxConnect1.setParam("place_changed",CHANGED_PLACE_OF_VISIT);
+                        rxConnect1.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                            @Override
+                            public void onResult(String result) {
+
+                                //If successful display the message
+                            }
+
+                            @Override
+                            public void onNoResult() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+                        });
+
+
+                    }
+                });
+
+
             }
 
 

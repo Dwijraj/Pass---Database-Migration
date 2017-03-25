@@ -34,7 +34,7 @@ public class Startup extends Activity {
                     boolean Value=!(USeR.equals("NO_USER"));
                     if(Value)
                     {
-                        Log.v("Username",SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"));
+
                         Intent MAIN=new Intent(Startup.this,ApplyPass.class);
                         finish();
                         startActivity(MAIN);
