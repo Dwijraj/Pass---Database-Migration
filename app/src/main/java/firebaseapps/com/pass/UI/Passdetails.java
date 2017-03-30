@@ -623,6 +623,7 @@ public class Passdetails extends AppCompatActivity {
             public void onClick(View view) {
 
 
+                Log.v("Clicked","clicked");
                 try {
 
                     String Names = Name.getText().toString().trim();
@@ -656,7 +657,7 @@ public class Passdetails extends AppCompatActivity {
                         {
                             Log.v("Working","Here123");
 
-                            // SubmitApplication();
+                             SubmitApplication();
                             // getPayment();
                         }
                         else

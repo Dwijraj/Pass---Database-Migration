@@ -1,8 +1,11 @@
 package firebaseapps.com.pass;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -39,6 +42,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.UI.Passdetails;
@@ -70,25 +74,25 @@ public class ViewPass extends AppCompatActivity {
     private DatabaseReference ApplicationRef2;
     public  Application app;
     private TextView ID_source;
+    private static  String Changed_Values_flag="0";
     private TextView Gate;
     private TextView place_of_visit;
     private ImageButton DOJ_CHANGE;
     private Boolean Changed=false;
     public static String CHANGED_DOJ;
     public static String CHANGED_PLACE_OF_VISIT;
+    private String Original_Date_Of_Journey;
     HashMap<String,String> PriceNPlace=new HashMap<>();
     ArrayList<String>  PLACES;
     int  mYear ;
     int  mMonth ;//= mcurrentDate.get(Calendar.MONTH);
     int  mDay ;//= mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
+    private String Pass_number;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Passdetails.THE_TEST==1)
-            finish();
         setContentView(R.layout.pass_history);
 
 
@@ -115,11 +119,9 @@ public class ViewPass extends AppCompatActivity {
         DOJ_CHANGE=(ImageButton)findViewById(R.id.DOJ_CHANGE_BUTTON);
         DOJ_CHANGE.setVisibility(View.INVISIBLE);
         DOJ_CHANGE.setEnabled(false);
-        ApplicationRef2= FirebaseDatabase.getInstance().getReference().child("Applications");//Points to the root directory of the Database
-
 
         Intent i=getIntent();
-        final String Pass_number=i.getExtras().getString("PassNumber");
+        Pass_number=i.getExtras().getString("PassNumber");
         String Editable=i.getExtras().getString("editable");
 
 
@@ -161,6 +163,7 @@ public class ViewPass extends AppCompatActivity {
             String DateOfJourney= JsonParser.JSONValue(jsonObject,"date_journey");
 
 
+
             String Res= JsonParser.JSONValue(jsonObject,"Photo");
 
             String Profile = Res.replaceAll("\"","");
@@ -181,6 +184,7 @@ public class ViewPass extends AppCompatActivity {
             ID_No2.setText(IDNumber);
             Dateofbirth2.setText(DateOfBirth);
             Dateofjourney2.setText(DateOfJourney);
+            Original_Date_Of_Journey=Dateofjourney2.getText().toString();
             Purpose2.setText(Purpose);
             Application_status2.setText(ApplicationStatus.toUpperCase());
             ID_source.setText(IDSource);
@@ -221,8 +225,10 @@ public class ViewPass extends AppCompatActivity {
             if (Editable.equals("1"))
             {
 
+                Vehicle.setText("Confirm Changes");
 
-                String  REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+                final String  REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
+
 
                 final RxConnect rxConnect=new RxConnect(this);
                 rxConnect.setCachingEnabled(false);
@@ -252,7 +258,6 @@ public class ViewPass extends AppCompatActivity {
                             Vehicle.setText("Submit Changes");
                             DOJ_CHANGE.setVisibility(View.VISIBLE);
                             DOJ_CHANGE.setEnabled(true);
-                            Vehicle.setVisibility(View.INVISIBLE);
 
 
                             place_of_visit.setOnClickListener(new View.OnClickListener() {
@@ -325,6 +330,7 @@ public class ViewPass extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
+
                         final Calendar mcurrentDate = Calendar.getInstance();
 
                         final Calendar  m_three_months = Calendar.getInstance();
@@ -348,19 +354,22 @@ public class ViewPass extends AppCompatActivity {
                                 String myFormat = "dd-MM-yyyy"; //Change as you need
                                 final SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
 
-                                if (CHANGED_DOJ.equals(sdf.format(myCalendar.getTime())))
+                                if(Original_Date_Of_Journey.equals(sdf.format(myCalendar.getTime())))
                                 {
-                                    Toast.makeText(getApplicationContext(),"Your trip was already scheduled on this day",Toast.LENGTH_LONG).show();
+                                   Toasty.warning(getApplicationContext(),"Your Trip was already scheduled on this day",Toast.LENGTH_SHORT).show();
+                                    Changed_Values_flag="0";
                                 }
-                                else  if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
+                               else if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
                                 {
                                     Dateofjourney2.setText(sdf.format(myCalendar.getTime()));
-                                    CHANGED_DOJ=sdf.format(myCalendar.getTime());
+                                    CHANGED_DOJ=Dateofjourney2.getText().toString();
+                                    Changed_Values_flag="1";
                                     Changed=true;
                                 }
                                 else
                                 {
-                                    Toast.makeText(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
+                                    Changed_Values_flag="0";
+                                    Toasty.error(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
                                 }
 
                                 mDay = selectedday;
@@ -379,32 +388,87 @@ public class ViewPass extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        RxConnect rxConnect1=new RxConnect(ViewPass.this);
-                        rxConnect1.setParam("token_id",Pass_number);
-                        rxConnect1.setParam("doj_changed",CHANGED_DOJ);
-                        rxConnect1.setParam("place_changed",CHANGED_PLACE_OF_VISIT);
-                        rxConnect1.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
-                            @Override
-                            public void onResult(String result) {
+                      /*  if(Changed_Values_flag.equals("1"))
+                        {
 
-                                //If successful display the message
-                            }
 
-                            @Override
-                            public void onNoResult() {
+                           AlertDialog.Builder builder=new AlertDialog.Builder(ViewPass.this);
+                            builder.setTitle("Confirm changes");
+                            builder.setMessage("Are you sure you want to make these changes?");
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            }
+                                    dialog.dismiss();
 
-                            @Override
-                            public void onError(Throwable throwable) {
+                                }
+                            });
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
 
-                            }
-                        });
+                                }
+                            });
+
+                            AlertDialog alertDialog=builder.create();
+                            alertDialog.show();
+
+
+                        }
+                        else {
+                            Toasty.info(ViewPass.this,"There were no changes in original application",Toast.LENGTH_SHORT).show();
+                        } */
+                      try {
+                          RxConnect rxConnect1=new RxConnect(ViewPass.this);
+                          rxConnect1.setParam("application_mobile",Mobile2.getText().toString());
+                          rxConnect1.setParam("application_no",Pass_number);
+                          rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
+                          rxConnect1.setParam("transaction_pay_id","transactionID");
+                          rxConnect1.setParam("status_pay","1");
+                          rxConnect1.setParam("date_journey",CHANGED_DOJ);
+                          rxConnect1.setParam("pay_time",new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(System.currentTimeMillis()));
+                          rxConnect1.setParam("place_changed",CHANGED_PLACE_OF_VISIT);
+                          rxConnect1.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                              @Override
+                              public void onResult(String result) {
+
+                                  Log.v("OnchangeDetailsError",result);
+
+                                  //  dialog.dismiss();
+                                     Toasty.success(ViewPass.this,"Changes Made Successfully",Toast.LENGTH_SHORT).show();
+                                  //If successful display the message
+                              }
+
+                              @Override
+                              public void onNoResult() {
+
+                              }
+
+                              @Override
+                              public void onError(Throwable throwable) {
+
+                              }
+                          });
+                      }catch (Exception e)
+                      {
+                          Log.v("OnCgangingReqerror",e.getLocalizedMessage());
+                      }
+
+
+
 
 
                     }
                 });
 
+
+            }
+            else if(Editable.equals("0"))
+            {
+                if(!ApplicationStatus.equals("1"))
+                {
+                    Vehicle.setEnabled(false);
+                }
 
             }
 

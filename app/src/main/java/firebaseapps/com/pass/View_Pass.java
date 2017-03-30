@@ -128,6 +128,7 @@ public class View_Pass extends AppCompatActivity {
                     rxConnect.setParam("token_id",PASS_NO);
                     rxConnect.setParam("app_mobile",ID_NO);
                     rxConnect.setParam("user_mobile",REGISTERED_MOBILE_NUBER);
+                    rxConnect.setParam("user","customer");
                     rxConnect.setParam("date_journey",DateOfJourney);
 
                     rxConnect.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
@@ -139,7 +140,7 @@ public class View_Pass extends AppCompatActivity {
 
                                 JSONObject jsonObject=new JSONObject(result);
 
-                                 if(jsonObject.getString("response_status").equals("1")/*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
+                                 if(jsonObject.getString("response_status").equals("1"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
                                     PASS_DETAILS=result;
                                     Intent VIEW_PASS=new Intent(View_Pass.this,ViewPass.class);

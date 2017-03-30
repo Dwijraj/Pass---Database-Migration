@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 rxConnect.setParam(Constants.REGISTRATION_USER_MOBILE_KEY,Phone.getText().toString().trim());
                                 rxConnect.setParam(Constants.REGISTRATION_USER_EMAIL_KEY,EMAILID.getText().toString().trim());
-                                rxConnect.execute(Constants.REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
+                                rxConnect.execute(Constants.OFFLINE_REGISTRATION_URL,RxConnect.POST, new RxConnect.RxResultHelper() {
 
 
                                     @Override

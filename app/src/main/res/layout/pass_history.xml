@@ -506,7 +506,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="" />
+                        android:text="Book Vehicle" />
 
 
             </LinearLayout>

@@ -82,6 +82,7 @@ public class ChangeDetails extends AppCompatActivity {
     private String DateOfJourney;
     public static ArrayList<String> UNAVAILABLE_DATES=new ArrayList<>();
     private RxConnect rxConnect1;
+    private String   OTPstring;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -114,6 +115,10 @@ public class ChangeDetails extends AppCompatActivity {
         update=(Button)findViewById(R.id.change_button);
         img_button.setEnabled(false);
         update.setEnabled(false);
+
+        Idno.setVisibility(View.INVISIBLE);
+        Idno.setEnabled(false);
+
 
         rxConnect=new RxConnect(ChangeDetails.this);
         rxConnect.setCachingEnabled(false);
@@ -224,11 +229,12 @@ public class ChangeDetails extends AppCompatActivity {
                         {
                             DOJ.setText(sdf.format(myCalendar.getTime()));
                             DateOfJourney=sdf.format(myCalendar.getTime());
+                            update.setEnabled(true);
 
                         }
                         else
                         {
-
+                            update.setEnabled(false);
                             Toasty.error(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
                         }
 
@@ -252,6 +258,7 @@ public class ChangeDetails extends AppCompatActivity {
                 public void onClick(View v) {
 
                     SubmitChanges();
+                  //  RequestRefund();
 
                     //PAYMENT
 
@@ -267,7 +274,10 @@ public class ChangeDetails extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+                   // SubmitChanges();
+
                     RequestRefund();
+
                 }
             });
 
@@ -290,7 +300,7 @@ public class ChangeDetails extends AppCompatActivity {
             rxConnect1.setParam("token_id",passno);
             rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
 
-            rxConnect1.execute(/*Constants.UPDATE_DETAILS_URL*/Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
@@ -301,119 +311,7 @@ public class ChangeDetails extends AppCompatActivity {
                        /* Idno.setVisibility(View.VISIBLE);
                         Idno.setHint("Enter the OTP you received on the mobile number used in application"); */
 
-
-                        Random rn = new Random();
-                        int n = 999 - 99;
-                        int i = rn.nextInt() % n;
-                        if(i<0)
-                        {
-                            i*=-1;
-                        }
-                        int  OTPint=  99 + i;
-                        final   String   OTPstring=String.valueOf(OTPint);
-
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP to is "+OTPstring);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
-                                rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
-                                    @Override
-                                    public void onResult(String result) {
-                                        //do something on result
-                                        Idno.setVisibility(View.VISIBLE);
-                                        Idno.setHint("Enter the OTP you received on the mobile number used in application");
-                                        Toast.makeText(getApplicationContext(),"OTP sent to mobile number of applicant ",Toast.LENGTH_LONG).show();
-                                        update.setEnabled(true);
-
-
-                                    }
-                                    @Override
-                                    public void onNoResult() {
-                                        //do something
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-                                    }
-                                    @Override
-                                    public void onError(Throwable throwable) {
-                                        //do somenthing on error
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }).start();
-
-                        update.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //  if(update.getText().toString().equals("Enter OTP"))
-                                // {
-                                String ENTERED_OTP=Idno.getText().toString().trim();
-                                if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
-                                {
-                                    RxConnect rxConnect2=new RxConnect(ChangeDetails.this);
-                                    rxConnect2.setParam("token_id",passno);
-                                    rxConnect2.setParam("app_mobile",APLICANT_MOBILE);
-                                    rxConnect2.setParam("user_mobile",REGISTERED_NUMBER);
-                                    rxConnect2.setParam("date_journey",DateOfJourney);
-                                    rxConnect2.execute(Constants.REFUND_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
-                                        @Override
-                                        public void onResult(String result) {
-
-
-                                            try {
-                                                JSONObject jsonObject1=new JSONObject(result);
-                                                String resullt=JsonParser.JSONValue(jsonObject1,"status");
-
-                                                if(resullt.equals("1"))
-                                                {
-                                                    Toasty.success(getApplicationContext(),"Refund request submitted",Toast.LENGTH_LONG).show();
-
-                                                }
-                                                else if(resullt.equals("2"))
-                                                {
-                                                    Toasty.warning(getApplicationContext(),"Refund not possible",Toast.LENGTH_LONG).show();
-                                                }
-                                                else if(resullt.equals("3"))
-                                                {
-                                                    Toasty.error(getApplicationContext(),"No such application exists",Toast.LENGTH_LONG).show();
-
-                                                }
-                                                else
-                                                {
-                                                    Toasty.info(getApplicationContext(),"Your request is under review",Toast.LENGTH_LONG).show();
-                                                }
-
-
-                                            }catch (JSONException e)
-                                            {
-
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onNoResult() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable throwable) {
-
-                                        }
-                                    });
-                                    //   }
-                                }
-
-                            }
-                        });
-
-
-
+                        Send_OTP();
                     }catch (JSONException e)
                     {
 
@@ -429,6 +327,76 @@ public class ChangeDetails extends AppCompatActivity {
 
                 @Override
                 public void onError(Throwable throwable) {
+
+                }
+            });
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //  if(update.getText().toString().equals("Enter OTP"))
+                    // {
+                    String ENTERED_OTP=Idno.getText().toString().trim();
+                    if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
+                    {
+
+                        Log.v("Clicked","4");
+
+
+                        rxConnect.setParam("token_id",passno);
+                        rxConnect.setParam("app_mobile",APLICANT_MOBILE);
+                        rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+                        rxConnect.setParam("date_journey",DateOfJourney);
+                        rxConnect.execute(Constants.REFUND_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
+                            @Override
+                            public void onResult(String result) {
+
+
+                                try {
+                                    JSONObject jsonObject1=new JSONObject(result);
+                                    String resullt=JsonParser.JSONValue(jsonObject1,"status");
+
+                                    if(resullt.equals("1"))
+                                    {
+                                        Toasty.success(getApplicationContext(),"Refund request submitted",Toast.LENGTH_LONG).show();
+
+                                    }
+                                    else if(resullt.equals("2"))
+                                    {
+                                        Toasty.warning(getApplicationContext(),"Refund not possible",Toast.LENGTH_LONG).show();
+                                    }
+                                    else if(resullt.equals("3"))
+                                    {
+                                        Toasty.error(getApplicationContext(),"No such application exists",Toast.LENGTH_LONG).show();
+
+                                    }
+                                    else
+                                    {
+                                        Toasty.info(getApplicationContext(),"Your request is under review",Toast.LENGTH_LONG).show();
+                                    }
+
+
+                                }catch (JSONException e)
+                                {
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onNoResult() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+                        });
+                        //   }
+                    }
+                    else {
+                        Toasty.error(getApplicationContext(),"Wrong OTP",Toast.LENGTH_LONG).show();
+                    }
 
                 }
             });
@@ -438,119 +406,175 @@ public class ChangeDetails extends AppCompatActivity {
         }
 
     }
-    public void SubmitChanges()
-    {
+    void Send_OTP() {
 
-
-        passno=Passno.getText().toString().trim();
-
-        if(!(passno.isEmpty() && DateOfJourney.isEmpty()))
+        Random rn = new Random();
+        int n = 999 - 99;
+        int i = rn.nextInt() % n;
+        if(i<0)
         {
+            i*=-1;
+        }
+        int  OTPint=  99 + i;
+        OTPstring=String.valueOf(OTPint);
+        update.setEnabled(false);
+
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP to is "+OTPstring);
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+        rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
+            @Override
+            public void onResult(String result) {
+                //do something on result
+                Idno.setVisibility(View.VISIBLE);
+                Idno.setEnabled(true);
+                Idno.setHint("Enter the OTP you received on the mobile number used in application");
+                Toast.makeText(getApplicationContext(),"OTP sent to mobile number of applicant "+OTPstring,Toast.LENGTH_LONG).show();
+                update.setEnabled(true);
 
 
-            update.setEnabled(false);
-            rxConnect1.setParam("old_doj",DateOfJourney);
-            rxConnect1.setParam("token_id",passno);
-            rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
-
-            rxConnect1.execute(/*Constants.UPDATE_DETAILS_URL*/Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            }
+            @Override
+            public void onNoResult() {
+                //do something
+                Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable throwable) {
+                //do somenthing on error
+                Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    void GetPass()
+    {
+        String ENTERED_OTP=Idno.getText().toString().trim();
+        if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
+        {
+            RxConnect rxConnect2=new RxConnect(ChangeDetails.this);
+            rxConnect2.setParam("token_id",passno);
+            rxConnect2.setParam("app_mobile",APLICANT_MOBILE);
+            rxConnect2.setParam("user_mobile",REGISTERED_NUMBER);
+            //    rxConnect2.setParam("user","customer");
+            rxConnect2.setParam("date_journey",DateOfJourney);
+            rxConnect2.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
+                    Log.v("ResponseChangeDetails",result);
                     try {
-
                         JSONObject jsonObject=new JSONObject(result);
-                     APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
-                       /* Idno.setVisibility(View.VISIBLE);
-                        Idno.setHint("Enter the OTP you received on the mobile number used in application"); */
 
-
-                        Random rn = new Random();
-                        int n = 999 - 99;
-                        int i = rn.nextInt() % n;
-                        if(i<0)
+                        if(JsonParser.JSONValue(jsonObject,"response_status").equals("1"))
                         {
-                            i*=-1;
+                            String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
+
+
+                            Intent Change=new Intent(ChangeDetails.this, ViewPass.class);
+                            Change.putExtra("PassNumber",passno);
+                            Change.putExtra("editable","1");
+                            View_Pass.PASS_DETAILS=result;
+                            finish();
+                            startActivity(Change);
+
                         }
-                        int  OTPint=  99 + i;
-                        final   String   OTPstring=String.valueOf(OTPint);
 
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP to is "+OTPstring);
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-                                rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
-                                rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
-                                    @Override
-                                    public void onResult(String result) {
-                                        //do something on result
-                                        Idno.setVisibility(View.VISIBLE);
-                                        Idno.setHint("Enter the OTP you received on the mobile number used in application");
-                                        Toast.makeText(getApplicationContext(),"OTP sent to mobile number of applicant ",Toast.LENGTH_LONG).show();
-                                        update.setEnabled(true);
+
+                    }catch (JSONException e)
+                    {
+
+                    }
 
 
-                                    }
-                                    @Override
-                                    public void onNoResult() {
-                                        //do something
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-                                    }
-                                    @Override
-                                    public void onError(Throwable throwable) {
-                                        //do somenthing on error
-                                        Toast.makeText(getApplicationContext(),"OTP could not be sent",Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }).start();
+                }
 
-                        update.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                              //  if(update.getText().toString().equals("Enter OTP"))
-                               // {
-                                    String ENTERED_OTP=Idno.getText().toString().trim();
-                                    if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
-                                    {
-                                        RxConnect rxConnect2=new RxConnect(ChangeDetails.this);
-                                        rxConnect2.setParam("token_id",passno);
-                                        rxConnect2.setParam("app_mobile",APLICANT_MOBILE);
-                                        rxConnect2.setParam("user_mobile",REGISTERED_NUMBER);
-                                        rxConnect2.setParam("date_journey",DateOfJourney);
-                                        rxConnect2.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
-                                            @Override
-                                            public void onResult(String result) {
+                @Override
+                public void onNoResult() {
 
-                                                Intent Change=new Intent(ChangeDetails.this, ViewPass.class);
-                                                Change.putExtra("PassNumber",passno);
-                                                Change.putExtra("editable","1");
-                                                View_Pass.PASS_DETAILS=result;
-                                                finish();
-                                                startActivity(Change);
+                    Log.v("ResponseChange Details","NOresult");
+                }
 
-                                            }
+                @Override
+                public void onError(Throwable throwable) {
 
-                                            @Override
-                                            public void onNoResult() {
+                    Log.v("ResponseChange Details",throwable.getLocalizedMessage()+"ffdfd");
+                }
+            });
+            //   }
+        }
+        else
+        {
+            Toasty.error(getApplicationContext(),"OTP invalid",Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                                            }
+    public void SubmitChanges()
+    {
 
-                                            @Override
-                                            public void onError(Throwable throwable) {
+        passno=Passno.getText().toString().trim();
+        //DateOfJourney=DOJ.getText().toString();
+        DateOfJourney=DOJ.getText().toString();
 
-                                            }
-                                        });
-                                 //   }
-                                }
 
-                            }
-                        });
+
+        if(!(passno.isEmpty() || DateOfJourney.isEmpty()))
+        {
+
+
+
+            rxConnect1.setParam("old_doj",DateOfJourney);
+            rxConnect1.setParam("application_no",passno);
+            rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
+
+            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                @Override
+                public void onResult(String result) {
+
+                    Log.v("ResultFromWeb",result);
+                    try {
+                        JSONObject jsonObject1=new JSONObject(result);
+
+                        Log.v("ResultFromWeb",result);
+
+                        if(JsonParser.JSONValue(jsonObject1,"response_status").equals("1"))
+                        {
+                            JSONObject jsonObject=new JSONObject(result);
+                            APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
+
+
+
+                            JSONObject jsonObject2=new JSONObject(APLICANT_MOBILE);
+                            APLICANT_MOBILE=JsonParser.JSONValue(jsonObject2,"application_mobile");
+
+                            Log.v("Applicant",APLICANT_MOBILE);
+
+
+                            Send_OTP();
+
+
+
+                        }
+                        else if(JsonParser.JSONValue(jsonObject1,"response_status").equals("2"))
+                        {
+                            Toasty.error(getApplicationContext(),"Registered Mobile Mismatch",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(JsonParser.JSONValue(jsonObject1,"response_status").equals("3"))
+                        {
+
+                            Toasty.warning(getApplicationContext(),"Credentials don't match",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(JsonParser.JSONValue(jsonObject1,"response_status").equals("0"))
+                        {
+                            Toasty.warning(getApplicationContext(),"Please Fill all details",Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+
 
 
 
@@ -572,10 +596,24 @@ public class ChangeDetails extends AppCompatActivity {
 
                 }
             });
+
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    GetPass();
+
+                }
+            });
+
+
+
+
         }
         else {
             Toasty.warning(getApplicationContext(),"Please fill the details",Toast.LENGTH_LONG).show();
         }
+
 
     }
 
