@@ -21,11 +21,13 @@
         <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.Passdetails">
 
-        <!--  <intent-filter>
+            <!--
+              <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
                  <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter> -->
+             </intent-filter>
+            -->
 
         </activity>
         <activity android:name=".UI.CheckPassDetails" />
@@ -54,13 +56,15 @@
         <activity android:name=".View_Pass" />
         <activity android:name=".UI.Vehicles" />
         <activity android:name=".UI.Startup">
-          <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.GetStarted"/>
+        <activity android:name=".UI.GetStarted" />
+        <activity android:name=".UI.PassPreview" />
+        <activity android:name=".UI.Documentschange"></activity>
     </application>
 
 </manifest>

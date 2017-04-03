@@ -5,7 +5,6 @@ package firebaseapps.com.pass.Constants;
  */
 
 public class Constants {
-
     public static String SMS_URL="http://mobicomm.dove-sms.com/mobicomm/submitsms.jsp";
     public static String SMS_PARAM_KEY_ACCUSAGE="accusage";
     public static String SMS_PARAM_VALUE_ACCUSAGE="2";
@@ -35,7 +34,7 @@ public class Constants {
     public static String OFFLINE="http://192.168.2.2/pass3/index.php/api/userapi/check/format/json";
     public static String UNAVAILABLE_DOJ="http://192.168.2.2/pass3/index.php/api/userapi/datesl_rejects_list/format/json";
     public static String PASS_RETREIVE_URL="http://192.168.2.2/pass3/index.php/api/userapi/user_pass_info/format/json";
-    public static String REFUND_REQUEST="";
+    public static String CANCEL_REQUEST="";
     public static String UPDATE_DETAILS_URL="http://192.168.2.2/pass3/index.php/api/userapi/price_updation_pass/format/json";
     public static String STATUS_DETAIL_URL="";
     public static String GET_APPLICANT_MOB_CHANGE_DETAIL="http://192.168.2.2/pass3/index.php/api/userapi/re_schedule_phone/format/json";

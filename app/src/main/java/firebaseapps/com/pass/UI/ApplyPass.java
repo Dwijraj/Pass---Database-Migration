@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import es.dmoral.toasty.Toasty;
+import firebaseapps.com.pass.Constants.OPTION_SELECTED;
 import firebaseapps.com.pass.SericeNReceiver.MyService;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.R;
@@ -32,10 +33,14 @@ public class ApplyPass extends AppCompatActivity {
 
     private Button applypass;
     private Button checkpassstatus;
+    private Button EnterVehicleDetails;
     private Button ViewPass;
     private String user;
+    private Button ApplicationPreview;
     private Button changepassdetails;
     public static  String OPTION;
+    public static  String OPTION_SELECTED; //Vehicle or Application Preview or Pass Preview
+
 
 
     @Override
@@ -44,6 +49,8 @@ public class ApplyPass extends AppCompatActivity {
         setContentView(R.layout.activity_apply_pass);
 
 
+        ApplicationPreview=(Button) findViewById(R.id.Application_Preview);                     //Preview of the Application
+        EnterVehicleDetails=(Button)findViewById(R.id.EnterVehicleDetails);                     //To Enter Vehicle info of a pass
         applypass=(Button)findViewById(R.id.getstarted);                                        //To apply for new pass
         checkpassstatus=(Button)findViewById(R.id.checkpassstatus);                             //To check pass status
         changepassdetails=(Button)findViewById(R.id.Changepassdetails);                         //To change the details of the pass
@@ -104,8 +111,8 @@ public class ApplyPass extends AppCompatActivity {
 
 
 
-                                OPTION="Refund request";
-                                Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to change the DOJ
+                                OPTION="Cancel request";
+                                Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to cancel application
                                 startActivity(ChangeDetails);
 
                                   // do nothing
@@ -120,8 +127,34 @@ public class ApplyPass extends AppCompatActivity {
         ViewPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view a particular pass
+
+                OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_PASS_VIEW;
+                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view a  Pass
                 startActivity(view_pass);
+            }
+        });
+        EnterVehicleDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_VEHICLE;
+                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to enter Vehicle Details pass
+                startActivity(view_pass);
+             //   Intent Vehicle_Details=new Intent(ApplyPass.this,Vehicles.class);
+              //  startActivity(Vehicle_Details);
+
+            }
+        });
+        ApplicationPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_APPLICATION_PREVIEW;
+                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view submitted Application
+                startActivity(view_pass);
+
+
+
             }
         });
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    tools:context="firebaseapps.com.pass.UI.PassPreview">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -275,6 +275,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:visibility="invisible"
                     android:layout_height="wrap_content"
                     android:layout_weight="20"
                     android:gravity="center">
@@ -466,55 +467,12 @@
                 android:textSize="16dp"/> -->
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/BAR_CODE_SHOW"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp" />
-
-                <TextView
-                    android:id="@+id/PassNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/BAR_CODE_SHOW"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="Hellos sdsdsdsdsdsdsds"
-                    android:textColor="#ffff"
-                    android:textSize="19sp" />
-
-
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-
-
-
-                    <Button
-                        android:id="@+id/Display_Bar_Code"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="Book Vehicle" />
-
-
-            </LinearLayout>
 
 
         </LinearLayout>
     </ScrollView>
+
 
 
 </LinearLayout>

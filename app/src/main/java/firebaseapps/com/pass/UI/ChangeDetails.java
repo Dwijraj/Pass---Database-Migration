@@ -244,6 +244,8 @@ public class ChangeDetails extends AppCompatActivity {
                     }
                 }, mYear, mMonth, mDay);
                 // mDatePicker.setTitle("Select date");
+                mDatePicker.getDatePicker().setMinDate(mcurrentDate.getTimeInMillis());
+                mDatePicker.getDatePicker().setMaxDate(m_three_months.getTimeInMillis());
                 mDatePicker.show();
 
 
@@ -258,7 +260,7 @@ public class ChangeDetails extends AppCompatActivity {
                 public void onClick(View v) {
 
                     SubmitChanges();
-                  //  RequestRefund();
+                  //  RequestCancel();
 
                     //PAYMENT
 
@@ -269,14 +271,15 @@ public class ChangeDetails extends AppCompatActivity {
         }
         else
         {
-            update.setText("REQUEST REFUND");
+            update.setText("REQUEST Cancel");
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                    // SubmitChanges();
+                    SubmitChanges();
 
-                    RequestRefund();
+                    RequestCancel();
 
                 }
             });
@@ -287,7 +290,7 @@ public class ChangeDetails extends AppCompatActivity {
 
 
     }
-    public void RequestRefund()
+    public void RequestCancel()
     {
         passno=Passno.getText().toString().trim();
 
@@ -334,6 +337,10 @@ public class ChangeDetails extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //  if(update.getText().toString().equals("Enter OTP"))
+
+
+                    Log.v("FunctionChange","Refund");
+
                     // {
                     String ENTERED_OTP=Idno.getText().toString().trim();
                     if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
@@ -346,7 +353,7 @@ public class ChangeDetails extends AppCompatActivity {
                         rxConnect.setParam("app_mobile",APLICANT_MOBILE);
                         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
                         rxConnect.setParam("date_journey",DateOfJourney);
-                        rxConnect.execute(Constants.REFUND_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
+                        rxConnect.execute(Constants.CANCEL_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
                             @Override
                             public void onResult(String result) {
 
@@ -357,12 +364,12 @@ public class ChangeDetails extends AppCompatActivity {
 
                                     if(resullt.equals("1"))
                                     {
-                                        Toasty.success(getApplicationContext(),"Refund request submitted",Toast.LENGTH_LONG).show();
+                                        Toasty.success(getApplicationContext(),"Cancel request submitted",Toast.LENGTH_LONG).show();
 
                                     }
                                     else if(resullt.equals("2"))
                                     {
-                                        Toasty.warning(getApplicationContext(),"Refund not possible",Toast.LENGTH_LONG).show();
+                                        Toasty.warning(getApplicationContext(),"Cancelation not possible",Toast.LENGTH_LONG).show();
                                     }
                                     else if(resullt.equals("3"))
                                     {
@@ -601,6 +608,7 @@ public class ChangeDetails extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+                    Log.v("FunctionChange","GetPass");
                     GetPass();
 
                 }

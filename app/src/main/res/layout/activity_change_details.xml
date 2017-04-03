@@ -48,7 +48,7 @@
                     android:maxEms="30"
                     android:minEms="10"
                     android:background="#ffff"
-                    android:hint="Enter Pass Number"
+                    android:hint="Application Number"
                     android:id="@+id/change_pass_number"/>
 
             </LinearLayout>

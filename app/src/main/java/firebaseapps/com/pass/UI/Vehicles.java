@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -142,6 +143,7 @@ public class Vehicles extends AppCompatActivity {
                             OPERATOR_NAME_STRING=Operatorname.getText().toString().trim();
 
 
+                    NUMBER_OF_PASSENGER.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     NUMBER_OF_PASSENGER.setContentView(R.layout.numberofperson);
                     NUMBER_OF_PASSENGER.setTitle("Number of Passengers");
                   //  NUMBER_OF_PASSENGER.setCanceledOnTouchOutside(false);
@@ -162,6 +164,7 @@ public class Vehicles extends AppCompatActivity {
 
                             Log.v("Selected",Sel);
 
+                            PASSENGER_NAME.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             if(Sel.equals("2131427515")||Sel.equals("2131493054"))
                             {
                                 //Passes 5-10
@@ -1113,8 +1116,9 @@ public class Vehicles extends AppCompatActivity {
             //When Applicant photo is selected
 
                     DRIVER_LICENSE_URI=data.getData();
-
                     DriverLicense.setImageURI(DRIVER_LICENSE_URI);
+
+
 
 
 
@@ -1124,7 +1128,6 @@ public class Vehicles extends AppCompatActivity {
             //when applicant scanned user id is selected
 
                 DOCUMENTS_URI=data.getData();
-
                 Documents.setImageURI(DOCUMENTS_URI);
 
 
@@ -1134,7 +1137,6 @@ public class Vehicles extends AppCompatActivity {
             //when applicant scanned user id is selected
 
             INSURANCE_URI=data.getData();
-
             Insurance.setImageURI(INSURANCE_URI);
 
 

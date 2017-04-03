@@ -29,7 +29,11 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.Constants;
+import firebaseapps.com.pass.Constants.OPTION_SELECTED;
+import firebaseapps.com.pass.UI.ApplyPass;
+import firebaseapps.com.pass.UI.PassPreview;
 import firebaseapps.com.pass.UI.Passdetails;
+import firebaseapps.com.pass.UI.Vehicles;
 import mohitbadwal.rxconnect.RxConnect;
 
 public class View_Pass extends AppCompatActivity {
@@ -58,6 +62,10 @@ public class View_Pass extends AppCompatActivity {
 
         rxConnect=new RxConnect(View_Pass.this);
         rxConnect.setCachingEnabled(false);
+        if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
+        {
+            pass_no.setHint("Enter Application Number");
+        }
 
 
         DATEPICKER.setOnClickListener(new View.OnClickListener() {
@@ -143,11 +151,34 @@ public class View_Pass extends AppCompatActivity {
                                  if(jsonObject.getString("response_status").equals("1"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
                                     PASS_DETAILS=result;
-                                    Intent VIEW_PASS=new Intent(View_Pass.this,ViewPass.class);
-                                    VIEW_PASS.putExtra("PassNumber",PASS_NO);
-                                    VIEW_PASS.putExtra("editable","0");
-                                    finish();
-                                    startActivity(VIEW_PASS);
+
+                                    if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
+                                    {
+                                        Intent PASS_PREVIEW=new Intent(View_Pass.this,PassPreview.class);
+                                        PASS_PREVIEW.putExtra("PassNumber",PASS_NO);
+                                        PASS_PREVIEW.putExtra("editable","0");
+                                        finish();
+                                        startActivity(PASS_PREVIEW);
+                                    }
+                                    else if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_PASS_VIEW))
+                                    {
+                                        Intent PASS_VIEW=new Intent(View_Pass.this,ViewPass.class);
+                                        PASS_VIEW.putExtra("PassNumber",PASS_NO);
+                                        PASS_VIEW.putExtra("editable","0");
+                                        finish();
+                                        startActivity(PASS_VIEW);
+
+                                    }
+                                    else {
+                                        Intent VEHICLE=new Intent(View_Pass.this, Vehicles.class);
+                                        VEHICLE.putExtra("PassNumber",PASS_NO);
+                                        VEHICLE.putExtra("editable","0");
+                                        finish();
+                                        startActivity(VEHICLE);
+
+
+                                    }
+
                                 }
                                 else if(jsonObject.getString("response_status").equals("3"))
                                 {
