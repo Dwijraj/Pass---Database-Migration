@@ -310,19 +310,39 @@ public class ChangeDetails extends AppCompatActivity {
 
             update.setEnabled(false);
             rxConnect1.setParam("old_doj",DateOfJourney);
-            rxConnect1.setParam("token_id",passno);
-            rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
+            rxConnect1.setParam("application_no",passno);
+            rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
 
             rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
+                    Log.v("Response",result);
                     try {
 
-                        JSONObject jsonObject=new JSONObject(result);
-                        APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
+                        Log.v("Response",result);
 
-                        Send_OTP();
+                        JSONObject jsonObject=new JSONObject(result);
+
+                        Log.v("Response1","here4");
+                        JSONObject jsonObject1=jsonObject.getJSONObject("applicant_mobile");
+
+                        Log.v("Response1","here3");
+                        APLICANT_MOBILE=JsonParser.JSONValue(jsonObject1,"application_mobile");
+
+                        Log.v("Response1","here2");
+                        String APPLICATION_STATUS=JsonParser.JSONValue(jsonObject1,"status_detail_vech");
+
+                        Log.v("Response1","here1");
+                        if(APPLICATION_STATUS.equals("2"))
+                        {
+                            Send_OTP();
+                        }
+                        else
+                        {
+                            Toasty.info(getApplicationContext(),"You are not authorized to enter your Vehicle Details Now",Toast.LENGTH_SHORT).show();
+                        }
+
                     }catch (JSONException e)
                     {
 
@@ -380,17 +400,19 @@ public class ChangeDetails extends AppCompatActivity {
 
             update.setEnabled(false);
             rxConnect1.setParam("old_doj",DateOfJourney);
-            rxConnect1.setParam("token_id",passno);
-            rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
+            rxConnect1.setParam("application_no",passno);
+            rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
 
             rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
+                    Log.v("ResponseRequestCancel",result);
                     try {
 
                         JSONObject jsonObject=new JSONObject(result);
-                        APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
+                        JSONObject jsonObject1=jsonObject.getJSONObject("applicant_mobile");
+                        APLICANT_MOBILE=JsonParser.JSONValue(jsonObject1,"application_mobile");
                        /* Idno.setVisibility(View.VISIBLE);
                         Idno.setHint("Enter the OTP you received on the mobile number used in application"); */
 

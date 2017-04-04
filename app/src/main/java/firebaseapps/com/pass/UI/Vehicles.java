@@ -139,9 +139,13 @@ public class Vehicles extends AppCompatActivity {
 
                 if(IsCorrect())
                 {
+
+                    Log.v("Response","Working2");
                     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
+
+                            Log.v("Response","Working1");
 
                         }
                     }, new Response.ErrorListener() {
@@ -156,11 +160,11 @@ public class Vehicles extends AppCompatActivity {
 
 
                             Map<String, String> params = new HashMap<>();
-                            params.put("DriversName",DRIVERS_NAME);
-                            params.put("DLNumber",DRIVER_LICENSE_NUMBER);
-                            params.put("VehicleNumber",VEHICLE_NUMBER);
-                            params.put("VehicleModel",VEHICLE_MODEL);
-                            params.put("Application_no",APPLICATION_NUMBER);
+                            params.put("driver_name",DRIVERS_NAME);
+                            params.put("driver_licence",DRIVER_LICENSE_NUMBER);
+                            params.put("vehicle_no",VEHICLE_NUMBER);
+                            params.put("vehicle_mode",VEHICLE_MODEL);
+                            params.put("application_no",APPLICATION_NUMBER);
 
                             return params;
                         }
@@ -172,9 +176,9 @@ public class Vehicles extends AppCompatActivity {
                             // for now just get bitmap data from ImageView
 
 
-                            params.put("DLScan", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
-                            params.put("RCBookScan", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
-                            params.put("InsuranceScan", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
+                            params.put("picture5", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
+                            params.put("picture3", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
+                            params.put("picture4", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
 
                             return params;
                         }

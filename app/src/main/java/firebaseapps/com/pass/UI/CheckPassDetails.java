@@ -173,8 +173,6 @@ public class CheckPassDetails extends AppCompatActivity {
 
                                 JSONObject jsonObject1=jsonObject.getJSONObject("application_info");
 
-                                Log.v("OTPSTRINGQ!@3",jsonObject.toString());
-                                Log.v("OTPSTRINGQ!@3",jsonObject1.toString());
 
 
                                 APLICANT_MOBILE=JsonParser.JSONValue(jsonObject1,"application_mobile");
@@ -182,18 +180,23 @@ public class CheckPassDetails extends AppCompatActivity {
                                 Log.v("OTPSTRINGQ!@3",APLICANT_MOBILE);
                                 String APPLICATION_STATUS=  JsonParser.JSONValue(jsonObject1,"paid_status");
 
-                                if(APPLICATION_STATUS.equals("APPLICATION_DOC_FAIL"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
+                                if(APPLICATION_STATUS.equals("2"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
 
                                         Toasty.info(getApplicationContext(),"ReUpload your picture and scan Id",Toast.LENGTH_SHORT).show();
                                         PROFILE_PIC_SCAN_PIC.setVisibility(View.VISIBLE);
 
                                 }
-                                else  if(APPLICATION_STATUS.equals("VEHICLE_DOC_FAIL"))
+                                else  if(APPLICATION_STATUS.equals("3"))
                                 {
 
-                                    Toasty.info(getApplicationContext(),"ReUpload your picture and scan Id",Toast.LENGTH_SHORT).show();
+                                    Toasty.info(getApplicationContext(),"ReUpload vehicle details",Toast.LENGTH_SHORT).show();
                                         VEHICLE.setVisibility(View.VISIBLE);
+
+                                }
+                                else if (APPLICATION_STATUS.equals("0"))
+                                {
+                                    Toasty.success(getApplicationContext(),"Your Application is under process",Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -249,9 +252,9 @@ public class CheckPassDetails extends AppCompatActivity {
                     @Override
                     public void onResult(String result) {
 
-                        Log.v("OTPSENT",result+"...");
 
-                        Toasty.info(getApplicationContext(),"Done",Toast.LENGTH_SHORT).show();
+
+                        Toasty.info(getApplicationContext(),"Done"+OTPstring,Toast.LENGTH_SHORT).show();
                         findViewById(R.id.OTP_LAYOUT).setVisibility(View.VISIBLE);
 
                     }
@@ -333,7 +336,7 @@ public class CheckPassDetails extends AppCompatActivity {
 
                         Log.v("OTPSENT",result+"...");
 
-                        Toasty.info(getApplicationContext(),"Done",Toast.LENGTH_SHORT).show();
+                        Toasty.info(getApplicationContext(),"Done"+OTPstring,Toast.LENGTH_SHORT).show();
                         findViewById(R.id.OTP_LAYOUT).setVisibility(View.VISIBLE);
 
                     }

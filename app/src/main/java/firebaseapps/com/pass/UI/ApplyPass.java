@@ -106,7 +106,7 @@ public class ApplyPass extends AppCompatActivity {
                                 startActivity(ChangeDetails);
                             }
                         })
-                        .setNegativeButton("Request refund", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Request Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
 

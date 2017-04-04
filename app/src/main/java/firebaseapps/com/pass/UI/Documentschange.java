@@ -8,11 +8,14 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -21,22 +24,34 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
+import firebaseapps.com.pass.Adapter.CustomAdapter;
+import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Constants.OPTION_SELECTED;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GetMimeType;
+import firebaseapps.com.pass.Utils.JsonParser;
+import firebaseapps.com.pass.Utils.NetworkUtil;
+import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 
 public class Documentschange extends AppCompatActivity {
 
+    private EditText ID_NUMBER;
+    private Spinner  ID_SOURCE;
     private ImageView PROFILE_PIC;
     private ImageView SCAN_ID;
     private Button CLICK_PICTURE;
@@ -48,15 +63,23 @@ public class Documentschange extends AppCompatActivity {
     private Uri DRIVER_LICENSE_URI;
     private Uri INSURANCE_URI;
     private Uri RCBook_URI;
+    private Uri PROFILE_PIC_CHANGE_URI;
+    private Uri SCAN_ID_URI;
     private String RCBOOK_MIME;
     private String INSURANCE_MIME;
     private String DRIVER_LICENSE_MIME;
+    private String PROFILE_PIC_CHANGE_MIME;
+    private String SCAN_ID_CHANGE_MIME;
     private File INSURANCE_FILE;
     private File RC_BOOK_FILE;
     private File DRIVER_LICENSE_FILE;
+    private File PROFILE_PIC_CHANGE_FILE;
+    private File SCAN_ID_CHANGE_FILE;
     private byte[] RC_BOOK_BYTE_ARRAY;
     private byte[] DRIVER_LICENSE_BYTE_ARRAY;
     private byte[] INSURANCE_BYTE_ARRAY;
+    private byte[]  PROFILE_PIC_CHANGE_BYTE_ARRAY;
+    private byte[]  SCAN_ID_CHANGE_BYTE_ARRAY;
     private EditText Drivername;
     private EditText DriverLicenseNumber;
     private EditText VehicleNumber;
@@ -65,7 +88,12 @@ public class Documentschange extends AppCompatActivity {
     private final int DRIVER_LICENSE_REQUEST_CODE=343;       //To recognise in onActivityresult
     private final int INSURANCE_REQUEST_CODE=434;
     private final int RCBook_REQUEST_CODE=535;
+    private final int PROFILE_PIC_CHANGE_REQUESTCODE=340;
+    private final int SCAN_ID_CHANGE_REQUESTCODE=430;
     private Button Submit;
+    private String SOURCE_DESCRIPTION;
+
+    private ArrayList<String> paths=new ArrayList<>();
 
     private LinearLayout Vehicle_Layout;
     private LinearLayout Application_Layout;
@@ -79,7 +107,148 @@ public class Documentschange extends AppCompatActivity {
 
 
 
-        if(CheckPassDetails.CHANGEABLE.equals(OPTION_SELECTED.OPTION_CHANGEABLE_VEHICLE))
+        if(CheckPassDetails.CHANGEABLE.equals(OPTION_SELECTED.OPTION_CHANGEABLE_APPLICATION))
+        {
+            SOURCE_DESCRIPTION=null;
+            paths.add("");
+            paths.add("Passport");
+            paths.add("Adhar Card");
+            paths.add("Driving License");
+
+
+             Vehicle_Layout.setVisibility(View.INVISIBLE);
+
+            Log.v("Documents","HERE");
+
+            PROFILE_PIC=(ImageView) findViewById(R.id.PROFILE_PICTURE_CHANGE);
+            SCAN_ID=(ImageView) findViewById(R.id.ID_PROOF_SCAN_CHANGE);
+            CLICK_PICTURE=(Button) findViewById(R.id.PROFILE_CHANGE);
+            UPLOAD_SCAN_ID=(Button) findViewById(R.id.UPLOAD_ID_CHANGE);
+            SUBMIT_UPDATED_INFO=(Button) findViewById(R.id.SUBMIT_APPLICATION);
+            ID_NUMBER=(EditText) findViewById(R.id.id_no_change);
+            ID_SOURCE=(Spinner) findViewById(R.id.ID_PROOF_change);
+
+            CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),paths);
+            ID_SOURCE.setAdapter(customAdapter);
+
+            ID_SOURCE.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    if(position==0)
+                        SOURCE_DESCRIPTION=null;
+
+                    else
+                        SOURCE_DESCRIPTION=paths.get(position);
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+            CLICK_PICTURE.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent PICK_PROFILE_PIC=new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(PICK_PROFILE_PIC, PROFILE_PIC_CHANGE_REQUESTCODE);
+
+                }
+            });
+
+            UPLOAD_SCAN_ID.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent=new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    startActivityForResult(intent,SCAN_ID_CHANGE_REQUESTCODE);
+
+                }
+            });
+
+
+            SUBMIT_UPDATED_INFO.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final String ID=ID_NUMBER.getText().toString().trim();
+
+
+                    if(PROFILE_PIC_CHANGE_BYTE_ARRAY!=null&&SCAN_ID_CHANGE_BYTE_ARRAY!=null&&ID!=null
+                            &&SOURCE_DESCRIPTION!=null)
+                    {
+
+                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.PROFILE_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
+                            @Override
+                            public void onResponse(NetworkResponse response) {
+
+
+
+
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                           }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() {
+
+
+
+                                Map<String, String> params = new HashMap<>();
+                                params.put("applicant_no",  Vehicles.APPLICATION_NUMBER);
+                                params.put("applicant_id_source",SOURCE_DESCRIPTION);
+                                params.put("applicant_id_number",ID);
+
+                                return params;
+                            }
+
+                            @Override
+                            protected Map<String, DataPart> getByteData() {
+                                Map<String, DataPart> params = new HashMap<>();
+                                // file name could found file base or direct access from real path
+                                // for now just get bitmap data from ImageView
+
+
+                                params.put(ApplicationParams.PICTURE1, new DataPart(PROFILE_PIC_CHANGE_URI.getLastPathSegment()+"."+PROFILE_PIC_CHANGE_MIME,PROFILE_PIC_CHANGE_BYTE_ARRAY, "image/jpeg"));
+                                params.put(ApplicationParams.PICTURE,new DataPart(SCAN_ID_URI.getLastPathSegment()+"."+"jpeg",SCAN_ID_CHANGE_BYTE_ARRAY,"image/jpeg"));
+                                return params;
+                            }
+
+                        };
+                        //Creating a Request Queue
+                        RequestQueue requestQueue2 = Volley.newRequestQueue(Documentschange.this);
+
+                        //Adding request to the queue
+                        requestQueue2.add(multipartRequest);
+
+
+
+
+                    }
+
+
+                }
+            });
+
+
+
+
+
+
+
+
+        }
+        else if(CheckPassDetails.CHANGEABLE.equals(OPTION_SELECTED.OPTION_CHANGEABLE_VEHICLE))
         {
             Application_Layout.setVisibility(View.INVISIBLE);
 
@@ -131,9 +300,13 @@ public class Documentschange extends AppCompatActivity {
 
                     if(IsCorrect())
                     {
-                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
+
+                        Log.v("Response","Working2");
+                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
                             @Override
                             public void onResponse(NetworkResponse response) {
+
+                                Log.v("Response","Working1");
 
                             }
                         }, new Response.ErrorListener() {
@@ -148,11 +321,11 @@ public class Documentschange extends AppCompatActivity {
 
 
                                 Map<String, String> params = new HashMap<>();
-                                params.put("DriversName",DRIVERS_NAME);
-                                params.put("DLNumber",DRIVER_LICENSE_NUMBER);
-                                params.put("VehicleNumber",VEHICLE_NUMBER);
-                                params.put("VehicleModel",VEHICLE_MODEL);
-                                params.put("Application_no",Vehicles.APPLICATION_NUMBER);
+                                params.put("driver_name",DRIVERS_NAME);
+                                params.put("driver_licence",DRIVER_LICENSE_NUMBER);
+                                params.put("vehicle_no",VEHICLE_NUMBER);
+                                params.put("vehicle_mode",VEHICLE_MODEL);
+                                params.put("application_no",Vehicles.APPLICATION_NUMBER);
 
                                 return params;
                             }
@@ -164,9 +337,9 @@ public class Documentschange extends AppCompatActivity {
                                 // for now just get bitmap data from ImageView
 
 
-                                params.put("DLScan", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
-                                params.put("RCBookScan", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
-                                params.put("InsuranceScan", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
+                                params.put("picture5", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
+                                params.put("picture3", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
+                                params.put("picture4", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
 
                                 return params;
                             }
@@ -187,13 +360,9 @@ public class Documentschange extends AppCompatActivity {
 
                 }
             });
-            
-            
 
-        }
-        else
-        {
-             Vehicle_Layout.setVisibility(View.INVISIBLE);
+
+
         }
 
     }
@@ -325,6 +494,66 @@ public class Documentschange extends AppCompatActivity {
 
 
 
+
+        }
+       else if(resultCode==RESULT_OK&&requestCode==PROFILE_PIC_CHANGE_REQUESTCODE)
+        {
+            PROFILE_PIC_CHANGE_URI= data.getData();
+
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+
+            int p[]=getResolution(photo.getWidth(),photo.getHeight());
+            photo=Bitmap.createScaledBitmap(photo,p[0],p[1],true);
+
+
+
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            PROFILE_PIC_CHANGE_BYTE_ARRAY = stream.toByteArray();
+
+
+            PROFILE_PIC_CHANGE_URI=  Passdetails.getImageUri(getApplicationContext(), photo);
+
+
+            Glide.with(Documentschange.this)
+                    .load(PROFILE_PIC_CHANGE_BYTE_ARRAY)
+                    .into(PROFILE_PIC);
+
+
+        }
+        else  if (resultCode==RESULT_OK && requestCode==SCAN_ID_CHANGE_REQUESTCODE)
+        {
+            SCAN_ID_URI=data.getData();
+
+            SCAN_ID_CHANGE_MIME=GetMimeType.GetMimeType(Documentschange.this,SCAN_ID_URI);
+
+            SCAN_ID_CHANGE_MIME=GetMimeType.ReturnCorrectMime(SCAN_ID_CHANGE_MIME);
+
+            try {
+                //Getting the Bitmap from Gallery
+                SCAN_ID_CHANGE_FILE=new File(getPath(SCAN_ID_URI));
+
+                SCAN_ID_CHANGE_BYTE_ARRAY = new byte[(int) SCAN_ID_CHANGE_FILE.length()];
+                FileInputStream fileInputStream = new FileInputStream(SCAN_ID_CHANGE_FILE);
+                fileInputStream.read(SCAN_ID_CHANGE_BYTE_ARRAY);
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), SCAN_ID_URI);
+                int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
+                Bitmap scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+
+
+
+                SCAN_ID.setImageBitmap(scaled);
+
+
+            } catch (IOException e) {
+
+                Toast.makeText(getApplicationContext(),"FILE ERROR",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+            }
 
         }
 
