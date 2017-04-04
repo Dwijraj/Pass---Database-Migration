@@ -27,4 +27,25 @@ public class GetMimeType {
 
         return strMimeType;
     }
+    public  static String ReturnCorrectMime(String MIME)
+    {
+        if(MIME.contains("/jpg") || MIME.contains("/JPG"))
+        {
+            MIME="jpg";
+        }
+        else if(MIME.contains("/png") || MIME.contains("/PNG"))
+        {
+            MIME="png";
+
+        }
+        else if(MIME.contains("/jpeg") || MIME.contains("/JPEG"))
+        {
+            MIME="jpeg";
+        }
+        else if(MIME.contains("/gif") || MIME.contains("/GIF"))
+        {
+            MIME="gif";
+        }
+        return MIME;
+    }
 }

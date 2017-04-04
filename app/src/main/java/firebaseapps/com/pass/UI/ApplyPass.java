@@ -137,8 +137,8 @@ public class ApplyPass extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_VEHICLE;
-                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to enter Vehicle Details pass
+                OPTION= "Update Vehicle Details";
+                Intent view_pass=new Intent(ApplyPass.this,ChangeDetails.class);            //Allows user to enter Vehicle Details pass
                 startActivity(view_pass);
              //   Intent Vehicle_Details=new Intent(ApplyPass.this,Vehicles.class);
               //  startActivity(Vehicle_Details);

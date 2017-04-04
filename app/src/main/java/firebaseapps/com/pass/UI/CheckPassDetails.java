@@ -162,6 +162,7 @@ public class CheckPassDetails extends AppCompatActivity {
                                 Log.v("ResponseViewPass",result);
 
 
+                                Vehicles.APPLICATION_NUMBER=PASS_NO;
                                 JSONObject jsonObject=new JSONObject(result);
                                 Log.v("OTPSTRINGQ!@3",jsonObject.toString());
 
@@ -388,8 +389,5 @@ public class CheckPassDetails extends AppCompatActivity {
 
 
     }
-    void Send_OTP() {
 
-
-    }
 }

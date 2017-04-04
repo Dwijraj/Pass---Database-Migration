@@ -111,7 +111,7 @@ import mohitbadwal.rxconnect.RxConnect;
 public class Passdetails extends AppCompatActivity {
 
 
-    private String ImagePath;
+
     private String MIME;
     private Uri imageuri =null;
     private Uri imageuriProfile=null;
@@ -998,7 +998,7 @@ public class Passdetails extends AppCompatActivity {
 
         return sb.toString();
     }
-    public String getPath(Uri uri)
+    public  String getPath(Uri uri)
     {
         String[] projection = { MediaStore.Images.Media.DATA };
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
@@ -1012,7 +1012,7 @@ public class Passdetails extends AppCompatActivity {
     File file;
     Bitmap scaled;
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
@@ -1081,9 +1081,8 @@ public class Passdetails extends AppCompatActivity {
             }
 
 
-            ImagePath=imageuri.getPath();
 
-            Log.v("Dinkus17",ImagePath+"  "+imageuri.toString());
+
 
             try {
                 //Getting the Bitmap from Gallery

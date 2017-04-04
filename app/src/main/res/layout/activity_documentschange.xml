@@ -17,6 +17,7 @@
 
 
         <LinearLayout
+            android:visibility="invisible"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -90,14 +91,15 @@
 
 
 
-                <RelativeLayout
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:gravity="start"
+                        android:gravity="center"
                         android:id="@+id/vehicle"
                         android:layout_marginTop="80dp"
                         android:layout_height="wrap_content">
@@ -114,7 +116,35 @@
                             android:layout_width="wrap_content"
                             android:minWidth="200sp"
                             android:gravity="center"
-                            android:id="@+id/driversname"
+                            android:id="@+id/Driversname_doc_change"
+                            android:inputType="text"
+                            android:background="#ffff"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:weightSum="100"
+                        android:layout_marginTop="80dp"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:text="Driver License Number :"
+                            android:textColor="#ffff"
+                            android:textSize="20sp"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:layout_marginRight="10dp"
+                            android:layout_width="fill_parent"
+                            android:gravity="center"
+                            android:id="@+id/DriverLicenseNumber_doc_change"
                             android:inputType="text"
                             android:background="#ffff"
                             android:layout_height="wrap_content" />
@@ -138,11 +168,11 @@
                                 android:layout_width="150dp"
                                 android:layout_centerHorizontal="true"
                                 android:background="#868181"
-                                android:id="@+id/driverlicense"
+                                android:id="@+id/driverlicense_doc_change"
                                 android:layout_height="150dp" />
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_below="@+id/driverlicense"
+                                android:layout_below="@+id/driverlicense_doc_change"
                                 android:layout_gravity="center"
                                 android:textColor="#ffff"
                                 android:text="Please Upload Driver License"
@@ -153,6 +183,7 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:gravity="center"
                         android:layout_marginTop="70dp"
@@ -161,92 +192,63 @@
                         android:layout_below="@+id/drivinglicense"
                         android:layout_height="wrap_content">
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <ImageView
                                 android:layout_width="150dp"
-                                android:layout_centerHorizontal="true"
                                 android:background="#868181"
-                                android:id="@+id/insurance"
+                                android:id="@+id/insurance_doc_change"
                                 android:layout_height="150dp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_below="@+id/insurance"
+                                android:layout_below="@+id/insurance_doc_change"
                                 android:layout_gravity="center"
                                 android:textColor="#ffff"
                                 android:text="Please Upload Insurance"
                                 android:layout_height="wrap_content" />
 
 
-
-                        </RelativeLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:gravity="center"
-                        android:layout_marginTop="70dp"
-                        android:id="@+id/DocumentsLayout"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_below="@+id/InsuranceLayout"
                         android:layout_height="wrap_content">
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:layout_width="150dp"
-                                android:layout_centerHorizontal="true"
-                                android:background="#868181"
-                                android:id="@+id/documents"
-                                android:layout_height="150dp" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_below="@+id/documents"
-                                android:layout_gravity="center"
-                                android:textColor="#ffff"
-                                android:text="Please Upload vehicle Documents"
-                                android:layout_height="wrap_content" />
-
-
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:id="@+id/Operator"
-                        android:layout_marginTop="40dp"
-                        android:layout_below="@+id/DocumentsLayout"
-                        android:layout_height="match_parent">
-
+                        <ImageView
+                            android:layout_width="150dp"
+                            android:background="#868181"
+                            android:id="@+id/RCBook_doc_change"
+                            android:layout_height="150dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="Operator Name :"
+                            android:layout_gravity="center"
                             android:textColor="#ffff"
-                            android:textSize="25sp"
+                            android:text="Please scan ID of RC Book"
                             android:layout_height="wrap_content" />
 
-                        <EditText
-                            android:layout_width="wrap_content"
-                            android:minWidth="200sp"
-                            android:gravity="center"
-                            android:id="@+id/operatore_name"
-                            android:inputType="text"
-                            android:background="#ffff"
-                            android:layout_height="wrap_content" />
 
 
                     </LinearLayout>
+
+
+
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:id="@+id/CarNums"
+                        android:gravity="center"
                         android:layout_marginTop="50dp"
                         android:layout_below="@+id/Operator"
                         android:layout_height="match_parent">
@@ -254,7 +256,7 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="Car Number :"
+                            android:text="Vehicle Number :"
                             android:textColor="#ffff"
                             android:textSize="25sp"
                             android:layout_height="wrap_content" />
@@ -263,13 +265,43 @@
                             android:layout_width="wrap_content"
                             android:minWidth="200sp"
                             android:gravity="center"
-                            android:id="@+id/CarNumber"
+                            android:id="@+id/VehcileNumber_doc_change"
                             android:inputType="text"
                             android:background="#ffff"
                             android:layout_height="wrap_content" />
 
 
+
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_marginTop="50dp"
+                        android:layout_height="match_parent">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Vehicle Model :"
+                            android:textColor="#ffff"
+                            android:textSize="25sp"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:minWidth="200sp"
+                            android:gravity="center"
+                            android:id="@+id/VehicleModel_doc_change"
+                            android:inputType="text"
+                            android:background="#ffff"
+                            android:layout_height="wrap_content" />
+
+
+
+                    </LinearLayout>
+
+
+
 
 
 
@@ -288,7 +320,7 @@
 
                             <Button
                                 android:layout_width="wrap_content"
-                                android:id="@+id/submit"
+                                android:id="@+id/submitVehicleDetails_doc_change"
                                 android:text="Submit"
                                 android:layout_height="wrap_content" />
 
@@ -301,12 +333,10 @@
 
 
 
-                </RelativeLayout>
+                </LinearLayout>
 
 
             </ScrollView>
-
-
 
 
 

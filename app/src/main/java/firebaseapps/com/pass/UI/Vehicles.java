@@ -4,7 +4,10 @@ package firebaseapps.com.pass.UI;
 import android.app.Dialog;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +21,12 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,77 +38,67 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import es.dmoral.toasty.Toasty;
+import firebaseapps.com.pass.Constants.ApplicationParams;
+import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.R;
+import firebaseapps.com.pass.Utils.GetMimeType;
+import firebaseapps.com.pass.Utils.JsonParser;
+import firebaseapps.com.pass.Utils.NetworkUtil;
+import firebaseapps.com.pass.Utils.QR_Codegenerator;
+import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 
 public class Vehicles extends AppCompatActivity {
 
+    public static String APPLICATION_NUMBER;
     private ImageView  DriverLicense;
     private ImageView  Insurance;
-    private ImageView Documents;
+    private ImageView  RCBook;
     private Uri DRIVER_LICENSE_URI;
     private Uri INSURANCE_URI;
-    private Uri DOCUMENTS_URI;
+    private Uri RCBook_URI;
+    private String RCBOOK_MIME;
+    private String INSURANCE_MIME;
+    private String DRIVER_LICENSE_MIME;
+    private File INSURANCE_FILE;
+    private File RC_BOOK_FILE;
+    private File DRIVER_LICENSE_FILE;
+    private byte[] RC_BOOK_BYTE_ARRAY;
+    private byte[] DRIVER_LICENSE_BYTE_ARRAY;
+    private byte[] INSURANCE_BYTE_ARRAY;
     private EditText Drivername;
-    private String PASS_WHICH_BOOKED;
-    private Dialog NUMBER_OF_PASSENGER;
-    private Dialog PASSENGER_NAME;
-    private EditText Operatorname;
-    private EditText Pss1;
-    private EditText Pss2;
-    private EditText Pss3;
-    private EditText Pss4;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass4);
-    private EditText Pss5;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass5);
-    private EditText Pss6;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass6);
-    private EditText Pss7;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass7);
-    private EditText Pss8;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass8);
-    private EditText Pss9;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass9);
-    private EditText Pss10;//=(EditText)PASSENGER_NAME.findViewById(R.id.pass10);
-    private String Passenger1;
-    private String Passenger2;
-    private String Passenger3;
-    private String Passenger4;
-    private String Passenger5;
-    private String Passenger6;// = null;
-    private String Passenger7;
-    private String Passenger8;
-    private String Passenger9;
-    private String Passenger10;
+    private EditText DriverLicenseNumber;
+    private EditText VehicleNumber;
+    private EditText VehicleModel;
     private int Selected;
     private final int DRIVER_LICENSE_REQUEST_CODE=343;       //To recognise in onActivityresult
     private final int INSURANCE_REQUEST_CODE=434;
-    private final int DOCUMENTS_REQUEST_CODE=535;
-    private DatabaseReference APPLICATION_REF;
-    private DatabaseReference databaseReferenceVerified;
-    private DatabaseReference VEHICLE_DATABASE_REF;
-    private StorageReference VEHICLE_STORAGE_REF;
+    private final int RCBook_REQUEST_CODE=535;
     private Button Submit;
-    private String DRIVER_NAME_STRING;
-    private String OPERATOR_NAME_STRING;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicles);
 
 
-        Intent FROM_VIEW_PASS=getIntent();
-        Bundle extras=FROM_VIEW_PASS.getExtras();
-        PASS_WHICH_BOOKED=extras.getString("BookedBy");
 
-
-        NUMBER_OF_PASSENGER=new Dialog(this);
-        PASSENGER_NAME=new Dialog(this);
-        PASSENGER_NAME.setCanceledOnTouchOutside(false);
-        databaseReferenceVerified=FirebaseDatabase.getInstance().getReference().child("VerifiedUsers");
-        databaseReferenceVerified.keepSynced(true);
-        VEHICLE_STORAGE_REF= FirebaseStorage.getInstance().getReference().child("VehiclesBooking");
-        VEHICLE_DATABASE_REF= FirebaseDatabase.getInstance().getReference().child("VehicleBooking");
-        APPLICATION_REF=FirebaseDatabase.getInstance().getReference();//.child("Applications");
-        Drivername=(EditText)findViewById(R.id.driversname);
-        Operatorname=(EditText)findViewById(R.id.operatore_name);
+        Drivername=(EditText)findViewById(R.id.Driversname);
+        DriverLicenseNumber=(EditText) findViewById(R.id.DriverLicenseNumber);
+        VehicleNumber=(EditText) findViewById(R.id.VehcileNumber);
+        VehicleModel=(EditText) findViewById(R.id.VehicleModel);
         DriverLicense = (ImageView) findViewById(R.id.driverlicense);
         Insurance = (ImageView) findViewById(R.id.insurance);
-        Documents = (ImageView) findViewById(R.id.documents);
-        Submit = (Button) findViewById(R.id.submit);
+        RCBook = (ImageView) findViewById(R.id.RCBook);
+        Submit = (Button) findViewById(R.id.submitVehicleDetails);
 
         Insurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,12 +110,12 @@ public class Vehicles extends AppCompatActivity {
             }
         });
 
-        Documents.setOnClickListener(new View.OnClickListener() {
+        RCBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent, DOCUMENTS_REQUEST_CODE);
+                startActivityForResult(intent, RCBook_REQUEST_CODE);
             }
         });
 
@@ -133,1015 +132,236 @@ public class Vehicles extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               // Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
-                try
+                final String DRIVERS_NAME=Drivername.getText().toString().trim();
+                final String DRIVER_LICENSE_NUMBER=DriverLicenseNumber.getText().toString().trim();
+                final String VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
+                final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
+
+                if(IsCorrect())
                 {
-
-                   // final String
-                            DRIVER_NAME_STRING=Drivername.getText().toString().trim();
-                   // final String
-                            OPERATOR_NAME_STRING=Operatorname.getText().toString().trim();
-
-
-                    NUMBER_OF_PASSENGER.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    NUMBER_OF_PASSENGER.setContentView(R.layout.numberofperson);
-                    NUMBER_OF_PASSENGER.setTitle("Number of Passengers");
-                  //  NUMBER_OF_PASSENGER.setCanceledOnTouchOutside(false);
-                    NUMBER_OF_PASSENGER.getWindow().setTitleColor(getResources().getColor(R.color.colorPrimary));
-                    NUMBER_OF_PASSENGER.show();
-
-
-                   final RadioGroup radioGroup=(RadioGroup) NUMBER_OF_PASSENGER.findViewById(R.id.radiogroup);
-                    Button Confirm=(Button) NUMBER_OF_PASSENGER.findViewById(R.id.Confirm_number_of_person);
-
-                    Confirm.setOnClickListener(new View.OnClickListener() {
+                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
                         @Override
-                        public void onClick(View v) {
-
-                            Selected=radioGroup.getCheckedRadioButtonId();
-
-                            String Sel=Selected+"";
-
-                            Log.v("Selected",Sel);
-
-                            PASSENGER_NAME.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            if(Sel.equals("2131427515")||Sel.equals("2131493054"))
-                            {
-                                //Passes 5-10
-                                NUMBER_OF_PASSENGER.dismiss();
-                                PASSENGER_NAME.setContentView(R.layout.numberfivetoten);
-                                PASSENGER_NAME.show();
-
-
-                                Pss1=(EditText)PASSENGER_NAME.findViewById(R.id.pass1);
-                                Pss2=(EditText)PASSENGER_NAME.findViewById(R.id.pass2);
-                                Pss3=(EditText)PASSENGER_NAME.findViewById(R.id.pass3);
-                                Pss4=(EditText)PASSENGER_NAME.findViewById(R.id.pass4);
-                                Pss5=(EditText)PASSENGER_NAME.findViewById(R.id.pass5);
-                                Pss6=(EditText)PASSENGER_NAME.findViewById(R.id.pass6);
-                                Pss7=(EditText)PASSENGER_NAME.findViewById(R.id.pass7);
-                                Pss8=(EditText)PASSENGER_NAME.findViewById(R.id.pass8);
-                                Pss9=(EditText)PASSENGER_NAME.findViewById(R.id.pass9);
-                                Pss10=(EditText)PASSENGER_NAME.findViewById(R.id.pass10);
-
-                                Button Book=(Button) PASSENGER_NAME.findViewById(R.id.BOOK);
-
-                                Book.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-
-                                        // Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
-
-                                        if(TextUtils.isEmpty(Pss1.getText().toString())||TextUtils.isEmpty(Pss2.getText().toString())||TextUtils.isEmpty(Pss3.getText().toString())||TextUtils.isEmpty(Pss4.getText().toString())||TextUtils.isEmpty(Pss5.getText().toString()))
-                                        {
-                                            Toast.makeText(getApplicationContext(),"Select 2-4 or fill applicant names in order",Toast.LENGTH_SHORT).show();
-                                        }
-                                        else
-                                        {
-
-                                            new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
-
-                                                    BookVehicleFiveToTen();
-                                                //    NotifyAllPassengers();
-
-                                                }
-                                            }).start();
-
-
-                                        }
-
-
-                                    }
-                                });
-
-
-                            }
-                            else
-                            {
-                                //Passes 1-4
-                                NUMBER_OF_PASSENGER.dismiss();
-                                PASSENGER_NAME.setContentView(R.layout.numbertwotofour);
-                                PASSENGER_NAME.show();
-
-
-                                Pss1=(EditText)PASSENGER_NAME.findViewById(R.id.pass1);
-                                Pss2=(EditText)PASSENGER_NAME.findViewById(R.id.pass2);
-                                Pss3=(EditText)PASSENGER_NAME.findViewById(R.id.pass3);
-                                Pss4=(EditText)PASSENGER_NAME.findViewById(R.id.pass4);
-
-
-                                Button Book=(Button) PASSENGER_NAME.findViewById(R.id.BOOK);
-
-                                Book.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-
-                                        // Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
-
-                                        if(TextUtils.isEmpty(Pss1.getText().toString()))
-                                        {
-                                            Toast.makeText(getApplicationContext(),"Please fill applicant name",Toast.LENGTH_SHORT).show();
-                                        }
-                                        else
-                                        {
-                                            new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
-
-                                                    BookVehicleTwoToFour();
-                                                   // NotifyAllPassengersOneToFour();
-
-                                                }
-                                            }).start();
-
-
-                                        }
-
-
-                                    }
-                                });
-                            }
+                        public void onResponse(NetworkResponse response) {
 
                         }
-                    });
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
 
 
 
+                            Map<String, String> params = new HashMap<>();
+                            params.put("DriversName",DRIVERS_NAME);
+                            params.put("DLNumber",DRIVER_LICENSE_NUMBER);
+                            params.put("VehicleNumber",VEHICLE_NUMBER);
+                            params.put("VehicleModel",VEHICLE_MODEL);
+                            params.put("Application_no",APPLICATION_NUMBER);
 
+                            return params;
+                        }
 
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(getApplicationContext(),"Make sure all fields are filled and images are uploaded",Toast.LENGTH_SHORT).show();
-                }
+                        @Override
+                        protected Map<String, DataPart> getByteData() {
+                            Map<String, DataPart> params = new HashMap<>();
+                            // file name could found file base or direct access from real path
+                            // for now just get bitmap data from ImageView
 
-            }
-        });
-    }
 
-    private void NotifyAllPassengersOneToFour() {
+                            params.put("DLScan", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
+                            params.put("RCBookScan", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
+                            params.put("InsuranceScan", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
 
-        if(!TextUtils.isEmpty(Pss1.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
+                            return params;
+                        }
 
-            final String ApplicationNo;
-            ApplicationNo=Pss1.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                    };
+                    //Creating a Request Queue
+                    RequestQueue requestQueue2 = Volley.newRequestQueue(Vehicles.this);
+                    //Adding request to the queue
+                    requestQueue2.add(multipartRequest);
 
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
 
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-
-
-        if(!TextUtils.isEmpty(Pss2.getText().toString()))
-        {
-
-            final String ApplicationNo;
-            ApplicationNo=Pss2.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("Applied for vehicle by user with pass"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss3.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss3.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss4.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerEight").setValue("N/A");
-
-
-
-            final String ApplicationNo;
-            ApplicationNo=Pss4.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-
-    }
-
-    private void BookVehicleTwoToFour() {
-
-        PASSENGER_NAME.dismiss();
-        Passenger1=Pss1.getText().toString().trim();
-
-        try
-        {
-            if(TextUtils.isEmpty(Pss2.getText().toString()))
-            {
-                Passenger2="NA";
-                Passenger3="NA";
-                Passenger4="NA";
-
-
-            }
-            else if(TextUtils.isEmpty(Pss3.getText().toString()))
-            {
-                Passenger2=Pss2.getText().toString().trim();
-                Passenger3="NA";//Pss7.getText().toString().trim();
-                Passenger4="NA";
-
-            }
-            else if(TextUtils.isEmpty(Pss8.getText().toString()))
-            {
-                Passenger2=Pss2.getText().toString().trim();
-                Passenger3=Pss7.getText().toString().trim();
-                Passenger4="NA";//Pss8.getText().toString().trim();
-            }
-            else if(TextUtils.isEmpty(Pss9.getText().toString()))
-            {
-
-                Passenger2=Pss2.getText().toString().trim();
-                Passenger3=Pss3.getText().toString().trim();
-                Passenger4=Pss4.getText().toString().trim();
-
-            }
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(),"Make sure no empty field precedes a non-empty field",Toast.LENGTH_LONG).show();
-        }
-
-
-
-
-        databaseReferenceVerified.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
-                if(dataSnapshot.hasChild(Passenger1)&&dataSnapshot.hasChild(Passenger2)&&dataSnapshot.hasChild(Passenger3)&&dataSnapshot.hasChild(Passenger4))
-                {
-                    FinalizeFormOneTwoFour();
-                    NotifyAllPassengersOneToFour();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Make Sure all passes are verified",Toast.LENGTH_SHORT).show();
+                    Toasty.warning(getApplicationContext(),"Please fill all details",Toast.LENGTH_SHORT).show();
                 }
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
+    private Boolean IsCorrect()
+    {
+        final String DRIVERS_NAME=Drivername.getText().toString().trim();
+        final String DRIVER_LICENSE_NUMBER=DriverLicenseNumber.getText().toString().trim();
+        final String VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
+        final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
-    private void FinalizeFormOneTwoFour() {
+        if(!(TextUtils.isEmpty(DRIVERS_NAME)&&TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)&&TextUtils.isEmpty(VEHICLE_NUMBER)
+                &&TextUtils.isEmpty(VEHICLE_MODEL)&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null))
+        {
 
+            return true;
+        }
 
-        // final ProgressDialog Upload =new ProgressDialog(getApplicationContext());
-        VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("DriverLicense").putFile(DRIVER_LICENSE_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(final UploadTask.TaskSnapshot taskSnapshotDRIVERLICENSE) {
-
-
-                VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("Documents").putFile(DOCUMENTS_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshotDOCUMENTS) {
-
-                        VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("Insurance").putFile(INSURANCE_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshotINSURANCE) {
-
-
-
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("Documents_LINK").setValue(taskSnapshotDOCUMENTS.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("DriverLicense_LINK").setValue(taskSnapshotDRIVERLICENSE.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("Insurance_LINK").setValue(taskSnapshotINSURANCE.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("DriverName").setValue(DRIVER_NAME_STRING);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerOne").setValue(Passenger1);
-                                if(TextUtils.isEmpty(Pss2.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTwo").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTwo").setValue(Pss2.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss3.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerThree").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerThree").setValue(Pss3.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss4.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerFour").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerFour").setValue(Pss4.getText().toString());
-                                }
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerFive").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSix").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerEight").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerNine").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTen").setValue("N/A");
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("OperatorName").setValue(OPERATOR_NAME_STRING).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Intent notify = new Intent();
-
-                                        notify.putExtra("Values", "Vehicle booked for pass_no "+PASS_WHICH_BOOKED);
-
-                                        notify.setAction("Pas_with_some_value_has_changed");
-                                         sendBroadcast(notify);
-
-
-
-                                        //  Toast.makeText(getApplicationContext(),"Uploading Successful",Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-
-                                        Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                });
-
-
-
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                                Toast.makeText(getApplicationContext(),"Uploading Failed...",Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                        Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-
+        return false;
     }
 
-    private void BookVehicleFiveToTen() {
 
-        PASSENGER_NAME.dismiss();
-      /*  final String Passenger1;
-        final String Passenger2;
-        final String Passenger3;
-        final String Passenger4;
-        final String Passenger5;
-        String Passenger6;// = null;
-        String Passenger7;
-        String Passenger8;
-        final String Passenger9;
-        String Passenger10;*/
-        Passenger1=Pss1.getText().toString().trim();
-        Passenger2=Pss2.getText().toString().trim();
-        Passenger3=Pss3.getText().toString().trim();
-        Passenger4=Pss4.getText().toString().trim();
-        Passenger5=Pss5.getText().toString().trim();
 
-        try
-        {
-            if(TextUtils.isEmpty(Pss6.getText().toString()))
-            {
-                Passenger6="NA";
-                Passenger7="NA";
-                Passenger8="NA";
-                Passenger9="NA";
-                Passenger10="NA";
 
-            }
-            else if(TextUtils.isEmpty(Pss7.getText().toString()))
-            {
-                Passenger6=Pss6.getText().toString().trim();
-                Passenger7="NA";//Pss7.getText().toString().trim();
-                Passenger8="NA";
-                Passenger9="NA";
-                Passenger10="NA";
-
-            }
-            else if(TextUtils.isEmpty(Pss8.getText().toString()))
-            {
-                Passenger6=Pss6.getText().toString().trim();
-                Passenger7=Pss7.getText().toString().trim();
-                Passenger8="NA";//Pss8.getText().toString().trim();
-                Passenger9="NA";
-                Passenger10="NA";
-            }
-            else if(TextUtils.isEmpty(Pss9.getText().toString()))
-            {
-
-                Passenger6=Pss6.getText().toString().trim();
-                Passenger7=Pss7.getText().toString().trim();
-                Passenger8=Pss8.getText().toString().trim();
-                Passenger9="NA";
-                Passenger10="NA";
-            }
-            else if(TextUtils.isEmpty(Pss10.getText().toString()))
-            {
-
-                Passenger6=Pss6.getText().toString().trim();
-                Passenger7=Pss7.getText().toString().trim();
-                Passenger8=Pss8.getText().toString().trim();
-                Passenger9=Pss9.getText().toString().trim();
-                Passenger10="NA";
-            }
-            else {
-                Passenger6=Pss6.getText().toString().trim();
-                Passenger7=Pss7.getText().toString().trim();
-                Passenger8=Pss8.getText().toString().trim();
-                Passenger9=Pss9.getText().toString().trim();//Passenger6=Pss6.getText().toString().trim();
-                Passenger10=Pss10.getText().toString().trim();
-            }
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(),"Make sure no empty field precedes a non-empty field",Toast.LENGTH_LONG).show();
-        }
-
-
-        databaseReferenceVerified.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
-                if(dataSnapshot.hasChild(Passenger1)&&dataSnapshot.hasChild(Passenger2)&&dataSnapshot.hasChild(Passenger3)&&dataSnapshot.hasChild(Passenger4)&&dataSnapshot.hasChild(Passenger5)&&dataSnapshot.hasChild(Passenger6)&&dataSnapshot.hasChild(Passenger7)&&dataSnapshot.hasChild(Passenger8)&&dataSnapshot.hasChild(Passenger9)&&dataSnapshot.hasChild(Passenger10))
-                {
-                    FinalizeForm();
-                    NotifyAllPassengers();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Make Sure all passes are verified",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-        // final ProgressDialog Upload =new ProgressDialog(getApplicationContext());
-
-
-
-
-
-    }
-
-    private void FinalizeForm() {
-        VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("DriverLicense").putFile(DRIVER_LICENSE_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(final UploadTask.TaskSnapshot taskSnapshotDRIVERLICENSE) {
-
-
-                VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("Documents").putFile(DOCUMENTS_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshotDOCUMENTS) {
-
-                        VEHICLE_STORAGE_REF.child(PASS_WHICH_BOOKED).child("Insurance").putFile(INSURANCE_URI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshotINSURANCE) {
-
-
-
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("Documents_LINK").setValue(taskSnapshotDOCUMENTS.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("DriverLicense_LINK").setValue(taskSnapshotDRIVERLICENSE.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("Insurance_LINK").setValue(taskSnapshotINSURANCE.getDownloadUrl().toString());
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("DriverName").setValue(DRIVER_NAME_STRING);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerOne").setValue(Passenger1);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTwo").setValue(Passenger2);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerThree").setValue(Passenger3);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerFour").setValue(Passenger4);
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerFive").setValue(Passenger5);
-
-                                if(TextUtils.isEmpty(Pss6.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSix").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSix").setValue(Pss6.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss7.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue(Pss7.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss8.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerEight").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerEight").setValue(Pss8.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss9.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerNine").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerNine").setValue(Pss9.getText().toString());
-                                }
-                                if(TextUtils.isEmpty(Pss10.getText().toString()))
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTen").setValue("N/A");
-                                }
-                                else
-                                {
-                                    VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTen").setValue(Pss10.getText().toString());
-                                }
-                                VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("OperatorName").setValue(OPERATOR_NAME_STRING).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Intent notify = new Intent();
-
-                                        notify.putExtra("Values", "Vehicle booked for pass_no "+PASS_WHICH_BOOKED);
-
-                                        notify.setAction("Pas_with_some_value_has_changed");
-
-                                        sendBroadcast(notify);
-
-
-
-                                        //  Toast.makeText(getApplicationContext(),"Uploading Successful",Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-
-                                        Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                });
-
-
-
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                                Toast.makeText(getApplicationContext(),"Uploading Failed...",Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                        Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Toast.makeText(getApplicationContext(),"Uploading Failed",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void NotifyAllPassengers() {
-        if(!TextUtils.isEmpty(Pss1.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss1.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss2.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss2.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss3.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss3.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss4.getText().toString()))
-        {
-
-            final String ApplicationNo;
-            ApplicationNo=Pss4.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss5.getText().toString()))
-        {
-            // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss5.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-
-      // String UID;
-
-        if(!TextUtils.isEmpty(Pss6.getText().toString()))
-        {
-           // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSix").setValue("N/A");
-
-                final String ApplicationNo;
-                ApplicationNo=Pss6.getText().toString().trim();
-                APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        String UID;
-                        UID= dataSnapshot.getValue(String.class);
-
-                        APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("Applied for vehicle by user with pass"+ApplicationNo);
-                        APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-
-                    }
-                });
-        }
-        if(!TextUtils.isEmpty(Pss7.getText().toString()))
-        {
-           // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerSeven").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss7.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss8.getText().toString()))
-        {
-           // VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerEight").setValue("N/A");
-
-
-
-
-            final String ApplicationNo;
-            ApplicationNo=Pss8.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss9.getText().toString()))
-        {
-
-            final String ApplicationNo;
-            ApplicationNo=Pss9.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-        if(!TextUtils.isEmpty(Pss10.getText().toString()))
-        {
-          //  VEHICLE_DATABASE_REF.child(PASS_WHICH_BOOKED).child("PassengerTen").setValue("N/A");
-
-            final String ApplicationNo;
-            ApplicationNo=Pss10.getText().toString().trim();
-            APPLICATION_REF.child("Applications").child(ApplicationNo).child("Uid").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    String UID;
-                    UID= dataSnapshot.getValue(String.class);
-
-                    APPLICATION_REF.child("Users").child(UID).child("Applications").child(ApplicationNo).setValue("A vehicle has been booked for apllication"+ApplicationNo);
-                    APPLICATION_REF.child("Applications").child(ApplicationNo).child("ApplicationStatus").setValue("Applied for vehicle by user with pass"+ApplicationNo);
-
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-
-                }
-            });
-        }
-
-
-
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode==RESULT_OK && requestCode==DRIVER_LICENSE_REQUEST_CODE)
         {
-            //When Applicant photo is selected
+            DRIVER_LICENSE_URI=data.getData();
 
-                    DRIVER_LICENSE_URI=data.getData();
-                    DriverLicense.setImageURI(DRIVER_LICENSE_URI);
+            DRIVER_LICENSE_MIME= GetMimeType.GetMimeType(Vehicles.this,DRIVER_LICENSE_URI);
 
+            DRIVER_LICENSE_MIME=GetMimeType.ReturnCorrectMime(DRIVER_LICENSE_MIME);
+
+            try {
+                //Getting the Bitmap from Gallery
+                DRIVER_LICENSE_FILE=new File(getPath(DRIVER_LICENSE_URI));
+
+                DRIVER_LICENSE_BYTE_ARRAY = new byte[(int) DRIVER_LICENSE_FILE.length()];
+                FileInputStream fileInputStream = new FileInputStream(DRIVER_LICENSE_FILE);
+                fileInputStream.read(DRIVER_LICENSE_BYTE_ARRAY);
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), DRIVER_LICENSE_URI);
+                int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
+                Bitmap scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+
+
+
+                DriverLicense.setImageBitmap(scaled);
+
+
+            } catch (IOException e) {
+
+                Toast.makeText(getApplicationContext(),"FILE ERROR",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+            }
 
 
 
 
         }
-        else if(resultCode==RESULT_OK && requestCode==DOCUMENTS_REQUEST_CODE)
+        else if(resultCode==RESULT_OK && requestCode==RCBook_REQUEST_CODE)
         {
-            //when applicant scanned user id is selected
+            RCBook_URI=data.getData();
 
-                DOCUMENTS_URI=data.getData();
-                Documents.setImageURI(DOCUMENTS_URI);
+            RCBOOK_MIME=GetMimeType.GetMimeType(Vehicles.this,DRIVER_LICENSE_URI);
+
+            RCBOOK_MIME=GetMimeType.ReturnCorrectMime(RCBOOK_MIME);
+
+            try {
+                //Getting the Bitmap from Gallery
+                RC_BOOK_FILE=new File(getPath(RCBook_URI));
+
+                RC_BOOK_BYTE_ARRAY = new byte[(int) RC_BOOK_FILE.length()];
+                FileInputStream fileInputStream = new FileInputStream(RC_BOOK_FILE);
+                fileInputStream.read(RC_BOOK_BYTE_ARRAY);
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), RCBook_URI);
+                int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
+                Bitmap scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+
+
+
+                RCBook.setImageBitmap(scaled);
+
+
+            } catch (IOException e) {
+
+                Toast.makeText(getApplicationContext(),"FILE ERROR",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+            }
 
 
         }
         else if(resultCode==RESULT_OK && requestCode==INSURANCE_REQUEST_CODE)
         {
-            //when applicant scanned user id is selected
-
             INSURANCE_URI=data.getData();
-            Insurance.setImageURI(INSURANCE_URI);
+
+            INSURANCE_MIME=GetMimeType.GetMimeType(Vehicles.this,INSURANCE_URI);
+
+            INSURANCE_MIME=GetMimeType.ReturnCorrectMime(INSURANCE_MIME);
+
+            try {
+                //Getting the Bitmap from Gallery
+                INSURANCE_FILE=new File(getPath(INSURANCE_URI));
+
+                INSURANCE_BYTE_ARRAY = new byte[(int) INSURANCE_FILE.length()];
+                FileInputStream fileInputStream = new FileInputStream(INSURANCE_FILE);
+                fileInputStream.read(INSURANCE_BYTE_ARRAY);
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), INSURANCE_URI);
+                int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
+                Bitmap scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+
+
+
+                Insurance.setImageBitmap(scaled);
+
+
+            } catch (IOException e) {
+
+                Toast.makeText(getApplicationContext(),"FILE ERROR",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+            }
+
+
 
 
         }
 
+    }
+    public  String getPath(Uri uri)
+    {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int column_index =             cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String s=cursor.getString(column_index);
+        cursor.close();
+        return s;
+    }
+    int[] getResolution(int a,int b)
+    {   int[] p=new int[2];
+        if(a>950&&a<1900)
+        {
+            p[0]=a/2;
+            p[1]=b/2;
+        }
+        else if (a>=1900&&a<3800)
+        {
+            p[0]=a/4;
+            p[1]=b/4;
+        }
+        else if (a>=3800&&a<7600)
+        {
+            p[0]=a/8;
+            p[1]=b/8;
+        }
+        else
+        {
+            p[0]=a;
+            p[1]=b;
+        }
+        return p;
     }
 
 }

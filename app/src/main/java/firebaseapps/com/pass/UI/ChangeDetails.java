@@ -269,6 +269,16 @@ public class ChangeDetails extends AppCompatActivity {
                 }
             });
         }
+        else if(ApplyPass.OPTION.equals("Update Vehicle Details"))
+        {
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    VehicleUpdate();
+                }
+            });
+        }
         else
         {
             update.setText("REQUEST Cancel");
@@ -288,6 +298,76 @@ public class ChangeDetails extends AppCompatActivity {
 
 
 
+
+    }
+    public void VehicleUpdate()
+    {
+        passno=Passno.getText().toString().trim();
+
+        if(!(passno.isEmpty() && DateOfJourney.isEmpty()))
+        {
+
+
+            update.setEnabled(false);
+            rxConnect1.setParam("old_doj",DateOfJourney);
+            rxConnect1.setParam("token_id",passno);
+            rxConnect1.setParam("applicant_mob",REGISTERED_NUMBER);
+
+            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                @Override
+                public void onResult(String result) {
+
+                    try {
+
+                        JSONObject jsonObject=new JSONObject(result);
+                        APLICANT_MOBILE=JsonParser.JSONValue(jsonObject,"applicant_mobile");
+
+                        Send_OTP();
+                    }catch (JSONException e)
+                    {
+
+                    }
+
+
+                }
+
+                @Override
+                public void onNoResult() {
+
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+
+                }
+            });
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //  if(update.getText().toString().equals("Enter OTP"))
+
+
+                    Log.v("FunctionChange","Vehicle");
+
+                    // {
+                    String ENTERED_OTP=Idno.getText().toString().trim();
+                    if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
+                    {
+                            Intent VEHICLE_UPDATE=new Intent(ChangeDetails.this,Vehicles.class);
+                            finish();
+                            Vehicles.APPLICATION_NUMBER=passno;
+                            startActivity(VEHICLE_UPDATE);
+                    }
+                    else {
+                        Toasty.error(getApplicationContext(),"Wrong OTP",Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+        }
+        else {
+            Toasty.warning(getApplicationContext(),"Please fill the details",Toast.LENGTH_LONG).show();
+        }
 
     }
     public void RequestCancel()
@@ -346,7 +426,7 @@ public class ChangeDetails extends AppCompatActivity {
                     if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
                     {
 
-                        Log.v("Clicked","4");
+
 
 
                         rxConnect.setParam("token_id",passno);
