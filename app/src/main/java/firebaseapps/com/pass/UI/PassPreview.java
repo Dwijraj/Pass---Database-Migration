@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +47,6 @@ public class PassPreview extends AppCompatActivity {
     private TextView CarNumber;
     private ImageView Profile2;
     private TextView Application_status2;
-    private DatabaseReference ApplicationRef2;
     public Application app;
     private TextView ID_source;
     private static  String Changed_Values_flag="0";

@@ -14,11 +14,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +135,7 @@ public class CheckPassDetails extends AppCompatActivity {
                 final String ID_NO=Id_no.getText().toString().trim();
                 if(PASS_NO.isEmpty()||ID_NO.isEmpty()||DateOfJourney.isEmpty())
                 {
-                    Toasty.warning(getApplicationContext(),"Enter pass number",Toast.LENGTH_SHORT).show();
+                    Toasty.warning(getApplicationContext(),"Enter the details",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -148,50 +143,45 @@ public class CheckPassDetails extends AppCompatActivity {
                     String REGISTERED_MOBILE_NUBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
                     rxConnect=new RxConnect(CheckPassDetails.this);
 
-                    rxConnect.setParam("token_id",PASS_NO);
-                    rxConnect.setParam("app_mobile",ID_NO);
-                    rxConnect.setParam("user_mobile",REGISTERED_MOBILE_NUBER);
-                    rxConnect.setParam("user","customer");
-                    rxConnect.setParam("date_journey",DateOfJourney);
+                    RxConnect rxConnect1=new RxConnect(CheckPassDetails.this);
+                    rxConnect1.setCachingEnabled(false);
+                    rxConnect1.setParam("old_doj",DateOfJourney);
+                    rxConnect1.setParam("application_no",PASS_NO);
+                    rxConnect1.setParam("user_mob",REGISTERED_MOBILE_NUBER);
 
-                    rxConnect.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                         @Override
                         public void onResult(String result) {
 
+                            Log.v("Response",result);
                             try {
-                                Log.v("ResponseViewPass",result);
 
+                                Log.v("Response",result);
 
-                                Vehicles.APPLICATION_NUMBER=PASS_NO;
                                 JSONObject jsonObject=new JSONObject(result);
-                                Log.v("OTPSTRINGQ!@3",jsonObject.toString());
 
+                                Log.v("Response1","here4");
+                                JSONObject jsonObject1=jsonObject.getJSONObject("applicant_mobile");
 
-                                ONCHANGEDETAILS=result;
-
-
-
-                                JSONObject jsonObject1=jsonObject.getJSONObject("application_info");
-
-
-
+                                Log.v("Response1","here3");
                                 APLICANT_MOBILE=JsonParser.JSONValue(jsonObject1,"application_mobile");
 
-                                Log.v("OTPSTRINGQ!@3",APLICANT_MOBILE);
-                                String APPLICATION_STATUS=  JsonParser.JSONValue(jsonObject1,"paid_status");
+                                Log.v("Response1","here2");
+                                String APPLICATION_STATUS=JsonParser.JSONValue(jsonObject1,"status_detail_vech");
 
+                                Log.v("Response1","here1");
                                 if(APPLICATION_STATUS.equals("2"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
 
-                                        Toasty.info(getApplicationContext(),"ReUpload your picture and scan Id",Toast.LENGTH_SHORT).show();
-                                        PROFILE_PIC_SCAN_PIC.setVisibility(View.VISIBLE);
+                                    Toasty.info(getApplicationContext(),"ReUpload your picture and scan Id",Toast.LENGTH_SHORT).show();
+                                    PROFILE_PIC_SCAN_PIC.setVisibility(View.VISIBLE);
 
                                 }
                                 else  if(APPLICATION_STATUS.equals("3"))
                                 {
 
                                     Toasty.info(getApplicationContext(),"ReUpload vehicle details",Toast.LENGTH_SHORT).show();
-                                        VEHICLE.setVisibility(View.VISIBLE);
+                                    VEHICLE.setVisibility(View.VISIBLE);
 
                                 }
                                 else if (APPLICATION_STATUS.equals("0"))
@@ -199,11 +189,11 @@ public class CheckPassDetails extends AppCompatActivity {
                                     Toasty.success(getApplicationContext(),"Your Application is under process",Toast.LENGTH_SHORT).show();
 
                                 }
+                            }catch (JSONException e)
+                            {
 
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+
 
                         }
 

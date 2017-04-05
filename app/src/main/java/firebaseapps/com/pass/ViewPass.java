@@ -24,11 +24,6 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
 
 import org.json.JSONArray;
@@ -71,7 +66,6 @@ public class ViewPass extends AppCompatActivity {
     private TextView CarNumber;
     private ImageView Profile2;
     private TextView Application_status2;
-    private DatabaseReference ApplicationRef2;
     public  Application app;
     private TextView ID_source;
     private static  String Changed_Values_flag="0";

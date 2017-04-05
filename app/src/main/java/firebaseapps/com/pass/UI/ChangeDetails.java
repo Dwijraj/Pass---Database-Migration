@@ -15,11 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.WriterException;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +30,6 @@ import java.util.Random;
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Utils.JsonParser;
-import firebaseapps.com.pass.Utils.PayPalConfig;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.ViewPass;
 import firebaseapps.com.pass.View_Pass;
@@ -69,7 +64,6 @@ public class ChangeDetails extends AppCompatActivity {
     private EditText Idno;
     private TextView DOJ;
     private ImageButton img_button;
-    private FirebaseAuth mAuth;
     private Button update;
     private String passno;
     private String state;
@@ -84,16 +78,10 @@ public class ChangeDetails extends AppCompatActivity {
     private RxConnect rxConnect1;
     private String   OTPstring;
 
-    private static PayPalConfiguration config = new PayPalConfiguration()
-            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
-            // or live (ENVIRONMENT_PRODUCTION)
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(PayPalConfig.PAYPAL_CLIENT_ID);
 
     public void onDestroy() {
         Passdetails.THE_TEST=0;
-        stopService(new Intent(this, PayPalService.class));
-        super.onDestroy();
+         super.onDestroy();
         N=400;
     }
     @Override
@@ -106,7 +94,6 @@ public class ChangeDetails extends AppCompatActivity {
 
         rxConnect1=new RxConnect(ChangeDetails.this);
         rxConnect1.setCachingEnabled(false);
-        mAuth=FirebaseAuth.getInstance();
         img_button=(ImageButton)findViewById(R.id.image_Button);
         img_button.setEnabled(false);
         Passno=(EditText)findViewById(R.id.change_pass_number);
@@ -190,9 +177,6 @@ public class ChangeDetails extends AppCompatActivity {
         });
 
 
-        intent = new Intent(this, PayPalService.class);
-
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 
         img_button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -24,3 +24,9 @@
 -keep class *{
     public private *;
 }
+-dontwarn com.braintreepayments.**
+-keep class com.braintreepayments.** { *; }
+-keep interface com.braintreepayments.** { *; }
+-dontwarn com.paypal.**
+-keep class com.paypal.** { *; }
+-keep interface com.paypal.** { *; }
