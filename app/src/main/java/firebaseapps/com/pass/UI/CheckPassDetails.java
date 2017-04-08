@@ -3,6 +3,7 @@ package firebaseapps.com.pass.UI;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class CheckPassDetails extends AppCompatActivity {
     private EditText OTP;
     private Button Submit;
     private TextView DOJ_DISPLAY;
+    private TextView APPLICATION_STATUS_SHOW;
     private ImageButton DATEPICKER;
     public static String  ONCHANGEDETAILS=null;
     private DatePicker datePicker;
@@ -52,11 +54,13 @@ public class CheckPassDetails extends AppCompatActivity {
     private String APLICANT_MOBILE;
     private  String  OTPstring;
     public  static  String CHANGEABLE=null;
+    public  static String WHICH_VEHICLE_STATS_STATUS=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_pass_details);
 
+        APPLICATION_STATUS_SHOW=(TextView) findViewById(R.id.viewstatus);
         PROFILE_PIC_SCAN_PIC=(Button) findViewById(R.id.APPLICATION_CHANGE);
         VEHICLE=(Button) findViewById(R.id.VEHICLE_DETAIL_CHANGE);
         pass_no=(EditText)findViewById(R.id.view_pass_passno_check);
@@ -73,10 +77,6 @@ public class CheckPassDetails extends AppCompatActivity {
         m2Dialog=new ProgressDialog(this);
 
 
-     /*   CHANGEABLE=OPTION_SELECTED.OPTION_CHANGEABLE_VEHICLE;
-        Intent NEW_INTENT=new Intent(CheckPassDetails.this,Documentschange.class);
-        finish();
-        startActivity(NEW_INTENT); */
 
         DATEPICKER.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,44 +149,95 @@ public class CheckPassDetails extends AppCompatActivity {
                     rxConnect1.setParam("application_no",PASS_NO);
                     rxConnect1.setParam("user_mob",REGISTERED_MOBILE_NUBER);
 
-                    rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    rxConnect1.execute(Constants.GET_REUPLOAD_DETAILS_LINK, RxConnect.POST, new RxConnect.RxResultHelper() {
                         @Override
                         public void onResult(String result) {
 
-                            Log.v("Response",result);
+                            Log.v("ResponseCPDetails",result);
+
+                            /**
+                             * {"response_status":"1",
+                             *  "msg":"Sucess-fully",
+                             *  "applicant_status":{"application_mobile":"8093679890",
+                             *                      "status":"4",
+                             *                      "pending_status":"0",
+                             *                      "remarked":null}}
+                             */
+
                             try {
 
-                                Log.v("Response",result);
+
 
                                 JSONObject jsonObject=new JSONObject(result);
 
-                                Log.v("Response1","here4");
-                                JSONObject jsonObject1=jsonObject.getJSONObject("applicant_mobile");
+                                Vehicles.APPLICATION_NUMBER=PASS_NO;
+                                Log.v("Here","1");
 
-                                Log.v("Response1","here3");
+                                JSONObject jsonObject1=jsonObject.getJSONObject("applicant_status");
+
+
+                                Log.v("Here","2");
                                 APLICANT_MOBILE=JsonParser.JSONValue(jsonObject1,"application_mobile");
 
-                                Log.v("Response1","here2");
-                                String APPLICATION_STATUS=JsonParser.JSONValue(jsonObject1,"status_detail_vech");
 
-                                Log.v("Response1","here1");
+                                Log.v("Here","3");
+                                String APPLICATION_STATUS=JsonParser.JSONValue(jsonObject1,"pending_status");
+
+                                Log.v("Here","4");
+                                String REMARK=JsonParser.JSONValue(jsonObject1,"remarked");
+                                APPLICATION_STATUS_SHOW.setTextColor(Color.RED);
                                 if(APPLICATION_STATUS.equals("2"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
 
-                                    Toasty.info(getApplicationContext(),"ReUpload your picture and scan Id",Toast.LENGTH_SHORT).show();
+
+                                    APPLICATION_STATUS_SHOW.setText(REMARK);
                                     PROFILE_PIC_SCAN_PIC.setVisibility(View.VISIBLE);
 
                                 }
-                                else  if(APPLICATION_STATUS.equals("3"))
+                                else  if(APPLICATION_STATUS.contains("3"))
                                 {
 
-                                    Toasty.info(getApplicationContext(),"ReUpload vehicle details",Toast.LENGTH_SHORT).show();
+                                    WHICH_VEHICLE_STATS_STATUS=APPLICATION_STATUS;
+                                    APPLICATION_STATUS_SHOW.setText(REMARK);
                                     VEHICLE.setVisibility(View.VISIBLE);
 
                                 }
                                 else if (APPLICATION_STATUS.equals("0"))
                                 {
-                                    Toasty.success(getApplicationContext(),"Your Application is under process",Toast.LENGTH_SHORT).show();
+                                    Log.v("Here","5");
+                                    String STATUS_APPLICATIONS_SHOW=JsonParser.JSONValue(jsonObject1,"status");
+                                    Log.v("Here",STATUS_APPLICATIONS_SHOW);
+                                    if (STATUS_APPLICATIONS_SHOW.contains("1"))
+                                    {
+                                        //Pass ready
+                                        APPLICATION_STATUS_SHOW.setText(" Your Pass is Ready you can Check your pass through VIEW PASS field");
+
+                                        Toasty.success(getApplicationContext(),"Your Pass is Ready",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                    else if(APPLICATION_STATUS.contains("2"))
+                                    {
+                                        //Personal Info verified
+
+                                        APPLICATION_STATUS_SHOW.setText("Your Personal information have been Verified");
+
+                                    }
+
+                                    else if(APPLICATION_STATUS.contains("3"))
+                                    {
+                                        //Vehicle Info verified
+
+                                        APPLICATION_STATUS_SHOW.setText("Your Vehicle Information is being Verified");
+
+                                    }
+
+                                    else if(APPLICATION_STATUS.contains("4"))
+                                    {
+                                        //Personal Info is being processed
+
+                                        Log.v("Here","7");
+                                        APPLICATION_STATUS_SHOW.setText("Your Personal Information is being Verified");
+                                    }
 
                                 }
                             }catch (JSONException e)

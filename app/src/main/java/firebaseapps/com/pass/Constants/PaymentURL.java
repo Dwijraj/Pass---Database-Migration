@@ -7,4 +7,5 @@ package firebaseapps.com.pass.Constants;
 public class PaymentURL {
 
     public static String CLIENT_TOKEN_URL="";
+    public static String EXECUTE_TRANSACTION_URL="";
 }

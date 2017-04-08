@@ -46,6 +46,8 @@ import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -82,6 +84,7 @@ import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
 import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
+import firebaseapps.com.pass.Constants.PaymentURL;
 import firebaseapps.com.pass.Payment.ClientToken;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.NetworkUtil;
@@ -100,7 +103,6 @@ public class Passdetails extends AppCompatActivity {
 
 
 
-    private
     BraintreeFragment  mBraintreeFragment;
     private String MIME;
     private Uri imageuri =null;
@@ -159,7 +161,7 @@ public class Passdetails extends AppCompatActivity {
     String REGISTERED_NUMBER;
 
     //PAYMENT Configuration Object
-   
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,16 +169,16 @@ public class Passdetails extends AppCompatActivity {
         THE_TEST=1;
 
 
-        getPayment();
+      //  getPayment();
 
 
 
-        try {
+/*        try {
             mBraintreeFragment = BraintreeFragment.newInstance(this,
                     "eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIxZjk4Yzk4NDUzNTE4OTNiYjBhMjdkNjlmODVmNWEzMjViNTcxYzExODYxMWUxNzdmM2E4MDMzOWJlM2NjNWMxfGNyZWF0ZWRfYXQ9MjAxNy0wNC0wNVQxMDoyODowMS4wMjc4NzQ0MzErMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tLzM0OHBrOWNnZjNiZ3l3MmIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=");
         } catch (InvalidArgumentException e) {
             // There was an issue with your authorization string.
-        }
+        } */
 
 
         paths.add("");
@@ -386,6 +388,14 @@ public class Passdetails extends AppCompatActivity {
                     PRICE_FIELD.setText(PriceNPlace.get(PLACES.get(positiond)));
                     PRICE_OF_PASS=PriceNPlace.get(PLACES.get(positiond));
 
+
+
+                }
+                else
+                {
+                    PLACE=null;
+                    PRICE_FIELD.setText("N/A");
+                    PRICE_OF_PASS=null;
 
                 }
 
@@ -643,7 +653,7 @@ public class Passdetails extends AppCompatActivity {
                             Log.v("Working","Here123");
 
                              SubmitApplication();
-                           //  getPayment();
+                          //   getPayment();
                         }
                         else
                         {
@@ -751,22 +761,27 @@ public class Passdetails extends AppCompatActivity {
         //Getting the amount from editText
 
 
-       // String TOKEN_GENERATED= ClientToken.GetClientToken(Passdetails.this);
+        String TOKEN_GENERATED= ClientToken.GetClientToken(Passdetails.this);
 
 
-/*        try {
-            mBraintreeFragment = BraintreeFragment.newInstance(this, mAuthorization);
+/*        */
+
+
+
+        try {
+            mBraintreeFragment = BraintreeFragment.newInstance(this,TOKEN_GENERATED);
+
             // mBraintreeFragment is ready to use!
         } catch (InvalidArgumentException e) {
             // There was an issue with your authorization string.
-        }*/
+        }
 
 
 
 
         DropInRequest dropInRequest = new DropInRequest()
-               // .clientToken(TOKEN_GENERATED)
-                .clientToken("eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIxZjk4Yzk4NDUzNTE4OTNiYjBhMjdkNjlmODVmNWEzMjViNTcxYzExODYxMWUxNzdmM2E4MDMzOWJlM2NjNWMxfGNyZWF0ZWRfYXQ9MjAxNy0wNC0wNVQxMDoyODowMS4wMjc4NzQ0MzErMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tLzM0OHBrOWNnZjNiZ3l3MmIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=")
+                .clientToken(TOKEN_GENERATED)
+              //  .clientToken("eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIxZjk4Yzk4NDUzNTE4OTNiYjBhMjdkNjlmODVmNWEzMjViNTcxYzExODYxMWUxNzdmM2E4MDMzOWJlM2NjNWMxfGNyZWF0ZWRfYXQ9MjAxNy0wNC0wNVQxMDoyODowMS4wMjc4NzQ0MzErMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tLzM0OHBrOWNnZjNiZ3l3MmIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=")
                 .amount(PRICE_OF_PASS);
 
 
@@ -807,6 +822,7 @@ public class Passdetails extends AppCompatActivity {
                 @Override
                 public void onResponse(NetworkResponse response) {
 
+                    Log.v("Executionhere","onResp");
 
 
                     progressDialog.dismiss();
@@ -831,7 +847,7 @@ public class Passdetails extends AppCompatActivity {
                         Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
                         scan_id.setImageBitmap(bitmap2);
 
-                        getPayment();
+                      // getPayment();
 
 
                         Log.v("JSONRESPONSE",jsonString+jsonObject);
@@ -915,7 +931,8 @@ public class Passdetails extends AppCompatActivity {
 
                     params.put(ApplicationParams.PICTURE1, new DataPart(imageuri.getLastPathSegment()+"."+MIME, b, "image/jpeg"));
                     params.put(ApplicationParams.PICTURE,new DataPart(imageuriProfile.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_BYTE_ARRAY,"image/jpeg"));
-                    Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
+
+                    //   Log.d("file",imageuriProfile.getLastPathSegment()+" " + b.length/1024);
                     return params;
                 }
 
@@ -1039,6 +1056,42 @@ public class Passdetails extends AppCompatActivity {
                 Log.v("resultPay",result.getPaymentMethodNonce().getNonce());
 
                 Log.v("resultPay",result.getPaymentMethodNonce().getDescription());
+                RxConnect rxConnect=new RxConnect(Passdetails.this);
+                rxConnect.setCachingEnabled(false);
+
+//                if(PRICE_OF_PASS!=null)
+
+  //              {
+
+                    rxConnect.setParam("PaymentMethodNonce",result.getPaymentMethodNonce().getNonce());
+                    rxConnect.setParam("amount_charged",PRICE_OF_PASS);
+                    rxConnect.execute(PaymentURL.EXECUTE_TRANSACTION_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                        @Override
+                        public void onResult(String result) {
+
+                            //Once Transaction is successful
+
+
+                        }
+
+                        @Override
+                        public void onNoResult() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+
+                        }
+                    });
+
+
+    //            }
+
+
+
+
+
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
                 // the user canceled

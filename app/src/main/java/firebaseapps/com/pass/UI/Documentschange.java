@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarException;
 
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
@@ -190,6 +192,23 @@ public class Documentschange extends AppCompatActivity {
 
 
 
+                                Log.v("Data",response.data+"...");
+
+                                String jsonString = new String(response.data);
+                                Log.v("Data",jsonString+"...");
+
+                                try {
+
+                                    JSONObject jsonObject= new JSONObject(jsonString);
+
+                                    Log.v("JsonObject1",jsonObject.getString("response_status"));
+                                    Log.v("JsonObject2",jsonObject.getString("msg"));
+
+                                }catch (JSONException e)
+                                {
+
+                                }
+
 
 
                             }
@@ -205,6 +224,8 @@ public class Documentschange extends AppCompatActivity {
 
 
                                 Map<String, String> params = new HashMap<>();
+
+                                Log.v("application_no", Vehicles.APPLICATION_NUMBER+"....");
                                 params.put("applicant_no",  Vehicles.APPLICATION_NUMBER);
                                 params.put("applicant_id_source",SOURCE_DESCRIPTION);
                                 params.put("applicant_id_number",ID);
@@ -218,9 +239,14 @@ public class Documentschange extends AppCompatActivity {
                                 // file name could found file base or direct access from real path
                                 // for now just get bitmap data from ImageView
 
+                                params.put(ApplicationParams.PICTURE, new DataPart(PROFILE_PIC_CHANGE_URI.getLastPathSegment()+"."+"jpeg",PROFILE_PIC_CHANGE_BYTE_ARRAY, "image/jpeg"));
+                                params.put(ApplicationParams.PICTURE1, new DataPart(SCAN_ID_URI.getLastPathSegment()+"."+SCAN_ID_CHANGE_MIME, SCAN_ID_CHANGE_BYTE_ARRAY, "image/jpeg"));
+                              //  params.put(ApplicationParams.PICTURE1, new DataPart(SCAN_ID_URI.getLastPathSegment()+"."+"jpeg", SCAN_ID_CHANGE_BYTE_ARRAY, "image/jpeg"));
 
-                                params.put(ApplicationParams.PICTURE1, new DataPart(PROFILE_PIC_CHANGE_URI.getLastPathSegment()+"."+PROFILE_PIC_CHANGE_MIME,PROFILE_PIC_CHANGE_BYTE_ARRAY, "image/jpeg"));
-                                params.put(ApplicationParams.PICTURE,new DataPart(SCAN_ID_URI.getLastPathSegment()+"."+"jpeg",SCAN_ID_CHANGE_BYTE_ARRAY,"image/jpeg"));
+
+
+                                Log.v("MIMEPROFILE",PROFILE_PIC_CHANGE_MIME+"....");
+
                                 return params;
                             }
 
@@ -337,9 +363,21 @@ public class Documentschange extends AppCompatActivity {
                                 // for now just get bitmap data from ImageView
 
 
-                                params.put("picture5", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
-                                params.put("picture3", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
-                                params.put("picture4", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
+                                if(DRIVER_LICENSE_BYTE_ARRAY!=null)
+                                {
+                                    params.put("picture5", new DataPart(DRIVER_LICENSE_URI.getLastPathSegment()+"."+DRIVER_LICENSE_MIME, DRIVER_LICENSE_BYTE_ARRAY, "image/jpeg"));
+
+                                }
+                                if(RC_BOOK_BYTE_ARRAY!=null)
+                                {
+                                    params.put("picture3", new DataPart(RCBook_URI.getLastPathSegment()+"."+RCBOOK_MIME, RC_BOOK_BYTE_ARRAY, "image/jpeg"));
+
+                                }
+                                if(INSURANCE_BYTE_ARRAY!=null)
+                                {
+                                    params.put("picture4", new DataPart(INSURANCE_URI.getLastPathSegment()+"."+INSURANCE_MIME, INSURANCE_BYTE_ARRAY, "image/jpeg"));
+
+                                }
 
                                 return params;
                             }
@@ -374,7 +412,7 @@ public class Documentschange extends AppCompatActivity {
         final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
         if(!(TextUtils.isEmpty(DRIVERS_NAME)&&TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)&&TextUtils.isEmpty(VEHICLE_NUMBER)
-                &&TextUtils.isEmpty(VEHICLE_MODEL)&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null))
+                &&TextUtils.isEmpty(VEHICLE_MODEL)))//&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null))
         {
 
             return true;
@@ -530,6 +568,9 @@ public class Documentschange extends AppCompatActivity {
             SCAN_ID_CHANGE_MIME=GetMimeType.GetMimeType(Documentschange.this,SCAN_ID_URI);
 
             SCAN_ID_CHANGE_MIME=GetMimeType.ReturnCorrectMime(SCAN_ID_CHANGE_MIME);
+
+            Log.v("MIMESCANID",SCAN_ID_CHANGE_MIME+"....");
+
 
             try {
                 //Getting the Bitmap from Gallery

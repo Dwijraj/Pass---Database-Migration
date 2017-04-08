@@ -37,12 +37,14 @@ public class Constants {
     public static String GET_APPLICANT_STATUS="";
     public static String CANCEL_REQUEST="";
     public static String VEHICLE_DETAILS_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/userapi//format/json";
-    public static String PROFILE_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/update_user_pass_detail//format/json";
+    public static String PROFILE_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/userapi/update_user_pass_detail/format/json";
     public static String VEHICLE_DETAILS_UPDATE_LINK="http://192.168.2.2/pass3/index.php/api/userapi/uservehicledetail/format/json";
     public static String UPDATE_DETAILS_URL="http://192.168.2.2/pass3/index.php/api/userapi/price_updation_pass/format/json";
     public static String STATUS_DETAIL_URL="";
     public static String GET_APPLICANT_MOB_CHANGE_DETAIL="http://192.168.2.2/pass3/index.php/api/userapi/re_schedule_phone/format/json";
     public static String SHARED_PREFS_NAME="USER";
     public static String SHARED_PREF_KEY="USER_MOBILE";
+    public static  String GET_REUPLOAD_DETAILS_LINK="http://192.168.2.2/pass3/index.php/api/userapi/user_applic_detail_status/format/json";
+
 
 }

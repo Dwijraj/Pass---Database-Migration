@@ -157,7 +157,6 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:id="@+id/VEHICLE_CHANGE_LAYOUT_1996"
             android:layout_height="match_parent">
