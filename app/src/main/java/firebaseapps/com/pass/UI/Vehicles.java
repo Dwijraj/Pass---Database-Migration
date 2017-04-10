@@ -134,7 +134,17 @@ public class Vehicles extends AppCompatActivity {
                         @Override
                         public void onResponse(NetworkResponse response) {
 
-                            Log.v("Response","Working1");
+                            String RESPONSE=new String(response.data);
+                            try {
+
+                                JSONObject jsonObject=new JSONObject(RESPONSE);
+                                Log.v("Response",jsonObject.toString()+"...");
+
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
 
                         }
                     }, new Response.ErrorListener() {

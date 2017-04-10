@@ -36,7 +36,7 @@ public class Constants {
     public static String PASS_RETREIVE_URL="http://192.168.2.2/pass3/index.php/api/userapi/user_pass_info/format/json";
     public static String GET_APPLICANT_STATUS="";
     public static String CANCEL_REQUEST="";
-    public static String VEHICLE_DETAILS_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/userapi//format/json";
+    public static String VEHICLE_DETAILS_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/userapi/updates_user_vehicle_detail/format/json";
     public static String PROFILE_CHANGE_LINK="http://192.168.2.2/pass3/index.php/api/userapi/update_user_pass_detail/format/json";
     public static String VEHICLE_DETAILS_UPDATE_LINK="http://192.168.2.2/pass3/index.php/api/userapi/uservehicledetail/format/json";
     public static String UPDATE_DETAILS_URL="http://192.168.2.2/pass3/index.php/api/userapi/price_updation_pass/format/json";

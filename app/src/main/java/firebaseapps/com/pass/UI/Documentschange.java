@@ -332,7 +332,19 @@ public class Documentschange extends AppCompatActivity {
                             @Override
                             public void onResponse(NetworkResponse response) {
 
-                                Log.v("Response","Working1");
+                                String RESPONSE= new String(response.data);
+
+                                try {
+
+                                    Log.v("Response",RESPONSE.toString());
+                                    JSONObject jsonObject=new JSONObject(RESPONSE);
+                                    Log.v("Response2",jsonObject.toString());
+
+
+                                }catch (JSONException e)
+                                {
+
+                                }
 
                             }
                         }, new Response.ErrorListener() {
@@ -412,7 +424,7 @@ public class Documentschange extends AppCompatActivity {
         final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
         if(!(TextUtils.isEmpty(DRIVERS_NAME)&&TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)&&TextUtils.isEmpty(VEHICLE_NUMBER)
-                &&TextUtils.isEmpty(VEHICLE_MODEL)))//&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null))
+                &&TextUtils.isEmpty(VEHICLE_MODEL))&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null)
         {
 
             return true;
