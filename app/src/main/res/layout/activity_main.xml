@@ -11,6 +11,8 @@
     tools:context="firebaseapps.com.pass.UI.MainActivity"
     android:background="@drawable/tourist_pass">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

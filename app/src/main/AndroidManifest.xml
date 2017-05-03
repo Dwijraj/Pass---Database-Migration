@@ -22,7 +22,7 @@
         <activity android:name=".UI.Passdetails">
 
             <!--
-              <intent-filter>
+             <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
                  <category android:name="android.intent.category.LAUNCHER" />
@@ -64,16 +64,20 @@
         </activity>
         <activity android:name=".UI.GetStarted" />
         <activity android:name=".UI.PassPreview" />
-        <activity android:name=".UI.Documentschange"></activity>
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity android:name=".UI.Documentschange" />
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="firebaseapps.com.pass.braintree" />
             </intent-filter>
         </activity>
+        <activity android:name=".UI.MovingCarSplash"></activity>
     </application>
 
 </manifest>

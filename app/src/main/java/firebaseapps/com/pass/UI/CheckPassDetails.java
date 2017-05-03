@@ -149,7 +149,7 @@ public class CheckPassDetails extends AppCompatActivity {
                     rxConnect1.setParam("application_no",PASS_NO);
                     rxConnect1.setParam("user_mob",REGISTERED_MOBILE_NUBER);
 
-                    rxConnect1.execute(Constants.GET_REUPLOAD_DETAILS_LINK, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    rxConnect1.execute(Constants.ONLINE_GET_REUPLOAD_DETAILS_LINK, RxConnect.POST, new RxConnect.RxResultHelper() {
                         @Override
                         public void onResult(String result) {
 

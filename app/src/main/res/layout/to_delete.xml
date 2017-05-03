@@ -1,14 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:weightSum="100"
+    android:background="@drawable/bg_color"
+    android:gravity="center"
     android:layout_height="match_parent">
-
-    <GridLayout
+    <LinearLayout
+        android:layout_weight="30"
+        android:weightSum="100"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:paddingTop="20dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@drawable/applypass_start"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:text="Submit Application"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:paddingTop="20dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@mipmap/ic_application_write"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:text="Submit Application"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
 
 
 
-    </GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="30"
+        android:weightSum="100"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@drawable/reviewapplication"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:text="Application Preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@drawable/vehicle"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:text="Vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_weight="30"
+        android:weightSum="100"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@drawable/pass"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:textColor="#ffff"
+                android:gravity="center"
+                android:text="View Pass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="100dp"
+                android:src="@drawable/faq"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:text="FAQs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

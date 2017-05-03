@@ -186,7 +186,7 @@ public class Documentschange extends AppCompatActivity {
                             &&SOURCE_DESCRIPTION!=null)
                     {
 
-                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.PROFILE_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
+                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_PROFILE_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
                             @Override
                             public void onResponse(NetworkResponse response) {
 
@@ -328,7 +328,7 @@ public class Documentschange extends AppCompatActivity {
                     {
 
                         Log.v("Response","Working2");
-                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
+                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_VEHICLE_DETAILS_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
                             @Override
                             public void onResponse(NetworkResponse response) {
 

@@ -227,7 +227,7 @@ public class ViewPass extends AppCompatActivity {
                 final RxConnect rxConnect=new RxConnect(this);
                 rxConnect.setCachingEnabled(false);
                 rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
-                rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                rxConnect.execute(Constants.ONLINE_PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
                     @Override
                     public void onResult(String result) {
 
@@ -422,7 +422,7 @@ public class ViewPass extends AppCompatActivity {
                           rxConnect1.setParam("date_journey",CHANGED_DOJ);
                           rxConnect1.setParam("pay_time",new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(System.currentTimeMillis()));
                           rxConnect1.setParam("place_changed",CHANGED_PLACE_OF_VISIT);
-                          rxConnect1.execute(Constants.UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                          rxConnect1.execute(Constants.ONLINE_UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
                               @Override
                               public void onResult(String result) {
 

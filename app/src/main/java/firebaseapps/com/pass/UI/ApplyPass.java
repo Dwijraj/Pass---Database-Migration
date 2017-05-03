@@ -135,7 +135,7 @@ public class ApplyPass extends AppCompatActivity {
             public void onClick(View v) {
 
                 OPTION= "Update Vehicle Details";
-                Intent view_pass=new Intent(ApplyPass.this,ChangeDetails.class);            //Allows user to enter Vehicle Details pass
+                Intent view_pass=new Intent(ApplyPass.this,MovingCarSplash.class);            //Allows user to enter Vehicle Details pass
                 startActivity(view_pass);
              //   Intent Vehicle_Details=new Intent(ApplyPass.this,Vehicles.class);
               //  startActivity(Vehicle_Details);

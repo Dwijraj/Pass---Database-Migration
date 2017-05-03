@@ -242,7 +242,8 @@ public class Passdetails extends AppCompatActivity {
 
 
         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
-        rxConnect.execute(Constants.PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+        Log.v("Number",REGISTERED_NUMBER);
+        rxConnect.execute(Constants.ONLINE_PRICING_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
 
@@ -273,7 +274,7 @@ public class Passdetails extends AppCompatActivity {
         });
         rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
 
-        rxConnect1.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
+        rxConnect1.execute(Constants.ONLINE_UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
 
@@ -818,7 +819,7 @@ public class Passdetails extends AppCompatActivity {
 
         if(Purposes!=null)
         {
-            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
+            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
                 @Override
                 public void onResponse(NetworkResponse response) {
 

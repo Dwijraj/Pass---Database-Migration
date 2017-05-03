@@ -133,7 +133,7 @@ public class View_Pass extends AppCompatActivity {
                     rxConnect.setParam("user","customer");
                     rxConnect.setParam("date_journey",DateOfJourney);
 
-                    rxConnect.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    rxConnect.execute(Constants.ONLINE_PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
                         @Override
                         public void onResult(String result) {
 

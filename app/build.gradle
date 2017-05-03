@@ -85,6 +85,8 @@ dependencies {
     compile 'com.artemzin.rxjava:proguard-rules:1.2.3.0'
     compile 'mohitbadwal.rxconnect:rxconnect:1.0.36'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'dwijrajbhattacharyya.FriskyImage:FriskyImage:1.0.2'
     compile 'com.github.dimorinny:floating-text-button:0.0.2'
     compile 'com.braintreepayments.api:drop-in:3.+'
     compile 'com.mcxiaoke.volley:library:1.0.19'

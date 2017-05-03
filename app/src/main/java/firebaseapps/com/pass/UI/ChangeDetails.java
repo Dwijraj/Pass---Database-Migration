@@ -114,7 +114,7 @@ public class ChangeDetails extends AppCompatActivity {
 
         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
         Log.v("Mobile",REGISTERED_NUMBER);
-        rxConnect.execute(Constants.UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
+        rxConnect.execute(Constants.ONLINE_UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
 
@@ -297,7 +297,7 @@ public class ChangeDetails extends AppCompatActivity {
             rxConnect1.setParam("application_no",passno);
             rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
 
-            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect1.execute(Constants.ONLINE_GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
@@ -387,7 +387,7 @@ public class ChangeDetails extends AppCompatActivity {
             rxConnect1.setParam("application_no",passno);
             rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
 
-            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect1.execute(Constants.ONLINE_GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
@@ -439,7 +439,7 @@ public class ChangeDetails extends AppCompatActivity {
                         rxConnect.setParam("app_mobile",APLICANT_MOBILE);
                         rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
                         rxConnect.setParam("date_journey",DateOfJourney);
-                        rxConnect.execute(Constants.CANCEL_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
+                        rxConnect.execute(Constants.ONLINE_CANCEL_REQUEST, RxConnect.POST, new RxConnect.RxResultHelper() {
                             @Override
                             public void onResult(String result) {
 
@@ -553,7 +553,7 @@ public class ChangeDetails extends AppCompatActivity {
             rxConnect2.setParam("user_mobile",REGISTERED_NUMBER);
             //    rxConnect2.setParam("user","customer");
             rxConnect2.setParam("date_journey",DateOfJourney);
-            rxConnect2.execute(Constants.PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect2.execute(Constants.ONLINE_PASS_RETREIVE_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 
@@ -623,7 +623,7 @@ public class ChangeDetails extends AppCompatActivity {
             rxConnect1.setParam("application_no",passno);
             rxConnect1.setParam("user_mob",REGISTERED_NUMBER);
 
-            rxConnect1.execute(Constants.GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
+            rxConnect1.execute(Constants.ONLINE_GET_APPLICANT_MOB_CHANGE_DETAIL, RxConnect.POST, new RxConnect.RxResultHelper() {
                 @Override
                 public void onResult(String result) {
 

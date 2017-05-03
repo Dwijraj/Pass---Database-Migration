@@ -130,7 +130,7 @@ public class Vehicles extends AppCompatActivity {
                 {
 
                     Log.v("Response","Working2");
-                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
+                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
 
