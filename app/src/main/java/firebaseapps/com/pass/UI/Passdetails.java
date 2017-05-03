@@ -24,6 +24,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -161,6 +162,22 @@ public class Passdetails extends AppCompatActivity {
     String REGISTERED_NUMBER;
 
     //PAYMENT Configuration Object
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.finish();
+                break;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +196,11 @@ public class Passdetails extends AppCompatActivity {
         } catch (InvalidArgumentException e) {
             // There was an issue with your authorization string.
         } */
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         paths.add("");

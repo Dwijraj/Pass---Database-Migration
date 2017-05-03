@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -100,6 +101,22 @@ public class Documentschange extends AppCompatActivity {
     private LinearLayout Vehicle_Layout;
     private LinearLayout Application_Layout;
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.finish();
+                break;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_documentschange);
@@ -107,6 +124,11 @@ public class Documentschange extends AppCompatActivity {
         Vehicle_Layout=(LinearLayout) findViewById(R.id.VEHICLE_CHANGE_LAYOUT_1996);
         Application_Layout=(LinearLayout) findViewById(R.id.APPLICATION_CHANGE_LAYOUT_1996);
 
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         if(CheckPassDetails.CHANGEABLE.equals(OPTION_SELECTED.OPTION_CHANGEABLE_APPLICATION))

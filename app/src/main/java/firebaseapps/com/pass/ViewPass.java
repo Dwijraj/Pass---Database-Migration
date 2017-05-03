@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -82,12 +83,33 @@ public class ViewPass extends AppCompatActivity {
     int  mMonth ;//= mcurrentDate.get(Calendar.MONTH);
     int  mDay ;//= mcurrentDate.get(Calendar.DAY_OF_MONTH);
     private String Pass_number;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.finish();
+                break;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pass_history);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
 

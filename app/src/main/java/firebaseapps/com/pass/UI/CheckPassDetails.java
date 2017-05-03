@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -56,6 +57,22 @@ public class CheckPassDetails extends AppCompatActivity {
     public  static  String CHANGEABLE=null;
     public  static String WHICH_VEHICLE_STATS_STATUS=null;
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.finish();
+                break;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_pass_details);
@@ -68,6 +85,11 @@ public class CheckPassDetails extends AppCompatActivity {
         Check=(Button)findViewById(R.id.viewcheck);
         DOJ_DISPLAY=(TextView) findViewById(R.id.DOJ_TEXT_VIEW_CHECK);
         DATEPICKER=(ImageButton) findViewById(R.id.DOJ_VIEW_PASS_CHECK);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         findViewById(R.id.OTP_LAYOUT).setVisibility(View.INVISIBLE);

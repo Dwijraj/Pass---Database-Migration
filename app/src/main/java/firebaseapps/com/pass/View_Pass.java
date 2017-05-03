@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -44,6 +45,22 @@ public class View_Pass extends AppCompatActivity {
     private int mYear,mMonth,mDay;
     private String DateOfJourney=null;
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.finish();
+                break;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view__pass);
@@ -53,6 +70,12 @@ public class View_Pass extends AppCompatActivity {
         view=(Button)findViewById(R.id.view_pass);
         DOJ_DISPLAY=(TextView) findViewById(R.id.DOJ_TEXT_VIEW);
         DATEPICKER=(ImageButton) findViewById(R.id.DOJ_VIEW_PASS);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         rxConnect=new RxConnect(View_Pass.this);
         rxConnect.setCachingEnabled(false);

@@ -9,8 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.*;
 import android.os.Bundle;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -28,15 +31,29 @@ import mohitbadwal.rxconnect.RxConnect;
 public class ApplyPass extends AppCompatActivity {
 
 
-    private Button applypass;
-    private Button checkpassstatus;
-    private Button EnterVehicleDetails;
-    private Button ViewPass;
+    private LinearLayout applypass;
+    private LinearLayout checkpassstatus;
+    private LinearLayout EnterVehicleDetails;
+    private LinearLayout ViewPass;
     private String user;
-    private Button ApplicationPreview;
-    private Button changepassdetails;
+    private LinearLayout ApplicationPreview;
+    private LinearLayout changepassdetails;
     public static  String OPTION;
     public static  String OPTION_SELECTED; //Vehicle or Application Preview or Pass Preview
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar, menu);
+
+
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
 
@@ -46,18 +63,15 @@ public class ApplyPass extends AppCompatActivity {
         setContentView(R.layout.activity_apply_pass);
 
 
-        ApplicationPreview=(Button) findViewById(R.id.Application_Preview);                     //Preview of the Application
-        EnterVehicleDetails=(Button)findViewById(R.id.EnterVehicleDetails);                     //To Enter Vehicle info of a pass
-        applypass=(Button)findViewById(R.id.getstarted);                                        //To apply for new pass
-        checkpassstatus=(Button)findViewById(R.id.checkpassstatus);                             //To check pass status
-        changepassdetails=(Button)findViewById(R.id.Changepassdetails);                         //To change the details of the pass
-        ViewPass=(Button)findViewById(R.id.Viewpass);                                           //To view the pass
+        ApplicationPreview=(LinearLayout) findViewById(R.id.ApplicationPreview);                     //Preview of the Application
+        EnterVehicleDetails=(LinearLayout)findViewById(R.id.EnterVehicleDetails);                     //To Enter Vehicle info of a pass
+        applypass=(LinearLayout)findViewById(R.id.ApplyForAPass);                                        //To apply for new pass
+        checkpassstatus=(LinearLayout)findViewById(R.id.CheckPassStatus);                             //To check pass status
+        changepassdetails=(LinearLayout)findViewById(R.id.ChangePassDetails);                         //To change the details of the pass
+        ViewPass=(LinearLayout)findViewById(R.id.ViewPass);                                           //To view the pass
         String status = NetworkUtil.getConnectivityStatusString(getApplicationContext());       //Gets the network status
 
-        /**If network is enable but the service is not running
-        * The service is not running
-         * the system will start the service
-         * */
+
         if(status.equals("Wifi enabled") || status.equals("Mobile data enabled"))
         {
            if(!isMyServiceRunning(MyService.class)    /*Checks if service is ruuning */ )
