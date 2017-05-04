@@ -16,6 +16,7 @@ import android.net.Uri;
 
 import android.provider.MediaStore;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -161,6 +162,7 @@ public class Passdetails extends AppCompatActivity {
     private ArrayList<String> UNAVAILABLE_DATES=new ArrayList<>();
     String REGISTERED_NUMBER;
 
+
     //PAYMENT Configuration Object
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -201,6 +203,9 @@ public class Passdetails extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+
 
 
         paths.add("");
@@ -475,12 +480,20 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                if(s.length()==0&& TextUtils.isDigitsOnly(s))
+                if(TextUtils.isDigitsOnly(s)&& s.length()==0)
                 {
                     if(ERROR_MOBILE.getVisibility()== View.VISIBLE)
                     {
                         ERROR_MOBILE.setVisibility(View.INVISIBLE);
                     }
+                }
+                else if(s.length()==0)
+                {
+                    if(ERROR_MOBILE.getVisibility()== View.VISIBLE)
+                    {
+                        ERROR_MOBILE.setVisibility(View.INVISIBLE);
+                    }
+
                 }
 
             }
@@ -501,7 +514,14 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(s.length()!=10)
+                if(s.length()==0)
+                {
+                    if(ERROR_MOBILE.getVisibility()== View.VISIBLE)
+                    {
+                        ERROR_MOBILE.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else if(s.length()!=10)
                 {
                     if(ERROR_MOBILE.getVisibility()== View.INVISIBLE)
                     {
@@ -776,6 +796,10 @@ public class Passdetails extends AppCompatActivity {
     }
     public void onDestroy() {
         THE_TEST=0;
+        paths.clear();
+        REASONS.clear();
+        PLACES.clear();
+
         super.onDestroy();
     }
 
@@ -1036,6 +1060,7 @@ public class Passdetails extends AppCompatActivity {
         return Uri.parse(path);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1165,6 +1190,8 @@ public class Passdetails extends AppCompatActivity {
                 Log.d("file","file size: 2 ");
                 int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
                 scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+
+
 
                 Log.d("file","file size: 2 ");
 

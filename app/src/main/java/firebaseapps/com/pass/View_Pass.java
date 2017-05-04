@@ -2,6 +2,7 @@ package firebaseapps.com.pass;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,6 +76,7 @@ public class View_Pass extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
 
 
         rxConnect=new RxConnect(View_Pass.this);

@@ -1,9 +1,14 @@
 package firebaseapps.com.pass.UI;
 
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import dwijraj.FriskyAnim.FriskyTanslations;
@@ -17,15 +22,28 @@ public class MovingCarSplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moving_car_splash);
 
+        DisplayMetrics displayMetrics=new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int WIDTH=displayMetrics.heightPixels;
+        int HEIGHT=displayMetrics.widthPixels;
+        int PixelDensity=displayMetrics.densityDpi;
 
+        ImageView imageView= (ImageView) findViewById(R.id.car);
+        imageView.animate().translationXBy(-250).setInterpolator(new LinearInterpolator()).setDuration(0).start();
+        findViewById(R.id.Wheels1).animate().translationXBy(-250).setInterpolator(new LinearInterpolator()).setDuration(0).start();
+        findViewById(R.id.Wheels2).animate().translationXBy(-250).setInterpolator(new LinearInterpolator()).setDuration(0).start();
+
+        int Distance=WIDTH;
+        int Duration=2000;
+        
         FriskyTanslations Wheel1=new FriskyTanslations(MovingCarSplash.this,R.id.Wheels1);
         FriskyTanslations Wheel2=new FriskyTanslations(MovingCarSplash.this,R.id.Wheels2);
         Wheel1.StartRotationClockWise();
         Wheel2.StartRotationClockWise();
         FriskyTanslations Car=new FriskyTanslations(MovingCarSplash.this,R.id.car);
-        Car.MoveXBy(140,2000);
-        Wheel1.MoveXBy(140,2000,true);
-        Wheel2.MoveXBy(140,2000,true);
+        Car.MoveXBy(Distance,Duration);
+        Wheel1.MoveXBy(Distance,Duration,true);
+        Wheel2.MoveXBy(Distance,Duration,true);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -36,7 +54,7 @@ public class MovingCarSplash extends AppCompatActivity {
                 finish();
 
             }
-        },2000);
+        },Duration);
 
 
 

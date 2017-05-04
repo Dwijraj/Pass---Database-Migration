@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.*;
 import android.os.Bundle;
 
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,6 +63,11 @@ public class ApplyPass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_pass);
 
+
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setIcon(R.mipmap.ic_home);
 
         ApplicationPreview=(LinearLayout) findViewById(R.id.ApplicationPreview);                     //Preview of the Application
         EnterVehicleDetails=(LinearLayout)findViewById(R.id.EnterVehicleDetails);                     //To Enter Vehicle info of a pass

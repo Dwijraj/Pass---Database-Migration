@@ -9,6 +9,9 @@
     android:background="@color/colorPrimary">
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,29 +27,32 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:textSize="@dimen/textSize"
                 android:layout_width="0dp"
+                android:gravity="center"
                 android:layout_weight="40"
-                android:gravity="end"
                 android:layout_height="wrap_content"
                 android:textColor="#ffff"
                 android:text="Application status :"/>
 
             <TextView
+                android:textSize="@dimen/textSize"
                 android:id="@+id/viewstatus"
                 android:layout_width="0dp"
-                android:gravity="start"
+                android:gravity="center"
                 android:textColor="#ffff"
                 android:layout_weight="60"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
 
         <EditText
+            android:layout_marginTop="5dp"
             android:id="@+id/view_pass_passno_check"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/textSize"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:gravity="center"
             android:hint="Enter Pass number"
             android:maxEms="30"
@@ -56,7 +62,8 @@
             android:textColorHint="#ffff" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/textSize"
             android:textColor="#ffff"
             android:maxLines="1"
             android:id="@+id/view_pass_Id_no_check"
@@ -74,6 +81,8 @@
 
             <TextView
                 android:layout_width="wrap_content"
+                android:textSize="@dimen/textSize"
+
                 android:id="@+id/DOJ_TEXT_VIEW_CHECK"
                 android:text="Date of Journey"
                 android:gravity="center"
@@ -102,7 +111,7 @@
                 android:gravity="center"
                 android:background="@drawable/button_bg"
                 android:layout_marginEnd="50dp"
-                android:layout_weight="45"
+                android:layout_weight="75"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewcheck"
                 android:text="Check"/>
@@ -112,18 +121,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:weightSum="90"
-            android:layout_marginTop="30dp"
+            android:weightSum="100"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
             android:layout_height="wrap_content">
 
             <Button
                 android:layout_width="0dp"
-                android:gravity="center"
                 android:visibility="invisible"
+                android:gravity="center"
                 android:background="@drawable/button_bg"
-                android:layout_weight="35"
+                android:layout_weight="45"
                 android:layout_height="wrap_content"
                 android:id="@+id/APPLICATION_CHANGE"
                 android:text="APPLICATION CHANGE"/>
@@ -138,7 +147,7 @@
                 android:gravity="center"
                 android:visibility="invisible"
                 android:background="@drawable/button_bg"
-                android:layout_weight="35"
+                android:layout_weight="50"
                 android:layout_height="wrap_content"
                 android:id="@+id/VEHICLE_DETAIL_CHANGE"
                 android:text="Vehicle detail change"/>
@@ -156,26 +165,37 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:textSize="@dimen/textSize"
                 android:maxEms="20"
                 android:background="#fff"
                 android:minEms="10"
                 android:id="@+id/ENTER_OTP_CHECK_PASS"
                 android:gravity="center"
-                android:hint="ENTER OTP"
+                android:hint="Enter the OTP received"
                 android:layout_height="wrap_content" />
 
 
-            <Button
-                android:layout_width="wrap_content"
-                android:text="MAKE CHANGES"
-                android:id="@+id/SUBMIT_OTP_CHECK_PASS"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:text="MAKE CHANGES"
+                    android:id="@+id/SUBMIT_OTP_CHECK_PASS"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
 
     </LinearLayout>
+
+
+    </ScrollView>
 
 </LinearLayout>
