@@ -17,6 +17,9 @@
 #}
 -keep class org.apache.http.** { *; }
 -dontwarn org.apache.http.**
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
 -dontwarn android.net.**
 -keep class firebaseapps.com.pass.ViewPass
 -keep class firebaseapps.com.pass.Application

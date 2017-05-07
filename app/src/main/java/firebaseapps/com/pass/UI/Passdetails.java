@@ -48,8 +48,7 @@ import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
-import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
-import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.interfaces.BraintreeListener;
 import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -97,6 +96,7 @@ import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 import mohitbadwal.rxconnect.RxConnect;
 
 
+
 /** MINOR BUG FIXES IMAGE VIEW IN SCAN_ID CANT PUT BIG IMAGES **/
 
 
@@ -104,8 +104,6 @@ import mohitbadwal.rxconnect.RxConnect;
 public class Passdetails extends AppCompatActivity {
 
 
-
-    BraintreeFragment  mBraintreeFragment;
     private String MIME;
     private Uri imageuri =null;
     private Uri imageuriProfile=null;
@@ -804,35 +802,18 @@ public class Passdetails extends AppCompatActivity {
     }
 
 
-    private void getPayment() {
+    private void getPayment(String Token) {
         //Getting the amount from editText
 
+        Log.v("here123",Token);
 
-        String TOKEN_GENERATED= ClientToken.GetClientToken(Passdetails.this);
-
+        String TOKEN_GENERATED= Token;
 
 /*        */
 
-
-
-        try {
-            mBraintreeFragment = BraintreeFragment.newInstance(this,TOKEN_GENERATED);
-
-            // mBraintreeFragment is ready to use!
-        } catch (InvalidArgumentException e) {
-            // There was an issue with your authorization string.
-        }
-
-
-
-
         DropInRequest dropInRequest = new DropInRequest()
-                .clientToken(TOKEN_GENERATED)
-              //  .clientToken("eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIxZjk4Yzk4NDUzNTE4OTNiYjBhMjdkNjlmODVmNWEzMjViNTcxYzExODYxMWUxNzdmM2E4MDMzOWJlM2NjNWMxfGNyZWF0ZWRfYXQ9MjAxNy0wNC0wNVQxMDoyODowMS4wMjc4NzQ0MzErMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tLzM0OHBrOWNnZjNiZ3l3MmIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=")
-                .amount(PRICE_OF_PASS);
-
-
-        startActivityForResult(dropInRequest.getIntent(this), ClientToken.CLIENT_TOKEN_REQUEST_CODE);
+              .clientToken(Token);
+                   startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE);
 
 
     }
@@ -894,7 +875,10 @@ public class Passdetails extends AppCompatActivity {
                         Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
                         scan_id.setImageBitmap(bitmap2);
 
-                      // getPayment();
+                        String PAYMENT_TOKEN=JsonParser.JSONValue(jsonObject,"token");
+
+
+                         getPayment(PAYMENT_TOKEN);
 
 
                         Log.v("JSONRESPONSE",jsonString+jsonObject);
@@ -1065,163 +1049,146 @@ public class Passdetails extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode==RESULT_OK && requestCode==PROFILE_PHOTO)
-        {
+        if (resultCode == RESULT_OK && requestCode == PROFILE_PHOTO) {
             //When Applicant photo is selected
 
-                profilephoto=data.getData();
+            profilephoto = data.getData();
 
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-
-                int p[]=getResolution(photo.getWidth(),photo.getHeight());
-                photo=Bitmap.createScaledBitmap(photo,p[0],p[1],true);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
 
 
+            int p[] = getResolution(photo.getWidth(), photo.getHeight());
+            photo = Bitmap.createScaledBitmap(photo, p[0], p[1], true);
 
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                PROFILE_PIC_BYTE_ARRAY = stream.toByteArray();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            PROFILE_PIC_BYTE_ARRAY = stream.toByteArray();
 
 
-                imageuriProfile=  getImageUri(getApplicationContext(), photo);
-
-               
-                Glide.with(Passdetails.this)
-                        .load(PROFILE_PIC_BYTE_ARRAY)
-                        .into(Profile);
+            imageuriProfile = getImageUri(getApplicationContext(), photo);
 
 
+            Glide.with(Passdetails.this)
+                    .load(PROFILE_PIC_BYTE_ARRAY)
+                    .into(Profile);
 
-        }
-        else if (requestCode==ClientToken.CLIENT_TOKEN_REQUEST_CODE)
-        {
-            if(resultCode==RESULT_OK)
-            {
+
+        } else if (requestCode == PAYMENT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
 
-                Log.v("resultPay",result.getPaymentMethodNonce().getNonce());
+                Log.v("Payment123",result.getPaymentMethodNonce().getNonce());
 
-                Log.v("resultPay",result.getPaymentMethodNonce().getDescription());
+
+                String NONCE=result.getPaymentMethodNonce().getNonce();
+
+
                 RxConnect rxConnect=new RxConnect(Passdetails.this);
-                rxConnect.setCachingEnabled(false);
+                rxConnect.setParam("token_id",TOKEN_PASS);
+                rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
+                rxConnect.setParam("transaction_pay_id",NONCE);
+                rxConnect.setParam("status_pay",PRICE_FIELD.getText().toString().trim());
+                rxConnect.execute(Constants.ONLINE_CONFIRMATION_LINK, RxConnect.POST, new RxConnect.RxResultHelper() {
+                    @Override
+                    public void onResult(String result) {
 
-//                if(PRICE_OF_PASS!=null)
+                        Log.v("PaymentResponse",result);
 
-  //              {
+                    }
 
-                    rxConnect.setParam("PaymentMethodNonce",result.getPaymentMethodNonce().getNonce());
-                    rxConnect.setParam("amount_charged",PRICE_OF_PASS);
-                    rxConnect.execute(PaymentURL.EXECUTE_TRANSACTION_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
-                        @Override
-                        public void onResult(String result) {
-
-                            //Once Transaction is successful
-
-
-                        }
-
-                        @Override
-                        public void onNoResult() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-
-                        }
-                    });
+                    @Override
+                    public void onNoResult() {
 
 
-    //            }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+                });
+
+
+                try {
+                  BraintreeFragment  mBraintreeFragment = BraintreeFragment.newInstance(this, result.getPaymentMethodNonce().getNonce());
+                    // mBraintreeFragment is ready to use!
+
+
+                } catch (InvalidArgumentException e) {
+                    // There was an issue with your authorization string.
+                }
 
 
 
 
-
-            }
-            else if (resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 // the user canceled
-                Toasty.error(getApplicationContext(),"PaymentCanceled",Toast.LENGTH_SHORT).show();
+                Toasty.error(getApplicationContext(), "PaymentCanceled", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(resultCode==RESULT_OK && requestCode==SCAN_ID)
-        {
+        } else if (resultCode == RESULT_OK && requestCode == SCAN_ID) {
             //when applicant scanned user id is selected
 
-            imageuri=data.getData();
-            MIME= GetMimeType.GetMimeType(Passdetails.this,imageuri);
+            imageuri = data.getData();
+            MIME = GetMimeType.GetMimeType(Passdetails.this, imageuri);
 
-            if(MIME.contains("/jpg") || MIME.contains("/JPG"))
-            {
-                MIME="jpg";
+            if (MIME.contains("/jpg") || MIME.contains("/JPG")) {
+                MIME = "jpg";
+            } else if (MIME.contains("/png") || MIME.contains("/PNG")) {
+                MIME = "png";
+
+            } else if (MIME.contains("/jpeg") || MIME.contains("/JPEG")) {
+                MIME = "jpeg";
+            } else if (MIME.contains("/gif") || MIME.contains("/GIF")) {
+                MIME = "gif";
             }
-            else if(MIME.contains("/png") || MIME.contains("/PNG"))
-            {
-                MIME="png";
-
-            }
-            else if(MIME.contains("/jpeg") || MIME.contains("/JPEG"))
-            {
-                MIME="jpeg";
-            }
-            else if(MIME.contains("/gif") || MIME.contains("/GIF"))
-            {
-                MIME="gif";
-            }
-
-
-
 
 
             try {
                 //Getting the Bitmap from Gallery
-                file=new File(getPath(imageuri));
+                file = new File(getPath(imageuri));
 
-               b = new byte[(int) file.length()];
+                b = new byte[(int) file.length()];
                 FileInputStream fileInputStream = new FileInputStream(file);
                 fileInputStream.read(b);
                 for (int i = 0; i < b.length; i++) {
-                    System.out.print((char)b[i]);
+                    System.out.print((char) b[i]);
                 }
-                Log.d("file","file size:"+b.length/1024);
+                Log.d("file", "file size:" + b.length / 1024);
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);
-                Log.d("file","file size: 2 ");
-                int p[]=getResolution(bitmap.getWidth(),bitmap.getHeight());
-                scaled=Bitmap.createScaledBitmap(bitmap,p[0],p[1],true);
+                Log.d("file", "file size: 2 ");
+                int p[] = getResolution(bitmap.getWidth(), bitmap.getHeight());
+                scaled = Bitmap.createScaledBitmap(bitmap, p[0], p[1], true);
 
 
-
-                Log.d("file","file size: 2 ");
+                Log.d("file", "file size: 2 ");
 
 
                 scan_id.setImageBitmap(scaled);
 
-                Log.d("file","file size: 3 ");
+
+                Log.d("file", "file size: 3 ");
 
             } catch (IOException e) {
 
-                Toast.makeText(getApplicationContext(),"FILE ERROR",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "FILE ERROR", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
 
-                Log.v("GALLERY",e.getLocalizedMessage());
+                Log.v("GALLERY", e.getLocalizedMessage());
             }
 
 
+        } else {
+
+            Log.v("PaymentTag","1");
+
+
         }
-        else  if (requestCode == PAYMENT_REQUEST_CODE) {
-
-            //If the result is OK i.e. user has not canceled the payment
-            if (resultCode == Activity.RESULT_OK) {
-
-
-                }
-            }
-        }
-
-
     }
+
+
+}
 
 
 

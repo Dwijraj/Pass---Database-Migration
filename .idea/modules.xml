@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Pass - Copy.iml" filepath="$PROJECT_DIR$/Pass - Copy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pass---Database-Migration.iml" filepath="$PROJECT_DIR$/Pass---Database-Migration.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

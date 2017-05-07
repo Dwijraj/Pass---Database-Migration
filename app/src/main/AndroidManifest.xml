@@ -70,16 +70,13 @@
             android:theme="@style/Theme.Design.NoActionBar"/>
         <activity android:name=".UI.PassPreview" />
         <activity android:name=".UI.Documentschange" />
-        <activity
-            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="firebaseapps.com.pass.braintree" />
+                <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
         <activity android:name=".UI.MovingCarSplash"

@@ -1,5 +1,6 @@
 package firebaseapps.com.pass.UI;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
 import android.os.Handler;
@@ -14,7 +15,7 @@ import android.widget.ImageView;
 import dwijraj.FriskyAnim.FriskyTanslations;
 import firebaseapps.com.pass.R;
 
-public class MovingCarSplash extends AppCompatActivity {
+public class MovingCarSplash extends Activity {
 
 
     @Override

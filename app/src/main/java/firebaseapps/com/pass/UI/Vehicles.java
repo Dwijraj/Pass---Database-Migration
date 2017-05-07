@@ -3,6 +3,7 @@ package firebaseapps.com.pass.UI;
 
 import android.app.Dialog;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -75,6 +76,7 @@ public class Vehicles extends AppCompatActivity {
     private final int INSURANCE_REQUEST_CODE=434;
     private final int RCBook_REQUEST_CODE=535;
     private Button Submit;
+    private ProgressDialog progressDialog;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -113,6 +115,7 @@ public class Vehicles extends AppCompatActivity {
         Insurance = (ImageView) findViewById(R.id.insurance);
         RCBook = (ImageView) findViewById(R.id.RCBook);
         Submit = (Button) findViewById(R.id.submitVehicleDetails);
+        progressDialog=new ProgressDialog(Vehicles.this);
 
         Insurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,12 +157,22 @@ public class Vehicles extends AppCompatActivity {
                 if(IsCorrect())
                 {
 
+                    progressDialog.setMessage("Uploading..");
+                    progressDialog.show();
+
                     Log.v("Response","Working2");
                     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_VEHICLE_DETAILS_UPDATE_LINK, new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
 
+                            progressDialog.dismiss();
+
+                            Toasty.success(Vehicles.this,"Success",Toast.LENGTH_SHORT).show();
+
                             String RESPONSE=new String(response.data);
+                            Log.v("Response",RESPONSE);
+
+
                             try {
 
                                 JSONObject jsonObject=new JSONObject(RESPONSE);
@@ -176,6 +189,10 @@ public class Vehicles extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
+                            progressDialog.dismiss();
+                            Toasty.error(Vehicles.this,"Error Uploading",Toast.LENGTH_SHORT).show();
+                            error.printStackTrace();
+                            Log.v("ResponseVehicle","Eerpr");
                         }
                     }) {
                         @Override
