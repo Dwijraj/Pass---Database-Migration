@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         prog=new ProgressDialog(this);
         buttons=(Button)findViewById(R.id.button);
 
+        if(getSupportActionBar().isShowing())
+        {
+            getSupportActionBar().hide();
+        }
 
         /**
          To take run time gallery and camera Permissions

@@ -1,5 +1,6 @@
 package firebaseapps.com.pass.UI;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -54,6 +55,7 @@ import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 
 public class Documentschange extends AppCompatActivity {
 
+    private ProgressDialog progressDialog;
     private EditText ID_NUMBER;
     private Spinner  ID_SOURCE;
     private ImageView PROFILE_PIC;
@@ -125,6 +127,7 @@ public class Documentschange extends AppCompatActivity {
         Vehicle_Layout=(LinearLayout) findViewById(R.id.VEHICLE_CHANGE_LAYOUT_1996);
         Application_Layout=(LinearLayout) findViewById(R.id.APPLICATION_CHANGE_LAYOUT_1996);
 
+        progressDialog=new ProgressDialog(this);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -210,12 +213,15 @@ public class Documentschange extends AppCompatActivity {
                             &&SOURCE_DESCRIPTION!=null)
                     {
 
+                        progressDialog.setMessage("Uploading...");
+                        progressDialog.show();
                         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_PROFILE_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
                             @Override
                             public void onResponse(NetworkResponse response) {
 
 
 
+                                progressDialog.dismiss();
                                 Log.v("Data",response.data+"...");
 
                                 String jsonString = new String(response.data);
@@ -239,6 +245,9 @@ public class Documentschange extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+
+                                progressDialog.dismiss();
+                                Toasty.error(Documentschange.this,"Error Uploading Details",Toast.LENGTH_SHORT).show();
 
                            }
                         }) {
@@ -351,11 +360,14 @@ public class Documentschange extends AppCompatActivity {
                     if(IsCorrect())
                     {
 
+                        progressDialog.setMessage("Uploading...");
+                        progressDialog.show();
                         Log.v("Response","Working2");
                         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_VEHICLE_DETAILS_CHANGE_LINK, new Response.Listener<NetworkResponse>() {
                             @Override
                             public void onResponse(NetworkResponse response) {
 
+                                progressDialog.dismiss();
                                 String RESPONSE= new String(response.data);
 
                                 try {
@@ -375,6 +387,8 @@ public class Documentschange extends AppCompatActivity {
                             @Override
                             public void onErrorResponse(VolleyError error) {
 
+                                progressDialog.dismiss();
+                                Toasty.error(Documentschange.this,"Error Uploading",Toast.LENGTH_SHORT).show();
                             }
                         }) {
                             @Override
@@ -447,14 +461,14 @@ public class Documentschange extends AppCompatActivity {
         final String VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
         final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
-        if(!(TextUtils.isEmpty(DRIVERS_NAME)&&TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)&&TextUtils.isEmpty(VEHICLE_NUMBER)
-                &&TextUtils.isEmpty(VEHICLE_MODEL))&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null)
+        if((TextUtils.isEmpty(DRIVERS_NAME)||TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)||TextUtils.isEmpty(VEHICLE_NUMBER)
+                ||TextUtils.isEmpty(VEHICLE_MODEL))||DRIVER_LICENSE_BYTE_ARRAY==null||RC_BOOK_BYTE_ARRAY==null||INSURANCE_BYTE_ARRAY==null)
         {
 
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
 

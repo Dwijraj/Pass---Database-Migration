@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_vehicles"
     android:layout_width="match_parent"
@@ -19,21 +20,33 @@
                 android:layout_width="match_parent"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:id="@+id/vehicle"
+                android:weightSum="100"
                 android:layout_marginTop="80dp"
                 android:layout_height="wrap_content">
 
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Driver name :"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="47"
+                    android:text="Driver  Name "
                     android:textColor="#ffff"
-                    android:textSize="25sp"
+                    android:textSize="23sp"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#ffff"
+                    android:textSize="23sp"
+                    android:text=": "
+                    android:layout_height="match_parent" />
+
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:minWidth="200sp"
+                    android:layout_marginRight="12dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
                     android:gravity="center"
                     android:id="@+id/Driversname"
                     android:inputType="text"
@@ -53,15 +66,27 @@
 
                 <TextView
 
-                    android:layout_width="wrap_content"
-                    android:text="Driver License Number :"
+                    android:gravity="center"
+                    android:layout_weight="47"
+                    android:layout_width="0dp"
+                    android:text="Driver License Number "
                     android:textColor="#ffff"
-                    android:textSize="20sp"
+                    android:textSize="23sp"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#ffff"
+                    android:textSize="23sp"
+                    android:text=": "
+                    android:layout_height="match_parent" />
+
                 <EditText
+                    android:layout_weight="50"
                     android:layout_marginRight="10dp"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dp"
                     android:gravity="center"
                     android:id="@+id/DriverLicenseNumber"
                     android:inputType="text"
@@ -84,6 +109,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:scaleType="fitXY"
                         android:layout_width="150dp"
                         android:layout_centerHorizontal="true"
                         android:background="#868181"
@@ -118,6 +144,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:scaleType="fitXY"
                         android:layout_width="150dp"
                         android:background="#868181"
                         android:id="@+id/insurance"
@@ -144,6 +171,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:scaleType="fitXY"
                     android:layout_width="150dp"
                     android:background="#868181"
                     android:id="@+id/RCBook"
@@ -169,21 +197,34 @@
                 android:layout_width="match_parent"
                 android:id="@+id/CarNums"
                 android:gravity="center"
+                android:weightSum="100"
                 android:layout_marginTop="50dp"
                 android:layout_below="@+id/Operator"
                 android:layout_height="match_parent">
 
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Vehicle Number :"
+                    android:gravity="center"
+                    android:layout_weight="47"
+                    android:layout_width="0dp"
+                    android:text="Vehicle Number "
                     android:textColor="#ffff"
                     android:textSize="25sp"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textColor="#ffff"
+                    android:textSize="23sp"
+                    android:text=": "
+                    android:layout_height="match_parent" />
+
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:minWidth="200sp"
+                    android:width="0dp"
+                    android:layout_weight="50"
+                    android:layout_width="0dp"
                     android:gravity="center"
                     android:id="@+id/VehcileNumber"
                     android:inputType="text"
@@ -201,14 +242,25 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Vehicle Model :"
+                    android:gravity="center"
+                    android:layout_weight="47"
+                    android:layout_width="0dp"
+                    android:text="Vehicle Model "
                     android:textColor="#ffff"
                     android:textSize="25sp"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#ffff"
+                    android:textSize="23sp"
+                    android:text=": "
+                    android:layout_height="match_parent" />
+
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_width="0dp"
                     android:minWidth="200sp"
                     android:gravity="center"
                     android:id="@+id/VehicleModel"
@@ -239,8 +291,8 @@
                     android:layout_height="wrap_content">
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:id="@+id/submitVehicleDetails"
+                        android:layout_width="match_parent"
+                        android:id="@+id/submitVehicleDetails_doc_change"
                         android:text="Submit"
                         android:layout_height="wrap_content" />
 

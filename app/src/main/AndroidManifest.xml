@@ -21,7 +21,7 @@
             android:label="Home Page"
             />
         <activity android:name=".UI.MainActivity"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            />
         <activity android:name=".UI.Passdetails">
 
             <!--
@@ -58,8 +58,7 @@
         <activity android:name=".ViewPass" />
         <activity android:name=".View_Pass" />
         <activity android:name=".UI.Vehicles" />
-        <activity android:name=".UI.Startup"
-            android:theme="@style/Theme.Design.NoActionBar">
+        <activity android:name=".UI.Startup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -67,7 +66,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".UI.GetStarted"
-            android:theme="@style/Theme.Design.NoActionBar"/>
+            />
         <activity android:name=".UI.PassPreview" />
         <activity android:name=".UI.Documentschange" />
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
@@ -80,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".UI.MovingCarSplash"
-            android:theme="@style/Theme.Design.NoActionBar"
+            
             ></activity>
     </application>
 

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -42,6 +43,12 @@ public class GetStarted extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_get_started);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar.isShowing())
+        {
+            actionBar.hide();
+        }
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);

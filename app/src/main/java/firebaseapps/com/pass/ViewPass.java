@@ -49,8 +49,6 @@ import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import mohitbadwal.rxconnect.RxConnect;
 
 import static firebaseapps.com.pass.UI.ChangeDetails.UNAVAILABLE_DATES;
-
-
 public class ViewPass extends AppCompatActivity {
 
     private ImageView scan_id2;
