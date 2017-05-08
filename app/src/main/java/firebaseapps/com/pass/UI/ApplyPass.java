@@ -33,12 +33,12 @@ public class ApplyPass extends AppCompatActivity {
 
 
     private LinearLayout applypass;
-    private LinearLayout checkpassstatus;
+    private LinearLayout Track;
     private LinearLayout EnterVehicleDetails;
     private LinearLayout ViewPass;
     private String user;
     private LinearLayout ApplicationPreview;
-    private LinearLayout changepassdetails;
+    private LinearLayout EditApplication;
     public static  String OPTION;
     public static  String OPTION_SELECTED; //Vehicle or Application Preview or Pass Preview
 
@@ -72,8 +72,8 @@ public class ApplyPass extends AppCompatActivity {
         ApplicationPreview=(LinearLayout) findViewById(R.id.ApplicationPreview);                     //Preview of the Application
         EnterVehicleDetails=(LinearLayout)findViewById(R.id.EnterVehicleDetails);                     //To Enter Vehicle info of a pass
         applypass=(LinearLayout)findViewById(R.id.ApplyForAPass);                                        //To apply for new pass
-        checkpassstatus=(LinearLayout)findViewById(R.id.CheckPassStatus);                             //To check pass status
-        changepassdetails=(LinearLayout)findViewById(R.id.ChangePassDetails);                         //To change the details of the pass
+        Track=(LinearLayout)findViewById(R.id.TrackStatus);                             //To check pass status
+        EditApplication=(LinearLayout)findViewById(R.id.ChangePassDetails);                         //To change the details of the pass
         ViewPass=(LinearLayout)findViewById(R.id.ViewPass);                                           //To view the pass
         String status = NetworkUtil.getConnectivityStatusString(getApplicationContext());       //Gets the network status
 
@@ -98,14 +98,14 @@ public class ApplyPass extends AppCompatActivity {
             }
         });
 
-       checkpassstatus.setOnClickListener(new View.OnClickListener() {
+       Track.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                Intent check=new Intent(ApplyPass.this,CheckPassDetails.class);      //Allows user to check pass details
                startActivity(check);
            }
        });
-        changepassdetails.setOnClickListener(new View.OnClickListener() {
+        EditApplication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
 

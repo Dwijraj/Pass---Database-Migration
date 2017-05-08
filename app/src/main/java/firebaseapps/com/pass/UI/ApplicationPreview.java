@@ -1,15 +1,11 @@
 package firebaseapps.com.pass.UI;
 
-import android.graphics.Bitmap;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,19 +15,15 @@ import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.jar.JarException;
 
 import firebaseapps.com.pass.Application;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.JsonParser;
-import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.View_Pass;
-import mohitbadwal.rxconnect.RxConnect;
 
-public class PassPreview extends AppCompatActivity {
+public class ApplicationPreview extends AppCompatActivity {
 
 
     private ImageView scan_id2;
@@ -78,7 +70,7 @@ public class PassPreview extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pass_preview);
+        setContentView(R.layout.activity_application_preview);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);

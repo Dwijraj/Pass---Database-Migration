@@ -67,7 +67,7 @@
         </activity>
         <activity android:name=".UI.GetStarted"
             />
-        <activity android:name=".UI.PassPreview" />
+        <activity android:name=".UI.ApplicationPreview" />
         <activity android:name=".UI.Documentschange" />
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">

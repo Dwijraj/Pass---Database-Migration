@@ -133,7 +133,7 @@
                 android:weightSum="100">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
                     android:gravity="center"
@@ -142,10 +142,10 @@
                     android:textSize="19sp" />
 
                 <TextView
+                    android:textSize="19sp"
                     android:id="@+id/SCAN_ID"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_weight="50"
                     android:gravity="center"
                     android:text="id_no"

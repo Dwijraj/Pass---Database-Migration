@@ -42,7 +42,7 @@
                 android:gravity="center"
                 android:textColor="#ffff"
                 android:layout_weight="60"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -54,7 +54,7 @@
             android:textSize="@dimen/textSize"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="Enter Pass number"
+            android:hint="Enter Application number"
             android:maxEms="30"
             android:maxLines="1"
             android:minEms="10"
@@ -68,7 +68,7 @@
             android:maxLines="1"
             android:id="@+id/view_pass_Id_no_check"
             android:gravity="center"
-            android:hint="Enter Mobile Number in the application"
+            android:hint="Enter Mobile Number in the Application"
             android:textColorHint="#ffff"
             android:minEms="10"
             android:maxEms="30"

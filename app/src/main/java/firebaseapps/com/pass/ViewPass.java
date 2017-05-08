@@ -68,10 +68,11 @@ public class ViewPass extends AppCompatActivity {
     private TextView Application_status2;
     public  Application app;
     private TextView ID_source;
-    private static  String Changed_Values_flag="0";
+    private boolean   Changed_Values_flag;
     private TextView Gate;
     private TextView place_of_visit;
     private ImageButton DOJ_CHANGE;
+    private String DATE_OF_JOURNEY_ORIGINAL;
     private Boolean Changed=false;
     public static String CHANGED_DOJ;
     public static String CHANGED_PLACE_OF_VISIT;
@@ -119,6 +120,7 @@ public class ViewPass extends AppCompatActivity {
         final  ImageView imageView=(ImageView) findViewById(R.id.BAR_CODE_SHOW);
         final TextView  Pass=(TextView)findViewById(R.id.PassNumber);
         Vehicle=(Button)findViewById(R.id.Display_Bar_Code);
+        Changed_Values_flag=false;
 
         scan_id2=(ImageView)findViewById(R.id.SCAN_PIC) ;
         Name2=(TextView)findViewById(R.id.SCAN_NAME);
@@ -177,6 +179,7 @@ public class ViewPass extends AppCompatActivity {
 
             String DateOfJourney= JsonParser.JSONValue(jsonObject,"date_journey");
 
+            DATE_OF_JOURNEY_ORIGINAL=DateOfJourney;
 
 
             String Res= JsonParser.JSONValue(jsonObject,"Photo");
@@ -366,24 +369,32 @@ public class ViewPass extends AppCompatActivity {
 
                                 // myCalenderCopy=myCalendar;
 
-                                String myFormat = "dd-MM-yyyy"; //Change as you need
+                                String myFormat = "yyyy-MM-dd"; //Change as you need
                                 final SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
 
-                                if(Original_Date_Of_Journey.equals(sdf.format(myCalendar.getTime())))
+                                Log.v("ValueOriginal",DATE_OF_JOURNEY_ORIGINAL);
+                                Log.v("ValueChanged",sdf.format(myCalendar.getTime()));
+
+
+
+                                if(DATE_OF_JOURNEY_ORIGINAL.equals(sdf.format(myCalendar.getTime())))
                                 {
                                    Toasty.warning(getApplicationContext(),"Your Trip was already scheduled on this day",Toast.LENGTH_SHORT).show();
-                                    Changed_Values_flag="0";
+                                    Changed_Values_flag=false;
+                                    Vehicle.setEnabled(false);
                                 }
                                else if(!UNAVAILABLE_DATES.contains(sdf.format(myCalendar.getTime())))
                                 {
                                     Dateofjourney2.setText(sdf.format(myCalendar.getTime()));
                                     CHANGED_DOJ=Dateofjourney2.getText().toString();
-                                    Changed_Values_flag="1";
+                                    Changed_Values_flag=true;
                                     Changed=true;
+                                    Vehicle.setEnabled(true);
                                 }
                                 else
                                 {
-                                    Changed_Values_flag="0";
+                                    Vehicle.setEnabled(false);
+                                    Changed_Values_flag=false;
                                     Toasty.error(getApplicationContext(),"The selected date is not available",Toast.LENGTH_SHORT).show();
                                 }
 
@@ -433,42 +444,45 @@ public class ViewPass extends AppCompatActivity {
                         else {
                             Toasty.info(ViewPass.this,"There were no changes in original application",Toast.LENGTH_SHORT).show();
                         } */
-                      try {
-                          RxConnect rxConnect1=new RxConnect(ViewPass.this);
-                          rxConnect1.setParam("application_mobile",Mobile2.getText().toString());
-                          rxConnect1.setParam("application_no",Pass_number);
-                          rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
-                          rxConnect1.setParam("transaction_pay_id","transactionID");
-                          rxConnect1.setParam("status_pay","1");
-                          rxConnect1.setParam("date_journey",CHANGED_DOJ);
-                          rxConnect1.setParam("pay_time",new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(System.currentTimeMillis()));
-                          rxConnect1.setParam("place_changed",CHANGED_PLACE_OF_VISIT);
-                          rxConnect1.execute(Constants.ONLINE_UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
-                              @Override
-                              public void onResult(String result) {
+                      if(Changed_Values_flag) {
 
-                                  Log.v("OnchangeDetailsError",result);
 
-                                  //  dialog.dismiss();
-                                     Toasty.success(ViewPass.this,"Changes Made Successfully",Toast.LENGTH_SHORT).show();
-                                  //If successful display the message
-                              }
+                          try {
+                              RxConnect rxConnect1 = new RxConnect(ViewPass.this);
+                              rxConnect1.setParam("application_mobile", Mobile2.getText().toString());
+                              rxConnect1.setParam("application_no", Pass_number);
+                              rxConnect1.setParam("user_mobile", REGISTERED_NUMBER);
+                              rxConnect1.setParam("transaction_pay_id", "transactionID");
+                              rxConnect1.setParam("status_pay", "1");
+                              rxConnect1.setParam("date_journey", CHANGED_DOJ);
+                              rxConnect1.setParam("pay_time", new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(System.currentTimeMillis()));
+                              rxConnect1.setParam("place_changed", CHANGED_PLACE_OF_VISIT);
+                              rxConnect1.execute(Constants.ONLINE_UPDATE_DETAILS_URL, RxConnect.POST, new RxConnect.RxResultHelper() {
+                                  @Override
+                                  public void onResult(String result) {
 
-                              @Override
-                              public void onNoResult() {
+                                      Log.v("OnchangeDetailsError", result);
 
-                              }
+                                      //  dialog.dismiss();
+                                      Toasty.success(ViewPass.this, "Changes Made Successfully", Toast.LENGTH_SHORT).show();
+                                      //If successful display the message
+                                  }
 
-                              @Override
-                              public void onError(Throwable throwable) {
+                                  @Override
+                                  public void onNoResult() {
 
-                              }
-                          });
-                      }catch (Exception e)
-                      {
-                          Log.v("OnCgangingReqerror",e.getLocalizedMessage());
+                                  }
+
+                                  @Override
+                                  public void onError(Throwable throwable) {
+
+                                  }
+                              });
+                          } catch (Exception e) {
+                              Log.v("OnCgangingReqerror", e.getLocalizedMessage());
+                          }
+
                       }
-
 
 
 

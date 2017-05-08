@@ -156,9 +156,17 @@ public class CheckPassDetails extends AppCompatActivity {
 
                 final String PASS_NO=pass_no.getText().toString().trim();
                 final String ID_NO=Id_no.getText().toString().trim();
-                if(PASS_NO.isEmpty()||ID_NO.isEmpty()||DateOfJourney.isEmpty())
+                if(PASS_NO.isEmpty()||ID_NO.isEmpty()||DateOfJourney==null)
                 {
-                    Toasty.warning(getApplicationContext(),"Enter the details",Toast.LENGTH_SHORT).show();
+                    if(PASS_NO.isEmpty())
+                    Toasty.warning(getApplicationContext(),"Enter Pass details",Toast.LENGTH_SHORT).show();
+
+                    else  if(ID_NO.isEmpty())
+                        Toasty.warning(getApplicationContext(),"Enter Mobile Number",Toast.LENGTH_SHORT).show();
+
+                    else
+                        Toasty.warning(getApplicationContext(),"Enter Date of Journey",Toast.LENGTH_SHORT).show();
+
                 }
                 else
                 {
@@ -190,8 +198,15 @@ public class CheckPassDetails extends AppCompatActivity {
                             try {
 
 
+                                APPLICATION_STATUS_SHOW.setTextColor(Color.RED);
 
                                 JSONObject jsonObject=new JSONObject(result);
+
+                                String APPLICATION_FOUND_STATUS=JsonParser.JSONValue(jsonObject,"response_status");
+                                if(APPLICATION_FOUND_STATUS.equals("3"))
+                                {
+                                    APPLICATION_STATUS_SHOW.setText("NO SUCH APPLICATION EXISTS CHECK APPLICATION NUMBER AND DATE OF JOURNEY");
+                                }
 
                                 Vehicles.APPLICATION_NUMBER=PASS_NO;
                                 Log.v("Here","1");
@@ -208,7 +223,7 @@ public class CheckPassDetails extends AppCompatActivity {
 
                                 Log.v("Here","4");
                                 String REMARK=JsonParser.JSONValue(jsonObject1,"remarked");
-                                APPLICATION_STATUS_SHOW.setTextColor(Color.RED);
+
                                 if(APPLICATION_STATUS.equals("2"))///*&&(jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER))||jsonObject.getString("mobile").equals(REGISTERED_MOBILE_NUBER)*/)
                                 {
 
@@ -230,36 +245,53 @@ public class CheckPassDetails extends AppCompatActivity {
                                     Log.v("Here","5");
                                     String STATUS_APPLICATIONS_SHOW=JsonParser.JSONValue(jsonObject1,"status");
                                     Log.v("Here",STATUS_APPLICATIONS_SHOW);
-                                    if (STATUS_APPLICATIONS_SHOW.contains("1"))
+
+                                    boolean One=STATUS_APPLICATIONS_SHOW.equals("1");
+                                    boolean Two=STATUS_APPLICATIONS_SHOW.equals("2");
+                                    boolean Three=STATUS_APPLICATIONS_SHOW.equals("3");
+                                    boolean Four=STATUS_APPLICATIONS_SHOW.equals("4");
+                                    boolean Five=STATUS_APPLICATIONS_SHOW.equals("5");
+                                    if (One)
                                     {
+
+
+                                        Log.v("CheckPassHere1","Reached1");
                                         //Pass ready
-                                        APPLICATION_STATUS_SHOW.setText(" Your Pass is Ready you can Check your pass through VIEW PASS field");
+                                        APPLICATION_STATUS_SHOW.setText("Pass is Ready you can Check your pass through VIEW PASS field");
 
                                         Toasty.success(getApplicationContext(),"Your Pass is Ready",Toast.LENGTH_SHORT).show();
 
                                     }
-                                    else if(APPLICATION_STATUS.contains("2"))
+                                    else if(Two)
                                     {
                                         //Personal Info verified
 
-                                        APPLICATION_STATUS_SHOW.setText("Your Personal information have been Verified");
+
+                                        Log.v("CheckPassHere1","Reached2");
+
+                                        APPLICATION_STATUS_SHOW.setText("Personal details have been verified proceed to uploading Vehicle details");
 
                                     }
 
-                                    else if(APPLICATION_STATUS.contains("3"))
+                                    else if(Three||Five)
                                     {
                                         //Vehicle Info verified
 
-                                        APPLICATION_STATUS_SHOW.setText("Your Vehicle Information is being Verified");
+                                        Log.v("CheckPassHere1","Reached3");
+                                        Toasty.success(getApplicationContext(),"Vehicle Information is being Verified",Toast.LENGTH_SHORT).show();
+
+                                        APPLICATION_STATUS_SHOW.setText("Vehicle Information is being Verified");
 
                                     }
 
-                                    else if(APPLICATION_STATUS.contains("4"))
+                                    else if(Four)
                                     {
                                         //Personal Info is being processed
 
+
+                                        Log.v("CheckPassHere1","Reached4");
                                         Log.v("Here","7");
-                                        APPLICATION_STATUS_SHOW.setText("Your Personal Information is being Verified");
+                                        APPLICATION_STATUS_SHOW.setText("Personal Information is being Verified");
                                     }
 
                                 }

@@ -292,7 +292,7 @@
 
                     <Button
                         android:layout_width="match_parent"
-                        android:id="@+id/submitVehicleDetails_doc_change"
+                        android:id="@+id/submitVehicleDetails"
                         android:text="Submit"
                         android:layout_height="wrap_content" />
 

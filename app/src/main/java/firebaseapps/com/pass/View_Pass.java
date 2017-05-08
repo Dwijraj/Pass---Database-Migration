@@ -2,7 +2,6 @@ package firebaseapps.com.pass;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +26,7 @@ import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Constants.OPTION_SELECTED;
 import firebaseapps.com.pass.UI.ApplyPass;
-import firebaseapps.com.pass.UI.PassPreview;
-import firebaseapps.com.pass.UI.Passdetails;
+import firebaseapps.com.pass.UI.ApplicationPreview;
 import firebaseapps.com.pass.UI.Vehicles;
 import mohitbadwal.rxconnect.RxConnect;
 
@@ -144,9 +142,23 @@ public class View_Pass extends AppCompatActivity {
 
                 final String PASS_NO=pass_no.getText().toString().trim();
                 final String ID_NO=Id_no.getText().toString().trim();
-                if(PASS_NO.isEmpty()||ID_NO.isEmpty()||DateOfJourney.isEmpty())
+                if(PASS_NO.isEmpty()||ID_NO.isEmpty()||DateOfJourney==null)
                 {
-                    Toast.makeText(getApplicationContext(),"Enter pass number",Toast.LENGTH_SHORT).show();
+                    if(PASS_NO.isEmpty())
+                    {
+                        Toasty.info(getApplicationContext(),"Enter Application number",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if(ID_NO.isEmpty())
+                    {
+                        Toasty.info(getApplicationContext(),"Enter Mobile Number",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else
+                    {
+                        Toasty.info(getApplicationContext(),"Enter Date of Journey",Toast.LENGTH_SHORT).show();
+
+                    }
                 }
                 else
                 {
@@ -173,7 +185,7 @@ public class View_Pass extends AppCompatActivity {
 
                                     if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
                                     {
-                                        Intent PASS_PREVIEW=new Intent(View_Pass.this,PassPreview.class);
+                                        Intent PASS_PREVIEW=new Intent(View_Pass.this,ApplicationPreview.class);
                                         PASS_PREVIEW.putExtra("PassNumber",PASS_NO);
                                         PASS_PREVIEW.putExtra("editable","0");
                                         finish();

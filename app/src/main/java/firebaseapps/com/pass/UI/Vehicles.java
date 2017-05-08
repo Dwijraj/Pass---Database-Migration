@@ -75,8 +75,13 @@ public class Vehicles extends AppCompatActivity {
     private final int DRIVER_LICENSE_REQUEST_CODE=343;       //To recognise in onActivityresult
     private final int INSURANCE_REQUEST_CODE=434;
     private final int RCBook_REQUEST_CODE=535;
-    private Button Submit;
+    private Button SUBMIT;
     private ProgressDialog progressDialog;
+    private String DRIVERS_NAME;//=Drivername.getText().toString().trim();
+    private String DRIVER_LICENSE_NUMBER;//=DriverLicenseNumber.getText().toString().trim();
+    private String VEHICLE_NUMBER;//=VehicleNumber.getText().toString().trim();
+    private String VEHICLE_MODEL;//=VehicleModel.getText().toString().trim();
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -93,11 +98,14 @@ public class Vehicles extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicles);
 
+
+        Log.v("Vehicles","CrashPoint -2");
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -107,15 +115,20 @@ public class Vehicles extends AppCompatActivity {
 
 
 
+        Log.v("Vehicles","CrashPoint -1");
         Drivername=(EditText)findViewById(R.id.Driversname);
+
+        Log.v("Vehicles","CrashPoint-3");
         DriverLicenseNumber=(EditText) findViewById(R.id.DriverLicenseNumber);
         VehicleNumber=(EditText) findViewById(R.id.VehcileNumber);
         VehicleModel=(EditText) findViewById(R.id.VehicleModel);
         DriverLicense = (ImageView) findViewById(R.id.driverlicense);
         Insurance = (ImageView) findViewById(R.id.insurance);
         RCBook = (ImageView) findViewById(R.id.RCBook);
-        Submit = (Button) findViewById(R.id.submitVehicleDetails);
+        SUBMIT = (Button) findViewById(R.id.submitVehicleDetails);
         progressDialog=new ProgressDialog(Vehicles.this);
+
+        Log.v("Vehicles","CrashPoint1");
 
         Insurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +140,8 @@ public class Vehicles extends AppCompatActivity {
             }
         });
 
+        Log.v("Vehicles","CrashPoint2");
+
         RCBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +150,8 @@ public class Vehicles extends AppCompatActivity {
                 startActivityForResult(intent, RCBook_REQUEST_CODE);
             }
         });
+
+        Log.v("Vehicles","CrashPoint3");
 
         DriverLicense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,17 +162,29 @@ public class Vehicles extends AppCompatActivity {
             }
         });
 
-        Submit.setOnClickListener(new View.OnClickListener() {
+
+        Log.v("Vehicles","CrashPoint4");
+
+        SUBMIT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final String DRIVERS_NAME=Drivername.getText().toString().trim();
-                final String DRIVER_LICENSE_NUMBER=DriverLicenseNumber.getText().toString().trim();
-                final String VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
-                final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
+                DRIVERS_NAME=Drivername.getText().toString().trim();
+                DRIVER_LICENSE_NUMBER=DriverLicenseNumber.getText().toString().trim();
+                VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
+                VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
-                if(IsCorrect())
+                if(!(TextUtils.isEmpty(DRIVERS_NAME)||TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)||TextUtils.isEmpty(VEHICLE_NUMBER)
+                        ||TextUtils.isEmpty(VEHICLE_MODEL)||DRIVER_LICENSE_BYTE_ARRAY==null||RC_BOOK_BYTE_ARRAY==null||INSURANCE_BYTE_ARRAY==null))
                 {
+
+
+
+                    Log.v("TagVals",DRIVERS_NAME+"..");
+                    Log.v("TagVals", DRIVER_LICENSE_NUMBER+"..");
+                    Log.v("TagVals",VEHICLE_NUMBER+"..");
+                    Log.v("TagVals",VEHICLE_MODEL+"..");
+
 
                     progressDialog.setMessage("Uploading..");
                     progressDialog.show();
@@ -241,22 +270,7 @@ public class Vehicles extends AppCompatActivity {
             }
         });
     }
-    private Boolean IsCorrect()
-    {
-        final String DRIVERS_NAME=Drivername.getText().toString().trim();
-        final String DRIVER_LICENSE_NUMBER=DriverLicenseNumber.getText().toString().trim();
-        final String VEHICLE_NUMBER=VehicleNumber.getText().toString().trim();
-        final String VEHICLE_MODEL=VehicleModel.getText().toString().trim();
 
-        if(!(TextUtils.isEmpty(DRIVERS_NAME)&&TextUtils.isEmpty(DRIVER_LICENSE_NUMBER)&&TextUtils.isEmpty(VEHICLE_NUMBER)
-                &&TextUtils.isEmpty(VEHICLE_MODEL)&&DRIVER_LICENSE_BYTE_ARRAY==null&&RC_BOOK_BYTE_ARRAY==null&&INSURANCE_BYTE_ARRAY==null))
-        {
-
-            return true;
-        }
-
-        return false;
-    }
 
 
 

@@ -872,6 +872,46 @@ public class Passdetails extends AppCompatActivity {
 
                         TOKEN_PASS=JsonParser.JSONValue(jsonObject,"token_no");
                         Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
+
+
+
+                        RxConnect rxConnect3=new RxConnect(Passdetails.this);
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+Mobiles);
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Application Number :"+TOKEN_PASS + "\n"
+                                +"Applicant Name :"+Names+"\n"+"Date of Journey :"+DateOfJourney+"\n");
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                        rxConnect3.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
+                            @Override
+                            public void onResult(String result) {
+                                //do something on result
+
+                                Log.v("ResultOnSending",result);
+
+                                Toasty.info(getApplicationContext(),"Application Details sent to Applicant Mobile",Toast.LENGTH_LONG,true).show();
+
+                            }
+                            @Override
+                            public void onNoResult() {
+                                //do something
+
+                                Toasty.info(getApplicationContext(),"Sorry OTP couldn't be send ",Toast.LENGTH_LONG,true).show();
+                            }
+                            @Override
+                            public void onError(Throwable throwable) {
+                                //do somenthing on error
+                                Toasty.info(getApplicationContext(),"Error sending OTP",Toast.LENGTH_LONG,true).show();
+
+                            }
+                        });
+
+
+
+
+
+
                         Bitmap bitmap2= QR_Codegenerator.encodeAsBitmap(JsonParser.JSONValue(jsonObject,"token_no"),100);
                         scan_id.setImageBitmap(bitmap2);
 
@@ -901,6 +941,7 @@ public class Passdetails extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
 
 
+                    error.printStackTrace();
 
                     progressDialog.dismiss();
                     Log.v("JSONRESPONSE",error.getMessage()+"EEROR");

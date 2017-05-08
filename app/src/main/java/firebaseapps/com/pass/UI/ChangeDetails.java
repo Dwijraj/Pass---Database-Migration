@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.WriterException;
@@ -252,9 +253,7 @@ public class ChangeDetails extends AppCompatActivity {
                     }
                 }, mYear, mMonth, mDay);
                 // mDatePicker.setTitle("Select date");
-                mDatePicker.getDatePicker().setMinDate(mcurrentDate.getTimeInMillis());
-                mDatePicker.getDatePicker().setMaxDate(m_three_months.getTimeInMillis());
-                mDatePicker.show();
+               mDatePicker.show();
 
 
             }
@@ -297,7 +296,7 @@ public class ChangeDetails extends AppCompatActivity {
                    // SubmitChanges();
                     SubmitChanges();
 
-                    RequestCancel();
+
 
                 }
             });
@@ -344,16 +343,47 @@ public class ChangeDetails extends AppCompatActivity {
                         Log.v("Response1","here1");
                         if(APPLICATION_STATUS.equals("2"))
                         {
+                            update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //  if(update.getText().toString().equals("Enter OTP"))
+
+
+                                    Log.v("FunctionChange","Vehicle");
+
+                                    // {
+                                    String ENTERED_OTP=Idno.getText().toString().trim();
+                                    if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
+                                    {
+                                        Intent VEHICLE_UPDATE=new Intent(ChangeDetails.this,Vehicles.class);
+                                        finish();
+                                        Vehicles.APPLICATION_NUMBER=passno;
+                                        startActivity(VEHICLE_UPDATE);
+                                    }
+                                    else {
+                                        Toasty.error(getApplicationContext(),"Wrong OTP",Toast.LENGTH_LONG).show();
+                                    }
+
+                                }
+                            });
                             Send_OTP();
                         }
                         else
                         {
-                            Toasty.info(getApplicationContext(),"You are not authorized to enter your Vehicle Details Now",Toast.LENGTH_SHORT).show();
+                            JSONObject jsonObject2=new JSONObject(result);
+                            String RESPONSE_STATUS=JsonParser.JSONValue(jsonObject2,"response_status");
+                            if(RESPONSE_STATUS.equals("3"))
+                                 Toasty.info(getApplicationContext(),"You are not authorized to enter your Vehicle Details Now",Toast.LENGTH_SHORT).show();
+                            else if(RESPONSE_STATUS.equals("1"))
+                                Toasty.info(getApplicationContext(),"Your Vehicle details are under review",Toast.LENGTH_SHORT).show();
+
+
                         }
 
                     }catch (JSONException e)
                     {
 
+                            Toasty.error(ChangeDetails.this,"Credentials don't match",Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -369,29 +399,7 @@ public class ChangeDetails extends AppCompatActivity {
 
                 }
             });
-            update.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //  if(update.getText().toString().equals("Enter OTP"))
 
-
-                    Log.v("FunctionChange","Vehicle");
-
-                    // {
-                    String ENTERED_OTP=Idno.getText().toString().trim();
-                    if (ENTERED_OTP!=null && ENTERED_OTP.equals(OTPstring))
-                    {
-                            Intent VEHICLE_UPDATE=new Intent(ChangeDetails.this,Vehicles.class);
-                            finish();
-                            Vehicles.APPLICATION_NUMBER=passno;
-                            startActivity(VEHICLE_UPDATE);
-                    }
-                    else {
-                        Toasty.error(getApplicationContext(),"Wrong OTP",Toast.LENGTH_LONG).show();
-                    }
-
-                }
-            });
         }
         else {
             Toasty.warning(getApplicationContext(),"Please fill the details",Toast.LENGTH_LONG).show();
@@ -549,6 +557,7 @@ public class ChangeDetails extends AppCompatActivity {
                 Idno.setVisibility(View.VISIBLE);
                 Idno.setEnabled(true);
                 Idno.setHint("Enter the OTP you received on the mobile number used in application");
+                Idno.getLayoutParams().height= LinearLayout.LayoutParams.WRAP_CONTENT;
                 Toast.makeText(getApplicationContext(),"OTP sent to mobile number of applicant "+OTPstring,Toast.LENGTH_LONG).show();
                 update.setEnabled(true);
 
@@ -670,7 +679,27 @@ public class ChangeDetails extends AppCompatActivity {
                             Log.v("Applicant",APLICANT_MOBILE);
 
 
+
+
+
+                            update.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    Log.v("FunctionChange","GetPass");
+                                    GetPass();
+
+                                }
+                            });
+
                             Send_OTP();
+
+
+
+                            if(ApplyPass.OPTION.equals("Cancel request"))
+                            {
+                                RequestCancel();
+                            }
 
 
 
@@ -714,15 +743,7 @@ public class ChangeDetails extends AppCompatActivity {
                 }
             });
 
-            update.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    Log.v("FunctionChange","GetPass");
-                    GetPass();
-
-                }
-            });
 
 
 

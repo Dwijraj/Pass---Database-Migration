@@ -234,6 +234,11 @@ public class Documentschange extends AppCompatActivity {
                                     Log.v("JsonObject1",jsonObject.getString("response_status"));
                                     Log.v("JsonObject2",jsonObject.getString("msg"));
 
+                                    if(jsonObject.getString("msg").equals("success"))
+                                    {
+                                        Toasty.success(Documentschange.this,"Changes Saved",Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }catch (JSONException e)
                                 {
 
@@ -375,6 +380,7 @@ public class Documentschange extends AppCompatActivity {
                                     Log.v("Response",RESPONSE.toString());
                                     JSONObject jsonObject=new JSONObject(RESPONSE);
                                     Log.v("Response2",jsonObject.toString());
+                                    Toasty.success(Documentschange.this,"Success",Toast.LENGTH_SHORT).show();
 
 
                                 }catch (JSONException e)
