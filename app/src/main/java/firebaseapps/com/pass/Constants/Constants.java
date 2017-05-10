@@ -61,5 +61,6 @@ public class Constants {
     public static String ONLINE_GET_APPLICANT_MOB_CHANGE_DETAIL="http://innovadorslab.co.in/pass3/index.php/api/userapi/re_schedule_phone/format/json";
     public static String ONLINE_GET_REUPLOAD_DETAILS_LINK="http://innovadorslab.co.in/pass3/index.php/api/userapi/user_applic_detail_status/format/json";
     public static String ONLINE_CANCEL_REQUEST="";
+    public static String ONLINE_GET_PASS_URL="http://innovadorslab.co.in/pass3/index.php/api/userapi/view_pass_info/format/json";
 
 }

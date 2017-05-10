@@ -392,7 +392,15 @@ public class Passdetails extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                ID_Source=paths.get(position);
+                if(position==0)
+                {
+                    ID_Source=null;
+                }
+                else
+                {
+                    ID_Source=paths.get(position);
+
+                }
 
             }
 
@@ -684,7 +692,7 @@ public class Passdetails extends AppCompatActivity {
 
 
                     {
-                        if(  !( ID_Source.contains("Tap") || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
+                        if(  !( ID_Source.contains("Tap")||ID_Source==null  || Purposes.contains("Tap") || TextUtils.isEmpty(Purposes) ||
                                 TextUtils.isEmpty(PLACE) || TextUtils.isEmpty(PLACE) ||  TextUtils.isEmpty(Names) ||
                                 TextUtils.isEmpty(Addresses) || TextUtils.isEmpty(DateOfJourney) || TextUtils.isEmpty(DateOfBirth) ||
                                 TextUtils.isEmpty(Mobiles) || TextUtils.isEmpty(ID_NO) || TextUtils.isEmpty(Purposes))
@@ -722,6 +730,7 @@ public class Passdetails extends AppCompatActivity {
 
 
                                 }
+
 
 
                             }
@@ -844,7 +853,7 @@ public class Passdetails extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        if(Purposes!=null)
+        if(Purposes!=null && ID_Source!=null )
         {
             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.ONLINE_IMAGE_SEND_LINK, new Response.Listener<NetworkResponse>() {
                 @Override
@@ -879,7 +888,7 @@ public class Passdetails extends AppCompatActivity {
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+Mobiles);
-                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Application Number :"+TOKEN_PASS + "\n"
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"APPLICATION RECEIVED"+"\n"+"Application Number: "+TOKEN_PASS + "\n"
                                 +"Applicant Name :"+Names+"\n"+"Date of Journey :"+DateOfJourney+"\n");
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
@@ -1016,6 +1025,10 @@ public class Passdetails extends AppCompatActivity {
             requestQueue2.add(multipartRequest);
 
 
+        }
+        else
+        {
+            Toasty.error(getApplicationContext(),"Fill all details",Toast.LENGTH_SHORT).show();
         }
 
 

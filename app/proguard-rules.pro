@@ -21,8 +21,8 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
 -dontwarn android.net.**
--keep class firebaseapps.com.pass.ViewPass
--keep class firebaseapps.com.pass.Application
+-keep class firebaseapps.com.pass.UI.EditApplication
+-keep class firebaseapps.com.pass.Constants.Application
 -dontwarn java.awt.**,javax.activation.**,java.beans.**
 -keep class *{
     public private *;

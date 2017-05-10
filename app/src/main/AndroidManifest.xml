@@ -17,11 +17,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.ApplyPass"
-            android:label="Home Page"
-            />
-        <activity android:name=".UI.MainActivity"
-            />
+        <activity
+            android:name=".UI.ApplyPass"
+            android:label="Home Page" />
+        <activity android:name=".UI.MainActivity" />
         <activity android:name=".UI.Passdetails">
 
             <!--
@@ -55,8 +54,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ViewPass" />
-        <activity android:name=".View_Pass" />
+        <activity android:name=".UI.EditApplication" />
+        <activity android:name=".UI.View_Pass" />
         <activity android:name=".UI.Vehicles" />
         <activity android:name=".UI.Startup">
             <intent-filter>
@@ -65,22 +64,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.GetStarted"
-            />
+        <activity android:name=".UI.GetStarted" />
         <activity android:name=".UI.ApplicationPreview" />
         <activity android:name=".UI.Documentschange" />
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="${applicationId}.braintree" />
+
+                <data android:scheme="firebaseapps.com.pass.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.MovingCarSplash"
-            
-            ></activity>
+        <activity android:name=".UI.MovingCarSplash" />
+        <activity android:name=".UI.DisplayPass"></activity>
     </application>
 
 </manifest>

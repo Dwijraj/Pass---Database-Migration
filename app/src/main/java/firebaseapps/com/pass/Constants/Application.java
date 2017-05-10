@@ -1,4 +1,4 @@
-package firebaseapps.com.pass;
+package firebaseapps.com.pass.Constants;
 
 /**
  * Created by 1405214 on 27-09-2016.

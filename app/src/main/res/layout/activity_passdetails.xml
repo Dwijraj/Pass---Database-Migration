@@ -76,6 +76,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:gravity="center"
                         android:layout_weight="60"
                         android:layout_margin="2dp"
                          android:layout_width="0dp"
@@ -140,10 +141,11 @@
 
                     <EditText
 
+
                         android:layout_weight="100"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="start"
+                        android:gravity="center"
                         android:id="@+id/address"
                         android:background="#ffff"
                         android:hint="Enter your current address"/>
@@ -288,6 +290,8 @@
                   android:layout_height="match_parent">
 
                   <EditText
+
+                      android:gravity="center"
                       android:layout_weight="100"
                       android:layout_width="0dp"
                       android:layout_height="match_parent"
@@ -355,6 +359,8 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+
+                            android:gravity="center"
                             android:layout_weight="60"
                             android:hint="Enter your Id.no here and select source ID proof below"
                             android:layout_width="match_parent"

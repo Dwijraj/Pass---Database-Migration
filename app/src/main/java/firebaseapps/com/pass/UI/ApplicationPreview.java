@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,10 +17,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import firebaseapps.com.pass.Application;
+import firebaseapps.com.pass.Constants.Application;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.JsonParser;
-import firebaseapps.com.pass.View_Pass;
 
 public class ApplicationPreview extends AppCompatActivity {
 
@@ -98,9 +96,6 @@ public class ApplicationPreview extends AppCompatActivity {
         ID_source=(TextView)findViewById(R.id.ID_Source_field);
         Profile2=(ImageView)findViewById(R.id.SCAN_PROFILE);
         Application_status2=(TextView)findViewById(R.id.SCAN_STATUS);
-        DOJ_CHANGE=(ImageButton)findViewById(R.id.DOJ_CHANGE_BUTTON);
-        DOJ_CHANGE.setVisibility(View.INVISIBLE);
-        DOJ_CHANGE.setEnabled(false);
 
         try {
             JSONObject Values=new JSONObject(View_Pass.PASS_DETAILS);

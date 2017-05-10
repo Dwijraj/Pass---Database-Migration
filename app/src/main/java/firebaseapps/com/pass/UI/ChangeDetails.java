@@ -1,13 +1,9 @@
 package firebaseapps.com.pass.UI;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.zxing.WriterException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +22,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -34,8 +29,6 @@ import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.R;
-import firebaseapps.com.pass.ViewPass;
-import firebaseapps.com.pass.View_Pass;
 import mohitbadwal.rxconnect.RxConnect;
 
 /**
@@ -48,7 +41,7 @@ import mohitbadwal.rxconnect.RxConnect;
  * 1.Applicant Mobile
  * 2.Token_ID
  * OTP generate and check
- * Pass Generate and show editables
+ * DisplayPass Generate and show editables
  * 1.DOJ
  * 2.Place Visiting
  * Set Minimum change in date of journey
@@ -599,7 +592,7 @@ public class ChangeDetails extends AppCompatActivity {
                             String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
 
 
-                            Intent Change=new Intent(ChangeDetails.this, ViewPass.class);
+                            Intent Change=new Intent(ChangeDetails.this, EditApplication.class);
                             Change.putExtra("PassNumber",passno);
                             Change.putExtra("editable","1");
                             View_Pass.PASS_DETAILS=result;

@@ -5,29 +5,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.*;
 import android.os.Bundle;
 
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 
-import com.android.volley.RequestQueue;
-
-
-import es.dmoral.toasty.Toasty;
-import firebaseapps.com.pass.Constants.OPTION_SELECTED;
 import firebaseapps.com.pass.SericeNReceiver.MyService;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.R;
-import firebaseapps.com.pass.View_Pass;
-import mohitbadwal.rxconnect.RxConnect;
 
 public class ApplyPass extends AppCompatActivity {
 
@@ -40,7 +30,7 @@ public class ApplyPass extends AppCompatActivity {
     private LinearLayout ApplicationPreview;
     private LinearLayout EditApplication;
     public static  String OPTION;
-    public static  String OPTION_SELECTED; //Vehicle or Application Preview or Pass Preview
+    public static  String OPTION_SELECTED; //Vehicle or Application Preview or DisplayPass Preview
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,7 +136,7 @@ public class ApplyPass extends AppCompatActivity {
             public void onClick(View view) {
 
                 OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_PASS_VIEW;
-                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view a  Pass
+                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view a  DisplayPass
                 startActivity(view_pass);
             }
         });

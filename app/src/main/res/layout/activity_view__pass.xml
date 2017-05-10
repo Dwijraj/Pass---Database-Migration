@@ -7,7 +7,7 @@
     android:gravity="center"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context="firebaseapps.com.pass.View_Pass"
+    tools:context="firebaseapps.com.pass.UI.View_Pass"
     android:background="@color/colorPrimary">
 
     <LinearLayout

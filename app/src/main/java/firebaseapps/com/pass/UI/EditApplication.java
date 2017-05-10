@@ -1,12 +1,8 @@
-package firebaseapps.com.pass;
+package firebaseapps.com.pass.UI;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.provider.Settings;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -26,7 +22,6 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.google.zxing.WriterException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,15 +36,15 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
+import firebaseapps.com.pass.Constants.Application;
 import firebaseapps.com.pass.Constants.Constants;
-import firebaseapps.com.pass.UI.Passdetails;
-import firebaseapps.com.pass.UI.Vehicles;
+import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import mohitbadwal.rxconnect.RxConnect;
 
 import static firebaseapps.com.pass.UI.ChangeDetails.UNAVAILABLE_DATES;
-public class ViewPass extends AppCompatActivity {
+public class EditApplication extends AppCompatActivity {
 
     private ImageView scan_id2;
     private TextView Name2;
@@ -66,7 +61,7 @@ public class ViewPass extends AppCompatActivity {
     private TextView CarNumber;
     private ImageView Profile2;
     private TextView Application_status2;
-    public  Application app;
+    public Application app;
     private TextView ID_source;
     private boolean   Changed_Values_flag;
     private TextView Gate;
@@ -282,7 +277,7 @@ public class ViewPass extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
 
-                                    final Dialog dialog=new Dialog(ViewPass.this);
+                                    final Dialog dialog=new Dialog(EditApplication.this);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.editable);
 
@@ -359,7 +354,7 @@ public class ViewPass extends AppCompatActivity {
                         mMonth = mcurrentDate.get(Calendar.MONTH);
                         mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                        DatePickerDialog mDatePicker = new DatePickerDialog(ViewPass.this, new DatePickerDialog.OnDateSetListener() {
+                        DatePickerDialog mDatePicker = new DatePickerDialog(EditApplication.this, new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                                 final  Calendar myCalendar = Calendar.getInstance();
                                 //Calendar myCalenderCopy;
@@ -418,7 +413,7 @@ public class ViewPass extends AppCompatActivity {
                         {
 
 
-                           AlertDialog.Builder builder=new AlertDialog.Builder(ViewPass.this);
+                           AlertDialog.Builder builder=new AlertDialog.Builder(EditApplication.this);
                             builder.setTitle("Confirm changes");
                             builder.setMessage("Are you sure you want to make these changes?");
                             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -442,13 +437,13 @@ public class ViewPass extends AppCompatActivity {
 
                         }
                         else {
-                            Toasty.info(ViewPass.this,"There were no changes in original application",Toast.LENGTH_SHORT).show();
+                            Toasty.info(EditApplication.this,"There were no changes in original application",Toast.LENGTH_SHORT).show();
                         } */
                       if(Changed_Values_flag) {
 
 
                           try {
-                              RxConnect rxConnect1 = new RxConnect(ViewPass.this);
+                              RxConnect rxConnect1 = new RxConnect(EditApplication.this);
                               rxConnect1.setParam("application_mobile", Mobile2.getText().toString());
                               rxConnect1.setParam("application_no", Pass_number);
                               rxConnect1.setParam("user_mobile", REGISTERED_NUMBER);
@@ -464,7 +459,7 @@ public class ViewPass extends AppCompatActivity {
                                       Log.v("OnchangeDetailsError", result);
 
                                       //  dialog.dismiss();
-                                      Toasty.success(ViewPass.this, "Changes Made Successfully", Toast.LENGTH_SHORT).show();
+                                      Toasty.success(EditApplication.this, "Changes Made Successfully", Toast.LENGTH_SHORT).show();
                                       //If successful display the message
                                   }
 

@@ -34,9 +34,9 @@ public class Notify extends BroadcastReceiver {
 
 
         notification.setSmallIcon(R.mipmap.ic_launcher);
-        notification.setTicker("Notification from Pass");
+        notification.setTicker("Notification from DisplayPass");
         notification.setWhen(System.currentTimeMillis());
-        notification.setContentTitle("Pass");
+        notification.setContentTitle("DisplayPass");
         notification.setContentText(value);
 
         Intent intents=new  Intent(context,CheckPassDetails.class);

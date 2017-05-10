@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         String USeR=SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"); //If user has logged in previously retrieve  his details else we get NO_USER
         boolean Value=!(USeR.equals("NO_USER"));                                 //Compares the User name with NO_USER
-        if(Value)     //If User logged in previously allow him to move forward with Apply Pass
+        if(Value)     //If User logged in previously allow him to move forward with Apply DisplayPass
         {
             Log.v("Username",SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"));
             Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);     //Redirects the logged in user to Home page
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                             GMailSender sender = new GMailSender(Constants.EMAIL_SENDER
                                     , Constants.EMAIL_PASSWORD_SENDER);
                             try {
-                                sender.sendMail("OTP from Pass", "One time password is " +
+                                sender.sendMail("OTP from DisplayPass", "One time password is " +
                                                 OTPstring, Constants.EMAIL_SENDER,
                                         EMAILID.getText().toString().trim());
                             } catch (Exception e) {

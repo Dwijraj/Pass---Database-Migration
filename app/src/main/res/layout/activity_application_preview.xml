@@ -274,27 +274,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
-                    android:layout_weight="40"
-                    android:gravity="center|right"
+                    android:layout_weight="50"
+                    android:gravity="center"
                     android:text="DOJ"
                     android:textSize="19sp"
                     android:textColor="#ffff" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:visibility="invisible">
 
-                    <ImageButton
-
-                        android:id="@+id/DOJ_CHANGE_BUTTON"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@mipmap/ic_date_range_white_24dp" />
-
-                </LinearLayout>
 
 
             </LinearLayout>
