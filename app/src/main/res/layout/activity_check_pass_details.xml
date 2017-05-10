@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_check_pass_details"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:gravity="center"
     android:layout_height="match_parent"
@@ -9,193 +9,203 @@
     android:background="@color/colorPrimary">
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
     <LinearLayout
+        android:id="@+id/activity_check_pass_details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
-        <LinearLayout
+        android:layout_height="match_parent">
+        <ScrollView
             android:layout_width="match_parent"
-            android:weightSum="100"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:textSize="@dimen/textSize"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_weight="40"
-                android:layout_height="wrap_content"
-                android:textColor="#ffff"
-                android:text="Application status :"/>
-
-            <TextView
-                android:textSize="@dimen/textSize"
-                android:id="@+id/viewstatus"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:layout_weight="60"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-
-        <EditText
-            android:layout_marginTop="5dp"
-            android:id="@+id/view_pass_passno_check"
-            android:layout_width="match_parent"
-            android:textSize="@dimen/textSize"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="Enter Application number"
-            android:maxEms="30"
-            android:maxLines="1"
-            android:minEms="10"
-            android:textColor="#ffff"
-            android:textColorHint="#ffff" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:textSize="@dimen/textSize"
-            android:textColor="#ffff"
-            android:maxLines="1"
-            android:id="@+id/view_pass_Id_no_check"
-            android:gravity="center"
-            android:hint="Enter Mobile Number in the Application"
-            android:textColorHint="#ffff"
-            android:minEms="10"
-            android:maxEms="30"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:textSize="@dimen/textSize"
-
-                android:id="@+id/DOJ_TEXT_VIEW_CHECK"
-                android:text="Date of Journey"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:layout_height="match_parent" />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/DOJ_VIEW_PASS_CHECK"
-                android:background="@mipmap/ic_date_range_white_24dp"
-                android:layout_height="50dp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:weightSum="90"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_marginStart="50dp"
-                android:gravity="center"
-                android:background="@drawable/button_bg"
-                android:layout_marginEnd="50dp"
-                android:layout_weight="75"
-                android:layout_height="wrap_content"
-                android:id="@+id/viewcheck"
-                android:text="Check"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:weightSum="100"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="0dp"
-                android:visibility="invisible"
-                android:gravity="center"
-                android:background="@drawable/button_bg"
-                android:layout_weight="45"
-                android:layout_height="wrap_content"
-                android:id="@+id/APPLICATION_CHANGE"
-                android:text="APPLICATION CHANGE"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="match_parent" />
-
-            <Button
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:visibility="invisible"
-                android:background="@drawable/button_bg"
-                android:layout_weight="50"
-                android:layout_height="wrap_content"
-                android:id="@+id/VEHICLE_DETAIL_CHANGE"
-                android:text="Vehicle detail change"/>
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:gravity="center|bottom"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:id="@+id/OTP_LAYOUT"
-            android:layout_height="match_parent">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:textSize="@dimen/textSize"
-                android:maxEms="20"
-                android:background="#fff"
-                android:minEms="10"
-                android:id="@+id/ENTER_OTP_CHECK_PASS"
-                android:gravity="center"
-                android:hint="Enter the OTP received"
-                android:layout_height="wrap_content" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
 
-                <Button
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:text="MAKE CHANGES"
-                    android:id="@+id/SUBMIT_OTP_CHECK_PASS"
+                    android:weightSum="100"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textSize="@dimen/textSize"
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="40"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffff"
+                        android:text="Application status :"/>
+
+                    <TextView
+                        android:textSize="@dimen/textSize"
+                        android:id="@+id/viewstatus"
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:textColor="#ffff"
+                        android:layout_weight="60"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/view_pass_passno_check"
+                    android:layout_width="match_parent"
+                    android:textSize="@dimen/textSize"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="Enter Application number"
+                    android:maxEms="30"
+                    android:maxLines="1"
+                    android:minEms="10"
+                    android:textColor="#ffff"
+                    android:textColorHint="#ffff" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:textSize="@dimen/textSize"
+                    android:textColor="#ffff"
+                    android:maxLines="1"
+                    android:id="@+id/view_pass_Id_no_check"
+                    android:gravity="center"
+                    android:hint="Enter Mobile Number in the Application"
+                    android:textColorHint="#ffff"
+                    android:minEms="10"
+                    android:maxEms="30"
                     android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/textSize"
+
+                        android:id="@+id/DOJ_TEXT_VIEW_CHECK"
+                        android:text="Date of Journey"
+                        android:gravity="center"
+                        android:textColor="#ffff"
+                        android:layout_height="match_parent" />
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_marginLeft="20dp"
+                        android:id="@+id/DOJ_VIEW_PASS_CHECK"
+                        android:background="@mipmap/ic_date_range_white_24dp"
+                        android:layout_height="50dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="90"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_marginStart="50dp"
+                        android:gravity="center"
+                        android:background="@drawable/button_bg"
+                        android:layout_marginEnd="50dp"
+                        android:layout_weight="75"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/viewcheck"
+                        android:text="Check"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="100"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:visibility="invisible"
+                        android:gravity="center"
+                        android:background="@drawable/button_bg"
+                        android:layout_weight="45"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/APPLICATION_CHANGE"
+                        android:text="APPLICATION CHANGE"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="match_parent" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:visibility="invisible"
+                        android:background="@drawable/button_bg"
+                        android:layout_weight="50"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/VEHICLE_DETAIL_CHANGE"
+                        android:text="Vehicle detail change"/>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:gravity="center|bottom"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/OTP_LAYOUT"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:textSize="@dimen/textSize"
+                        android:maxEms="20"
+                        android:background="#fff"
+                        android:minEms="10"
+                        android:id="@+id/ENTER_OTP_CHECK_PASS"
+                        android:gravity="center"
+                        android:hint="Enter the OTP received"
+                        android:layout_height="wrap_content" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:text="MAKE CHANGES"
+                            android:id="@+id/SUBMIT_OTP_CHECK_PASS"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
             </LinearLayout>
 
 
-        </LinearLayout>
+        </ScrollView>
 
 
     </LinearLayout>
 
 
-    </ScrollView>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

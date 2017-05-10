@@ -65,6 +65,8 @@ public class DisplayPass extends AppCompatActivity {
     private RxConnect rxConnect;
     private ImageView    QR_CODE;
     private String    PassDetails;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,12 @@ public class DisplayPass extends AppCompatActivity {
         Purpose2=(TextView)findViewById(R.id.SCAN_REASON_DISPLAY_PASS);
         Profile2=(ImageView)findViewById(R.id.SCAN_PROFILE_DISPLAY_PASS);
         Application_status2=(TextView)findViewById(R.id.SCAN_STATUS_DISPLAY_PASS);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
 
 

@@ -1,529 +1,589 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     tools:context="firebaseapps.com.pass.UI.DisplayPass">
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-        <LinearLayout
+        android:layout_height="match_parent">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="786dp"
-            android:orientation="vertical"
-            android:background="@color/colorPrimary"
-            android:weightSum="1">
-
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="0dp"
-                    android:id="@+id/SCAN_PROFILE_DISPLAY_PASS"
-                    android:scaleType="centerCrop" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:gravity="start"
-
-                    android:textSize="23sp"
-                    android:text="PERSONAL INFORMATION"
-                    android:textColor="#ffff"
-                    android:typeface="monospace"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="NAME"
-                    android:textSize="19sp"
-                    android:textColor="#ffff"
-                    android:id="@+id/names_DISPLAY_PASS" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_NAME_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="ADDRESS"
-                    android:textSize="19sp"
-                    android:textColor="#ffff"
-                    />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_ADDRESS_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="MOBILE"
-                    android:textSize="19sp"
-                    android:textColor="#ffff"
-                    />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_MOBILE_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="SCAN ID"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_ID_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="SCAN ID SOURCE"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/ID_Source_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="DATE OF BIRTH"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_DOB_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:id="@+id/textView_DISPLAY_PASS"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="50"
-                    android:gravity="center"
-                    android:text="PURPOSE OF VISIT"
-                    android:textColor="#ffff"
-                    android:textSize="19sp" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_REASON_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="DESTINATION"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/DESTINATION_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:gravity="start"
-                    android:textSize="23sp"
-                    android:text="VEHICLE INFORMATION"
-                    android:textColor="#ffff"
-                    android:typeface="monospace"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-            </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="DATE OF JOURNEY"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/SCAN_DOJ_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-
-
-
-
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:id="@+id/VEHICLE_No_ID_DISPLAY_PASS"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="VEHICLE NUMBER"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/car_num_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="DRIVER NAME"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/driver_name_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="DRIVER LICENSE"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/driver_license_id_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_height="70dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:text="Vehicle Model"
-                    android:textSize="19sp"
-                    android:textColor="#ffff" />
-
-                <TextView
-                    android:layout_marginTop="0dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:textSize="19sp"
-                    android:layout_height="match_parent"
-                    android:text="Address"
-                    android:gravity="center_vertical"
-                    android:textColor="#ffff"
-                    android:id="@+id/vehicle_model_id_DISPLAY_PASS"
-                    android:layout_marginLeft="20dp"/>
-
-
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:weightSum="102"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:orientation="vertical">
+                android:layout_height="786dp"
+                android:orientation="vertical"
+                android:background="@color/colorPrimary"
+                android:weightSum="1">
 
                 <LinearLayout
-                    android:layout_weight="49"
-                    android:orientation="horizontal"
-                    android:weightSum="100"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp">
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
 
                     <ImageView
-                        android:scaleType="fitXY"
-                        android:layout_weight="50"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorPrimary"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/SCAN_PROFILE_DISPLAY_PASS"
+                        android:scaleType="centerCrop" />
+                </LinearLayout>
 
-                        android:id="@+id/SCAN_PIC_DISPLAY_PASS"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:scaleType="fitXY"
-                        android:layout_weight="50"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorPrimary"
-                        android:id="@+id/DL_PIC_DISPLAY_PASS"/>
+                    <TextView
+                        android:gravity="start"
+
+                        android:textSize="23sp"
+                        android:text="PERSONAL INFORMATION"
+                        android:textColor="#ffff"
+                        android:typeface="monospace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="NAME"
+                        android:textSize="19sp"
+                        android:textColor="#ffff"
+                        android:id="@+id/names_DISPLAY_PASS" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_NAME_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="ADDRESS"
+                        android:textSize="19sp"
+                        android:textColor="#ffff"
+                        />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_ADDRESS_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="MOBILE"
+                        android:textSize="19sp"
+                        android:textColor="#ffff"
+                        />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_MOBILE_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="SCAN ID"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_ID_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="SCAN ID SOURCE"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/ID_Source_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="DATE OF BIRTH"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_DOB_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:id="@+id/textView_DISPLAY_PASS"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="50"
+                        android:gravity="center"
+                        android:text="PURPOSE OF VISIT"
+                        android:textColor="#ffff"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_REASON_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="DESTINATION"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/DESTINATION_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:gravity="start"
+                        android:textSize="23sp"
+                        android:text="VEHICLE INFORMATION"
+                        android:textColor="#ffff"
+                        android:typeface="monospace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="DATE OF JOURNEY"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/SCAN_DOJ_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+
+
+
+
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:id="@+id/VEHICLE_No_ID_DISPLAY_PASS"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="VEHICLE NUMBER"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/car_num_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="DRIVER NAME"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/driver_name_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="DRIVER LICENSE"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/driver_license_id_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:weightSum="100"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:text="VEHICLE MODEL"
+                        android:textSize="19sp"
+                        android:textColor="#ffff" />
+
+                    <TextView
+                        android:layout_marginTop="0dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:textSize="19sp"
+                        android:layout_height="match_parent"
+                        android:text="Address"
+                        android:gravity="center_vertical"
+                        android:textColor="#ffff"
+                        android:id="@+id/vehicle_model_id_DISPLAY_PASS"
+                        android:layout_marginLeft="20dp"/>
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:weightSum="102"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_weight="49"
+                        android:orientation="horizontal"
+                        android:weightSum="100"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:layout_weight="50"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary"
+
+                            android:id="@+id/SCAN_PIC_DISPLAY_PASS"/>
+
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:layout_weight="50"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary"
+                            android:id="@+id/DL_PIC_DISPLAY_PASS"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="4"
+                        android:weightSum="100"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="50"
+                            android:text="SCAN ID"
+                            android:gravity="center"
+                            android:textColor="#ffff"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="50"
+                            android:text="DRIVING LICENSE"
+                            android:gravity="center"
+                            android:textColor="#ffff"
+                            android:layout_height="match_parent" />
+
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_weight="49"
+                        android:orientation="horizontal"
+                        android:weightSum="100"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:layout_weight="50"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary"
+                            android:id="@+id/RC_BOOK_PIC_DISPLAY_PASS"/>
+
+                        <ImageView
+                            android:id="@+id/INSURANCE_PIC_DISPLAY_PASS"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="50"
+                            android:background="@color/colorPrimary"
+
+                            android:scaleType="fitXY" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_weight="4"
@@ -533,14 +593,14 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="50"
-                        android:text="SCAN ID"
+                        android:text="RCBOOK "
                         android:gravity="center"
                         android:textColor="#ffff"
                         android:layout_height="match_parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="50"
-                        android:text="DRIVING LICENSE"
+                        android:text="INSURANCE "
                         android:gravity="center"
                         android:textColor="#ffff"
                         android:layout_height="match_parent" />
@@ -549,99 +609,48 @@
 
 
                 </LinearLayout>
+
                 <LinearLayout
-                    android:layout_weight="49"
-                    android:orientation="horizontal"
-                    android:weightSum="100"
+                    android:layout_marginTop="40dp"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:scaleType="fitXY"
-                        android:layout_weight="50"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorPrimary"
-                        android:id="@+id/RC_BOOK_PIC_DISPLAY_PASS"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="APPLICATION STATUS"
+                        android:id="@+id/NOT_REQUIRED_DISPLAY_PASS"
+                        android:textSize="19sp"
+                        android:textColor="#ffff"/>
 
-                    <ImageView
-                        android:id="@+id/INSURANCE_PIC_DISPLAY_PASS"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="50"
-                        android:background="@color/colorPrimary"
-
-                        android:scaleType="fitXY" />
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="Application status"
+                        android:id="@+id/SCAN_STATUS_DISPLAY_PASS"
+                        android:textSize="19sp"
+                        android:textColor="#ffff"/>
 
                 </LinearLayout>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_weight="4"
-                android:weightSum="100"
-                android:layout_height="0dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:text="RCBOOK "
-                    android:gravity="center"
-                    android:textColor="#ffff"
-                    android:layout_height="match_parent" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:text="INSURANCE "
-                    android:gravity="center"
-                    android:textColor="#ffff"
-                    android:layout_height="match_parent" />
-
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="APPLICATION STATUS"
-                    android:id="@+id/NOT_REQUIRED_DISPLAY_PASS"
-                    android:textSize="19sp"
-                    android:textColor="#ffff"/>
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="Application status"
-                    android:id="@+id/SCAN_STATUS_DISPLAY_PASS"
-                    android:textSize="19sp"
-                    android:textColor="#ffff"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/QR_CODE"
+                        android:layout_height="wrap_content" />
 
+                </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:id="@+id/QR_CODE"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
 
 
-</RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

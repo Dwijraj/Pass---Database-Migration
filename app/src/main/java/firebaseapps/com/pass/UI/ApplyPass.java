@@ -32,7 +32,7 @@ public class ApplyPass extends AppCompatActivity {
     public static  String OPTION;
     public static  String OPTION_SELECTED; //Vehicle or Application Preview or DisplayPass Preview
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
@@ -44,7 +44,7 @@ public class ApplyPass extends AppCompatActivity {
 
 
         return super.onCreateOptionsMenu(menu);
-    }
+    } */
 
 
 

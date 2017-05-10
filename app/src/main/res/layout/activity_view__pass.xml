@@ -1,87 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_view__pass"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+   android:fitsSystemWindows="true"
     tools:context="firebaseapps.com.pass.UI.View_Pass"
     android:background="@color/colorPrimary">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true">
-
-
-        <EditText
-            android:textSize="23sp"
-            android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffff"
-            android:gravity="center"
-           android:maxLines="1"
-            android:id="@+id/view_pass_passno."
-            android:hint="Enter Pass number"
-            android:textColorHint="#ffff"
-            android:minEms="10"
-            android:maxEms="30"/>
-
-        <EditText
-            android:textSize="23sp"
-            android:layout_width="wrap_content"
-            android:textColor="#ffff"
-            android:maxLines="1"
-            android:id="@+id/view_pass_Id_no"
-            android:gravity="center"
-            android:hint="Enter Mobile Number in the application"
-            android:textColorHint="#ffff"
-            android:minEms="10"
-            android:maxEms="30"
-            android:layout_height="wrap_content" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_height="wrap_content">
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true">
 
-            <TextView
 
+            <EditText
+                android:textSize="23sp"
+                android:layout_marginTop="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffff"
+                android:gravity="center"
+                android:maxLines="1"
+                android:id="@+id/view_pass_passno."
+                android:hint="Enter Pass number"
+                android:textColorHint="#ffff"
+                android:minEms="10"
+                android:maxEms="30"/>
+
+            <EditText
                 android:textSize="23sp"
                 android:layout_width="wrap_content"
-                android:id="@+id/DOJ_TEXT_VIEW"
-                android:text="Date of Journey"
-                android:gravity="center"
                 android:textColor="#ffff"
-                android:layout_height="match_parent" />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/DOJ_VIEW_PASS"
-                android:background="@mipmap/ic_date_range_white_24dp"
-                android:layout_height="50dp" />
+                android:maxLines="1"
+                android:id="@+id/view_pass_Id_no"
+                android:gravity="center"
+                android:hint="Enter Mobile Number in the application"
+                android:textColorHint="#ffff"
+                android:minEms="10"
+                android:maxEms="30"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+                <TextView
+
+                    android:textSize="23sp"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/DOJ_TEXT_VIEW"
+                    android:text="Date of Journey"
+                    android:gravity="center"
+                    android:textColor="#ffff"
+                    android:layout_height="match_parent" />
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/DOJ_VIEW_PASS"
+                    android:background="@mipmap/ic_date_range_white_24dp"
+                    android:layout_height="50dp" />
 
 
 
 
 
 
+
+            </LinearLayout>
+
+            <Button
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_bg"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/view_pass"
+                android:text="VIEW"/>
 
         </LinearLayout>
 
-        <Button
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_bg"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:id="@+id/view_pass"
-            android:text="VIEW"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

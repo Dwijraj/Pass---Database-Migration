@@ -149,6 +149,7 @@ public class CheckPassDetails extends AppCompatActivity {
 
 
 
+                APPLICATION_STATUS_SHOW.setText("");
 
 
                 final String PASS_NO=pass_no.getText().toString().trim();
@@ -265,7 +266,7 @@ public class CheckPassDetails extends AppCompatActivity {
                                             //DisplayPass ready
                                             APPLICATION_STATUS_SHOW.setText("Pass is Ready you can Check your pass through VIEW PASS field");
 
-                                            Toasty.success(getApplicationContext(), "Your DisplayPass is Ready", Toast.LENGTH_SHORT).show();
+                                            Toasty.success(getApplicationContext(), "Your Pass is Ready", Toast.LENGTH_SHORT).show();
 
                                         } else if (Two) {
                                             //Personal Info verified
@@ -279,7 +280,6 @@ public class CheckPassDetails extends AppCompatActivity {
                                             //Vehicle Info verified
 
                                             Log.v("CheckPassHere1", "Reached3");
-                                            Toasty.success(getApplicationContext(), "Vehicle Information is being Verified", Toast.LENGTH_SHORT).show();
 
                                             APPLICATION_STATUS_SHOW.setText("Vehicle Information is being Verified");
 

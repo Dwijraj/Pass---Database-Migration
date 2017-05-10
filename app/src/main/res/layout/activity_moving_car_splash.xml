@@ -1,50 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:gravity="center"
     android:weightSum="100"
     android:background="@color/bg_screen1"
     tools:context="firebaseapps.com.pass.UI.MovingCarSplash">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="60"
-        android:background="@color/bg_screen1">
+        android:weightSum="100"
+        android:gravity="center"
+        android:background="@color/bg_screen1"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="60"
+            android:background="@color/bg_screen1">
 
 
-        <ImageView
-            android:id="@+id/car"
-            android:layout_width="250dp"
-            android:layout_height="146dp"
-            android:background="@drawable/car" />
+            <ImageView
+                android:id="@+id/car"
+                android:layout_width="250dp"
+                android:layout_height="146dp"
+                android:background="@drawable/car" />
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/Wheels2"
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_marginLeft="34dp"
-            android:layout_marginTop="78dp"
-            android:background="@drawable/wheelsmin"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp" />
-
-
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/Wheels1"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginLeft="184dp"
-            android:layout_marginTop="74dp"
-            android:background="@drawable/wheelsmin"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp" />
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/Wheels2"
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="78dp"
+                android:background="@drawable/wheelsmin"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
 
 
-    </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/Wheels1"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginLeft="184dp"
+                android:layout_marginTop="74dp"
+                android:background="@drawable/wheelsmin"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
 
-</LinearLayout>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
