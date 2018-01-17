@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimary"
     android:layout_height="match_parent"
-    tools:context="firebaseapps.com.pass.UI.ApplyPass"
+    tools:context="firebaseapps.com.pass.UI.HomeScreen"
     >
 
     <LinearLayout

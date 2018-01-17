@@ -7,7 +7,7 @@
     android:weightSum="100"
     android:layout_height="match_parent"
    android:background="@color/colorPrimary"
-    tools:context="firebaseapps.com.pass.UI.GetStarted">
+    tools:context="firebaseapps.com.pass.UI.Introduction">
 
 
     <android.support.v4.view.ViewPager

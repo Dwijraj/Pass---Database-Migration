@@ -16,7 +16,6 @@ import android.net.Uri;
 
 import android.provider.MediaStore;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -45,16 +44,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.api.Json;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
-import com.braintreepayments.api.interfaces.BraintreeListener;
 import com.bumptech.glide.Glide;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,34 +59,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
 
 
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
 import firebaseapps.com.pass.Constants.ApplicationParams;
 import firebaseapps.com.pass.Constants.Constants;
-import firebaseapps.com.pass.Constants.PaymentURL;
-import firebaseapps.com.pass.Payment.ClientToken;
 import firebaseapps.com.pass.Utils.JsonParser;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GetMimeType;
-import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 import mohitbadwal.rxconnect.RxConnect;
 
@@ -102,7 +86,7 @@ import mohitbadwal.rxconnect.RxConnect;
 
 
 
-public class Passdetails extends AppCompatActivity {
+public class ApplicationForm extends AppCompatActivity {
 
 
     private String MIME;
@@ -183,7 +167,7 @@ public class Passdetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passdetails);
+        setContentView(R.layout.activity_application_form);
         THE_TEST=1;
 
 
@@ -226,18 +210,18 @@ public class Passdetails extends AppCompatActivity {
         startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE);*/
 
 
-        rxConnect=new RxConnect(Passdetails.this);
+        rxConnect=new RxConnect(ApplicationForm.this);
         rxConnect.setCachingEnabled(false);
 
-        rxConnect2=new RxConnect(Passdetails.this);
+        rxConnect2=new RxConnect(ApplicationForm.this);
         rxConnect2.setCachingEnabled(false);
 
-        rxConnect1=new RxConnect(Passdetails.this);
+        rxConnect1=new RxConnect(ApplicationForm.this);
         rxConnect1.setCachingEnabled(false);
 
         REGISTERED_NUMBER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).getString(Constants.SHARED_PREF_KEY,"DEFAULT");
 
-        dialog=new Dialog(Passdetails.this);
+        dialog=new Dialog(ApplicationForm.this);
 
         PRICE_FIELD=(TextView) findViewById(R.id.PRICE_OF_PASS);
         PLACES_SPINNER=(Spinner) findViewById(R.id.spinnerPlaces);
@@ -245,7 +229,7 @@ public class Passdetails extends AppCompatActivity {
         ERROR_DATE=(LinearLayout)findViewById(R.id.DATE_ERROR);
         ERROR_MOBILE=(LinearLayout)findViewById(R.id.MOBILE_ERROR);
         ERROR_NAME=(LinearLayout)findViewById(R.id.NAME_ERROR);
-        rxConnect=new RxConnect(Passdetails.this);
+        rxConnect=new RxConnect(ApplicationForm.this);
         rxConnect.setCachingEnabled(false);
         ID_Source="Tap to select ID proof source";
         DOBDate=(ImageButton)findViewById(R.id.DOBDate);
@@ -280,7 +264,7 @@ public class Passdetails extends AppCompatActivity {
             public void onResult(String result) {
 
 
-                Log.v("Response","RESULT"+result);
+                Log.v("ResponsePricing","RESULT"+result);
 
                 GetPricesAndPlaces(result);
 
@@ -305,7 +289,6 @@ public class Passdetails extends AppCompatActivity {
             }
         });
         rxConnect1.setParam("user_mobile",REGISTERED_NUMBER);
-
         rxConnect1.execute(Constants.ONLINE_UNAVAILABLE_DOJ, RxConnect.POST, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
@@ -322,7 +305,7 @@ public class Passdetails extends AppCompatActivity {
                                     "dates_info":[{"date_block":"2017-03-17"},{"date_block":"2017-03-30"},{"date_block":"2017-04-20"}]} */
 
                     String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
-                    if(Response_status.equals("1"))
+                    if(Response_status.equals("1") || Response_status.equals("3"))
                     {
                         JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"dates_info");
 
@@ -339,7 +322,7 @@ public class Passdetails extends AppCompatActivity {
                     }
                 }catch (JSONException e)
                 {
-
+                        Log.v("Unavailable",e.getLocalizedMessage());
                 }
 
 
@@ -357,7 +340,7 @@ public class Passdetails extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(),throwable.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
 
-                Log.v("Response","RESULT"+throwable.getMessage());
+                Log.v("ResponseUnavailable","RESULT"+throwable.getMessage());
             }
         });
 
@@ -575,7 +558,7 @@ public class Passdetails extends AppCompatActivity {
                   mMonth = mcurrentDate.get(Calendar.MONTH);
                  mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog mDatePicker = new DatePickerDialog(Passdetails.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog mDatePicker = new DatePickerDialog(ApplicationForm.this, new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                       final  Calendar myCalendar = Calendar.getInstance();
                         //Calendar myCalenderCopy;
@@ -620,7 +603,7 @@ public class Passdetails extends AppCompatActivity {
                 mMonth = mcurrentDate.get(Calendar.MONTH);
                 mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog mDatePicker = new DatePickerDialog(Passdetails.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog mDatePicker = new DatePickerDialog(ApplicationForm.this, new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                         Calendar myCalendar = Calendar.getInstance();
                         myCalendar.set(Calendar.YEAR, selectedyear);
@@ -895,14 +878,14 @@ public class Passdetails extends AppCompatActivity {
 
 
 
-                        RxConnect rxConnect3=new RxConnect(Passdetails.this);
+                        RxConnect rxConnect3=new RxConnect(ApplicationForm.this);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+Mobiles);
                         rxConnect3.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"APPLICATION RECEIVED"+"\n"+"Application Number: "+TOKEN_PASS + "\n"
                                 +"Applicant Name :"+Names+"\n"+"Date of Journey :"+DateOfJourney+"\n");
-                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_SENDERID,Constants.SMS_PARAM_VALUE_SENDERID);
+                        rxConnect3.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,Constants.SMS_PARAM_VALUE_ACCUSAGE);
                         rxConnect3.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
                             @Override
                             public void onResult(String result) {
@@ -966,23 +949,23 @@ public class Passdetails extends AppCompatActivity {
 
                     if(imageuri==null)
                     {
-                        Toast.makeText(Passdetails.this,"Upload Scan ID",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApplicationForm.this,"Upload Scan ID",Toast.LENGTH_SHORT).show();
                     }
                     else if(imageuriProfile==null)
                     {
-                        Toast.makeText(Passdetails.this,"Upload Profile Picture",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApplicationForm.this,"Upload Profile Picture",Toast.LENGTH_SHORT).show();
 
                     }
                     else
                     {
-                        String Network_status= NetworkUtil.getConnectivityStatusString(Passdetails.this);
+                        String Network_status= NetworkUtil.getConnectivityStatusString(ApplicationForm.this);
 
                         if(Network_status.equals("Not connected to Internet"))
                         {
-                            Toast.makeText(Passdetails.this,"Failed to connect..",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ApplicationForm.this,"Failed to connect..",Toast.LENGTH_SHORT).show();
                         }
                         else
-                            Toast.makeText(Passdetails.this,"Error Uploading",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ApplicationForm.this,"Error Uploading",Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -1132,7 +1115,7 @@ public class Passdetails extends AppCompatActivity {
             imageuriProfile = getImageUri(getApplicationContext(), photo);
 
 
-            Glide.with(Passdetails.this)
+            Glide.with(ApplicationForm.this)
                     .load(PROFILE_PIC_BYTE_ARRAY)
                     .into(Profile);
 
@@ -1148,7 +1131,7 @@ public class Passdetails extends AppCompatActivity {
                 String NONCE=result.getPaymentMethodNonce().getNonce();
 
 
-                RxConnect rxConnect=new RxConnect(Passdetails.this);
+                RxConnect rxConnect=new RxConnect(ApplicationForm.this);
                 rxConnect.setParam("token_id",TOKEN_PASS);
                 rxConnect.setParam("user_mobile",REGISTERED_NUMBER);
                 rxConnect.setParam("transaction_pay_id",NONCE);
@@ -1215,7 +1198,7 @@ public class Passdetails extends AppCompatActivity {
             //when applicant scanned user id is selected
 
             imageuri = data.getData();
-            MIME = GetMimeType.GetMimeType(Passdetails.this, imageuri);
+            MIME = GetMimeType.GetMimeType(ApplicationForm.this, imageuri);
 
             if (MIME.contains("/jpg") || MIME.contains("/JPG")) {
                 MIME = "jpg";

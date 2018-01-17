@@ -18,10 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".UI.ApplyPass"
+            android:name=".UI.HomeScreen"
             android:label="Home Page" />
-        <activity android:name=".UI.MainActivity" />
-        <activity android:name=".UI.Passdetails">
+        <activity android:name=".UI.Login" />
+        <activity android:name=".UI.ApplicationForm">
 
             <!--
              <intent-filter>
@@ -64,7 +64,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.GetStarted" />
+        <activity android:name=".UI.Introduction" />
         <activity android:name=".UI.ApplicationPreview" />
         <activity android:name=".UI.Documentschange" />
         <activity

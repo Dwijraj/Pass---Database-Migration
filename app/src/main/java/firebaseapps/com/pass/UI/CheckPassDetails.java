@@ -434,8 +434,8 @@ public class CheckPassDetails extends AppCompatActivity {
                 rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
                 rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
                 rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP to is "+OTPstring);
-                rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-                rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,Constants.SMS_PARAM_VALUE_SENDERID);
+                rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,Constants.SMS_PARAM_VALUE_ACCUSAGE);
                 rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
                     @Override
                     public void onResult(String result) {

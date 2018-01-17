@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "firebaseapps.com.pass"
         minSdkVersion 19
@@ -53,6 +53,9 @@ android {
         maven {
             url "https://maven.java.net/content/groups/public/"
             maven { url "https://jitpack.io" }
+        }
+        maven {
+            url "https://maven.google.com"
         }
     }
     buildTypes {

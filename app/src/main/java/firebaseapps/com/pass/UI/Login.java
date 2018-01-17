@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -37,7 +36,7 @@ import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GMailSender;
 import mohitbadwal.rxconnect.RxConnect;
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
 
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText OTPS; //To enter OTP
     private EditText Phone; //To enter Phone number
     private EditText EMAILID; //To enter EMAIL ID
-    private Button buttons;   //Submit
+    private Button Getting_Started;   //Submit
     private final int GALLERY_OPEN=90; //Code for Gallery Permission
     private final Integer CAMERA = 0x4; //Code for Camera Permission
     private ProgressDialog prog;  //Progress Dialog
@@ -57,18 +56,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         SHARED_PREF=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE);
         USER=getSharedPreferences(Constants.SHARED_PREFS_NAME,MODE_PRIVATE).edit();
         EMAILID=(EditText) findViewById(R.id.EMAIL);
         OTPIDS=(LinearLayout) findViewById(R.id.OTPID);
-        rxConnect=new RxConnect(MainActivity.this);
+        rxConnect=new RxConnect(Login.this);
         rxConnect.setCachingEnabled(false);
         OTPS=(EditText)findViewById(R.id.OTP);
         Phone=(EditText)findViewById(R.id.editText3);
         prog=new ProgressDialog(this);
-        buttons=(Button)findViewById(R.id.button);
+        Getting_Started=(Button)findViewById(R.id.button);
 
         if(getSupportActionBar().isShowing())
         {
@@ -92,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         if(Value)     //If User logged in previously allow him to move forward with Apply DisplayPass
         {
             Log.v("Username",SHARED_PREF.getString(Constants.SHARED_PREF_KEY,"NO_USER"));
-            Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);     //Redirects the logged in user to Home page
+            Intent MAIN=new Intent(Login.this,HomeScreen.class);     //Redirects the logged in user to Home page
             finish();
             startActivity(MAIN);
         }
-        buttons.setOnClickListener(new View.OnClickListener() {
+        Getting_Started.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -113,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                         Code to generate an OTP for user and send it Via SMS and Email
                         **/
 
-                    final String IMEI = Phone.getText().toString().trim();
-                    final String EMAIL = IMEI + "@" + IMEI + ".com";
-                    final String PASSWORD = IMEI;
+                    final String MOBILE_NUMBER = Phone.getText().toString().trim();
+                    final String EMAIL = MOBILE_NUMBER + "@" + MOBILE_NUMBER + ".com";
+                    final String PASSWORD = MOBILE_NUMBER;
                     Random rn = new Random();
                     int n = 999 - 99;
                     int i = rn.nextInt() % n;
@@ -160,17 +159,17 @@ public class MainActivity extends AppCompatActivity {
                            public void run() {
                                rxConnect.setParam(Constants.SMS_PARAM_KEY_USER,Constants.SMS_PARAM_VALUE_USER);
                                rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
-                               rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+IMEI);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+MOBILE_NUMBER);
                                rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP is "+OTPstring);
-                               rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-                               rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,Constants.SMS_PARAM_VALUE_SENDERID);
+                               rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,Constants.SMS_PARAM_VALUE_ACCUSAGE);
                                rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
                                    @Override
                                    public void onResult(String result) {
                                        //do something on result
-                                       Toast.makeText(getApplicationContext(),OTPstring,Toast.LENGTH_SHORT).show();
+                                       Toast.makeText(getApplicationContext(),OTPstring + result,Toast.LENGTH_SHORT).show();
                                        Toasty.info(getApplicationContext(),"OTP sent",Toast.LENGTH_LONG,true).show();
-                                       buttons.setText("GET STARTED");
+                                       Getting_Started.setText("GET STARTED");
                                        OTPS.setVisibility(View.VISIBLE);
                                        Phone.setEnabled(false);
                                        OTPIDS.setVisibility(View.VISIBLE);
@@ -201,11 +200,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                    buttons.setText("GET STARTED");
+                    Getting_Started.setText("GET STARTED");
                     OTPS.setVisibility(View.VISIBLE);
                     Phone.setEnabled(false);
                     OTPIDS.setVisibility(View.VISIBLE);
-                    buttons.setOnClickListener(new View.OnClickListener() {
+                    Getting_Started.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
@@ -243,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                                                  **/
 
                                                 USER.putString(Constants.SHARED_PREF_KEY,Phone.getText().toString().trim()).commit();
-                                                Intent MAIN=new Intent(MainActivity.this,ApplyPass.class);
+                                                Intent MAIN=new Intent(Login.this,HomeScreen.class);
                                                 finish();
                                                 startActivity(MAIN);
 
@@ -336,17 +335,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void askForPermission(String permission, Integer requestCode) {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Login.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Login.this, permission)) {
 
 
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+                ActivityCompat.requestPermissions(Login.this, new String[]{permission}, requestCode);
 
             } else {
 
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+                ActivityCompat.requestPermissions(Login.this, new String[]{permission}, requestCode);
             }
         }
 

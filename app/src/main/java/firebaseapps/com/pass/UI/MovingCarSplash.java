@@ -2,13 +2,9 @@ package firebaseapps.com.pass.UI;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
 import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
@@ -50,7 +46,7 @@ public class MovingCarSplash extends Activity {
             @Override
             public void run() {
 
-                ApplyPass.OPTION= "Update Vehicle Details";
+                HomeScreen.OPTION= "Update Vehicle Details";
                 startActivity(new Intent(MovingCarSplash.this,ChangeDetails.class));
                 finish();
 

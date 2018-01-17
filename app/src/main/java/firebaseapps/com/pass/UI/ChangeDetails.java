@@ -76,7 +76,7 @@ public class ChangeDetails extends AppCompatActivity {
 
 
     public void onDestroy() {
-        Passdetails.THE_TEST=0;
+        ApplicationForm.THE_TEST=0;
          super.onDestroy();
         N=400;
     }
@@ -102,7 +102,7 @@ public class ChangeDetails extends AppCompatActivity {
         setContentView(R.layout.activity_change_details);
 
         state="Payment_Pending";
-        Passdetails.THE_TEST=1;
+        ApplicationForm.THE_TEST=1;
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -145,7 +145,7 @@ public class ChangeDetails extends AppCompatActivity {
 
 
                           String Response_status= JsonParser.JSONValue(jsonObject,"response_status");
-                          if(Response_status.equals("1"))
+                          if(Response_status.equals("1")|| Response_status.equals("3"))
                           {
                               JSONArray jsonArray=JsonParser.GetJsonArray(jsonObject,"dates_info");
 
@@ -252,7 +252,7 @@ public class ChangeDetails extends AppCompatActivity {
             }
         });
 
-        if(ApplyPass.OPTION.equals("Change Details"))
+        if(HomeScreen.OPTION.equals("Change Details"))
         {
 
             update.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +269,7 @@ public class ChangeDetails extends AppCompatActivity {
                 }
             });
         }
-        else if(ApplyPass.OPTION.equals("Update Vehicle Details"))
+        else if(HomeScreen.OPTION.equals("Update Vehicle Details"))
         {
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -541,8 +541,8 @@ public class ChangeDetails extends AppCompatActivity {
         rxConnect.setParam(Constants.SMS_PARAM_KEY_KEY,Constants.SMS_PARAM_VALUE_KEY);
         rxConnect.setParam(Constants.SMS_PARAM_KEY_MOBILE,"91"+APLICANT_MOBILE);
         rxConnect.setParam(Constants.SMS_PARAM_KEY_MESSAGE,"Your OTP to is "+OTPstring);
-        rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,"INFOSM");
-        rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,"2");
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_SENDERID,Constants.SMS_PARAM_VALUE_SENDERID);
+        rxConnect.setParam(Constants.SMS_PARAM_KEY_ACCUSAGE,Constants.SMS_PARAM_VALUE_ACCUSAGE);
         rxConnect.execute(Constants.SMS_URL,RxConnect.GET, new RxConnect.RxResultHelper() {
             @Override
             public void onResult(String result) {
@@ -689,7 +689,7 @@ public class ChangeDetails extends AppCompatActivity {
 
 
 
-                            if(ApplyPass.OPTION.equals("Cancel request"))
+                            if(HomeScreen.OPTION.equals("Cancel request"))
                             {
                                 RequestCancel();
                             }

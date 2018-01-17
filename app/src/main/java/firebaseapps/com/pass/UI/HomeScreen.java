@@ -9,8 +9,6 @@ import android.support.v7.app.*;
 import android.os.Bundle;
 
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,7 +17,7 @@ import firebaseapps.com.pass.SericeNReceiver.MyService;
 import firebaseapps.com.pass.Utils.NetworkUtil;
 import firebaseapps.com.pass.R;
 
-public class ApplyPass extends AppCompatActivity {
+public class HomeScreen extends AppCompatActivity {
 
 
     private LinearLayout applypass;
@@ -51,7 +49,7 @@ public class ApplyPass extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apply_pass);
+        setContentView(R.layout.activity_home_screen);
 
 
         ActionBar actionBar=getSupportActionBar();
@@ -72,7 +70,7 @@ public class ApplyPass extends AppCompatActivity {
         {
            if(!isMyServiceRunning(MyService.class)    /*Checks if service is ruuning */ )
             {
-                Intent serviceIntent = new Intent(ApplyPass.this, MyService.class);
+                Intent serviceIntent = new Intent(HomeScreen.this, MyService.class);
                 startService(serviceIntent);                                                //starts the service if it is not running
             }
         }
@@ -82,7 +80,7 @@ public class ApplyPass extends AppCompatActivity {
 
 
                 //Takes user to the new activity on applyling pass
-                Intent Passdetail=new Intent(ApplyPass.this,Passdetails.class);     //Allows user to fill up a new pass application
+                Intent Passdetail=new Intent(HomeScreen.this,ApplicationForm.class);     //Allows user to fill up a new pass application
                 startActivity(Passdetail);
 
             }
@@ -91,7 +89,7 @@ public class ApplyPass extends AppCompatActivity {
        Track.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               Intent check=new Intent(ApplyPass.this,CheckPassDetails.class);      //Allows user to check pass details
+               Intent check=new Intent(HomeScreen.this,CheckPassDetails.class);      //Allows user to check pass details
                startActivity(check);
            }
        });
@@ -101,7 +99,7 @@ public class ApplyPass extends AppCompatActivity {
 
 
 
-                         new AlertDialog.Builder(ApplyPass.this)
+                         new AlertDialog.Builder(HomeScreen.this)
                         .setTitle("Select appropriate option")
                         .setMessage("Select appropriate option")
                         .setPositiveButton("Change Application detail", new DialogInterface.OnClickListener() {
@@ -109,7 +107,7 @@ public class ApplyPass extends AppCompatActivity {
 
 
                                 OPTION="Change Details";
-                                Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to change the DOJ
+                                Intent ChangeDetails=new Intent(HomeScreen.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to change the DOJ
                                 startActivity(ChangeDetails);
                             }
                         })
@@ -119,7 +117,7 @@ public class ApplyPass extends AppCompatActivity {
 
 
                                 OPTION="Cancel request";
-                                Intent ChangeDetails=new Intent(ApplyPass.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to cancel application
+                                Intent ChangeDetails=new Intent(HomeScreen.this, firebaseapps.com.pass.UI.ChangeDetails.class);    //Allows user to cancel application
                                 startActivity(ChangeDetails);
 
                                   // do nothing
@@ -136,7 +134,7 @@ public class ApplyPass extends AppCompatActivity {
             public void onClick(View view) {
 
                 OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_PASS_VIEW;
-                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view a  DisplayPass
+                Intent view_pass=new Intent(HomeScreen.this,View_Pass.class);            //Allows user to view a  DisplayPass
                 startActivity(view_pass);
             }
         });
@@ -145,9 +143,9 @@ public class ApplyPass extends AppCompatActivity {
             public void onClick(View v) {
 
                 OPTION= "Update Vehicle Details";
-                Intent view_pass=new Intent(ApplyPass.this,MovingCarSplash.class);            //Allows user to enter Vehicle Details pass
+                Intent view_pass=new Intent(HomeScreen.this,MovingCarSplash.class);            //Allows user to enter Vehicle Details pass
                 startActivity(view_pass);
-             //   Intent Vehicle_Details=new Intent(ApplyPass.this,Vehicles.class);
+             //   Intent Vehicle_Details=new Intent(HomeScreen.this,Vehicles.class);
               //  startActivity(Vehicle_Details);
 
             }
@@ -157,7 +155,7 @@ public class ApplyPass extends AppCompatActivity {
             public void onClick(View v) {
 
                 OPTION_SELECTED= firebaseapps.com.pass.Constants.OPTION_SELECTED.OPTION_APPLICATION_PREVIEW;
-                Intent view_pass=new Intent(ApplyPass.this,View_Pass.class);            //Allows user to view submitted Application
+                Intent view_pass=new Intent(HomeScreen.this,View_Pass.class);            //Allows user to view submitted Application
                 startActivity(view_pass);
 
 

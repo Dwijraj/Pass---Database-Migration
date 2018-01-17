@@ -77,7 +77,7 @@ public class View_Pass extends AppCompatActivity {
 
         rxConnect=new RxConnect(View_Pass.this);
         rxConnect.setCachingEnabled(false);
-        if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
+        if(HomeScreen.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
         {
             pass_no.setHint("Enter Application Number");
         }
@@ -160,7 +160,7 @@ public class View_Pass extends AppCompatActivity {
                 else
                 {
 
-                    if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_PASS_VIEW))
+                    if(HomeScreen.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_PASS_VIEW))
                     {
                         Log.v("ViewingPass","3");
 
@@ -250,7 +250,7 @@ public class View_Pass extends AppCompatActivity {
                                     {
                                         PASS_DETAILS=result;
 
-                                        if(ApplyPass.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
+                                        if(HomeScreen.OPTION_SELECTED.equals(OPTION_SELECTED.OPTION_APPLICATION_PREVIEW))
                                         {
                                             Intent PASS_PREVIEW=new Intent(View_Pass.this,ApplicationPreview.class);
                                             PASS_PREVIEW.putExtra("PassNumber",PASS_NO);

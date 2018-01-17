@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.JarException;
 
 import es.dmoral.toasty.Toasty;
 import firebaseapps.com.pass.Adapter.CustomAdapter;
@@ -48,9 +46,6 @@ import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.Constants.OPTION_SELECTED;
 import firebaseapps.com.pass.R;
 import firebaseapps.com.pass.Utils.GetMimeType;
-import firebaseapps.com.pass.Utils.JsonParser;
-import firebaseapps.com.pass.Utils.NetworkUtil;
-import firebaseapps.com.pass.Utils.QR_Codegenerator;
 import firebaseapps.com.pass.Utils.VolleyMultipartRequest;
 
 public class Documentschange extends AppCompatActivity {
@@ -608,7 +603,7 @@ public class Documentschange extends AppCompatActivity {
             PROFILE_PIC_CHANGE_BYTE_ARRAY = stream.toByteArray();
 
 
-            PROFILE_PIC_CHANGE_URI=  Passdetails.getImageUri(getApplicationContext(), photo);
+            PROFILE_PIC_CHANGE_URI=  ApplicationForm.getImageUri(getApplicationContext(), photo);
 
 
             Glide.with(Documentschange.this)

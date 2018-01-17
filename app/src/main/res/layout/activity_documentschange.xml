@@ -20,6 +20,7 @@
         android:background="@color/colorPrimary">
 
         <FrameLayout
+
             android:layout_weight="100"
             android:layout_width="match_parent"
             android:layout_height="0dp">
@@ -124,8 +125,9 @@
                                 <EditText
                                     android:layout_weight="60"
                                     android:hint="Enter your Id.no here and select source ID proof below"
+                                    android:gravity="center"
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
+                                    android:layout_height="wrap_content"
                                     android:id="@+id/id_no_change"
                                     android:background="#ffff" />
 
@@ -137,7 +139,7 @@
                                     android:background="#ffff"
                                     android:tag="Select the Id "
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
+                                    android:layout_height="wrap_content"
                                     android:minHeight="50dp"
                                     android:layout_weight="40"/>
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Bundle;
-import android.util.Log;
 
 import firebaseapps.com.pass.Constants.Constants;
 import firebaseapps.com.pass.R;
@@ -35,13 +34,13 @@ public class Startup extends Activity {
                     if(Value)
                     {
 
-                        Intent MAIN=new Intent(Startup.this,ApplyPass.class);
+                        Intent MAIN=new Intent(Startup.this,HomeScreen.class);
                         finish();
                         startActivity(MAIN);
                     }
                     else
                     {
-                        Intent mainIntent = new Intent(Startup.this,GetStarted.class);
+                        Intent mainIntent = new Intent(Startup.this,Introduction.class);
                         Startup.this.startActivity(mainIntent);
                         Startup.this.finish();
                     }

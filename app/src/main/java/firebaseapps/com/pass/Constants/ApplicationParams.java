@@ -6,6 +6,10 @@ package firebaseapps.com.pass.Constants;
 
 public class ApplicationParams {
 
+    /**
+     * Application Params
+     */
+
     public static String Name="applicant_name";
     public static String Address="applicant_address";
     public static String RegisteredMobile="mobile_registered";
