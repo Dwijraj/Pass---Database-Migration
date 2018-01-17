@@ -48,6 +48,7 @@ import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.bumptech.glide.Glide;
+import com.sun.mail.imap.protocol.ID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -144,6 +145,7 @@ public class ApplicationForm extends AppCompatActivity {
     private RxConnect rxConnect1,rxConnect2; //rxConnect1 is for retreiving unavailable date rxConnect2 for Payment Confirmation
     private ArrayList<String> UNAVAILABLE_DATES=new ArrayList<>();
     String REGISTERED_NUMBER;
+    private Boolean Application_sent;
 
 
     //PAYMENT Configuration Object
@@ -793,9 +795,12 @@ public class ApplicationForm extends AppCompatActivity {
     }
     public void onDestroy() {
         THE_TEST=0;
-        paths.clear();
-        REASONS.clear();
-        PLACES.clear();
+        if (paths!=null)
+            paths.clear();
+        if(REASONS!=null)
+            REASONS.clear();
+        if(PLACES!=null)
+            PLACES.clear();
 
         super.onDestroy();
     }
@@ -874,8 +879,6 @@ public class ApplicationForm extends AppCompatActivity {
                         Application_status.setText(JsonParser.JSONValue(jsonObject,"token_no"));
                         Transaction_Id.setVisibility(View.VISIBLE);
 
-                        Payment.setEnabled(false);
-
 
 
                         RxConnect rxConnect3=new RxConnect(ApplicationForm.this);
@@ -909,17 +912,8 @@ public class ApplicationForm extends AppCompatActivity {
 
                             }
                         });
-
-
-
-
-
-
-
                         String PAYMENT_TOKEN=JsonParser.JSONValue(jsonObject,"token");
-
-
-                         getPayment(PAYMENT_TOKEN);
+                        getPayment(PAYMENT_TOKEN);
 
 
                         Log.v("JSONRESPONSE",jsonString+jsonObject);
@@ -991,6 +985,10 @@ public class ApplicationForm extends AppCompatActivity {
                     params.put(ApplicationParams.DateOfBirthd,DateOfBirth);
                     params.put(ApplicationParams.DateOfJourney,DateOfJourney);
                     params.put(ApplicationParams.PurposeOfVisit,Purposes);
+
+
+                    Log.v("Maina"+ApplicationParams.IDNumber, ID_NO);
+
 
                     return params;
                 }
@@ -1123,6 +1121,10 @@ public class ApplicationForm extends AppCompatActivity {
         } else if (requestCode == PAYMENT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
+                Payment.setEnabled(false);
+
+
+
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
 
                 Log.v("Payment123",result.getPaymentMethodNonce().getNonce());
@@ -1192,6 +1194,7 @@ public class ApplicationForm extends AppCompatActivity {
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // the user canceled
+                Payment.setEnabled(true);
                 Toasty.error(getApplicationContext(), "PaymentCanceled", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == RESULT_OK && requestCode == SCAN_ID) {

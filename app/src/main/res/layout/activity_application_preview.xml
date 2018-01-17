@@ -151,7 +151,7 @@
 
                     <TextView
                         android:textSize="19sp"
-                        android:id="@+id/SCAN_ID"
+                        android:id="@+id/ID_NUMBER"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"

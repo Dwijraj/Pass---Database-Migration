@@ -32,6 +32,7 @@ public class ApplicationPreview extends AppCompatActivity {
     private TextView Dateofbirth2;
     private TextView Dateofjourney2;
     private TextView Transaction_Id2;
+    private TextView ID_NUMBER;
     private TextView ID_No2;
     private TextView Purpose2;
     private TextView Scan_id2;
@@ -85,6 +86,7 @@ public class ApplicationPreview extends AppCompatActivity {
         final TextView  Pass=(TextView)findViewById(R.id.PassNumber);
         Vehicle=(Button)findViewById(R.id.Display_Bar_Code);
 
+        ID_NUMBER=(TextView) findViewById(R.id.ID_NUMBER);
         scan_id2=(ImageView)findViewById(R.id.SCAN_PIC) ;
         Name2=(TextView)findViewById(R.id.SCAN_NAME);
         Address2=(TextView)findViewById(R.id.SCAN_ADDRESS);
@@ -100,7 +102,7 @@ public class ApplicationPreview extends AppCompatActivity {
         try {
             JSONObject Values=new JSONObject(View_Pass.PASS_DETAILS);
 
-            Log.v("Here","1");
+            Log.v("Here",View_Pass.PASS_DETAILS+"");
 
             JSONObject jsonObject=Values.getJSONObject("application_info");
 
@@ -145,12 +147,15 @@ public class ApplicationPreview extends AppCompatActivity {
 
             String ApplicationStatus=JsonParser.JSONValue(jsonObject,"paid_status");
 
+            Log.v("Maina",IDNumber);
+
 
 
             Name2.setText(Name);
             Address2.setText(Address);
             Mobile2.setText(Mobile);
-            ID_No2.setText(IDNumber);
+           // ID_No2.setText(IDNumber);
+            ID_NUMBER.setText(IDNumber);
             Dateofbirth2.setText(DateOfBirth);
             Dateofjourney2.setText(DateOfJourney);
             Original_Date_Of_Journey=Dateofjourney2.getText().toString();
@@ -158,6 +163,7 @@ public class ApplicationPreview extends AppCompatActivity {
             Application_status2.setText(ApplicationStatus.toUpperCase());
             ID_source.setText(IDSource);
             place_of_visit.setText(PlaceOfVisit);
+
 
             try {
 
